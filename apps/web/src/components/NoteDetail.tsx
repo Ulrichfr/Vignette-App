@@ -1,4 +1,4 @@
-import { noteToMarkdown, noteToText, relativeAge } from '@vignette/core';
+import { isDue, noteToMarkdown, noteToText, relativeAge } from '@vignette/core';
 import { useState } from 'react';
 import { COLOR_NAMES, PALETTE, colorSpec } from '../colors';
 import { useI18n } from '../i18n';
@@ -165,6 +165,22 @@ export function NoteDetail({ noteId, onDeleted, onBack }: NoteDetailProps) {
       </header>
 
       <article className="detail-card" style={{ background: spec.base, color: spec.ink }}>
+        {note.remindAt && (
+          <button
+            className={`remind-corner ${isDue(note) ? 'due' : ''}`}
+            title={t.reminderRemove}
+            onClick={() => store.setReminder(note.id, null)}
+          >
+            <span className="remind-fold" style={{ borderColor: `${spec.edge} transparent` }} />
+            <span className="remind-time hand">
+              {new Date(note.remindAt).toLocaleString(t.dateLocale, {
+                weekday: 'short',
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            </span>
+          </button>
+        )}
         <div className="detail-card-top">
           <input
             className="detail-title"
@@ -230,6 +246,34 @@ export function NoteDetail({ noteId, onDeleted, onBack }: NoteDetailProps) {
           >
             {t.duplicate}
           </button>
+          <span className="remind-wrap">
+            <button
+              className={`ghost-btn ${note.remindAt ? 'active' : ''}`}
+              title={t.reminder}
+              onClick={() => {
+                if ('Notification' in window && Notification.permission === 'default') {
+                  void Notification.requestPermission();
+                }
+                const el = document.getElementById('remind-input') as HTMLInputElement | null;
+                el?.showPicker?.();
+                el?.focus();
+              }}
+            >
+              🕐 {t.reminder}
+            </button>
+            <input
+              id="remind-input"
+              type="datetime-local"
+              className="remind-input"
+              value={note.remindAt ? note.remindAt.slice(0, 16) : ''}
+              onChange={(e) =>
+                store.setReminder(
+                  note.id,
+                  e.target.value ? new Date(e.target.value).toISOString() : null,
+                )
+              }
+            />
+          </span>
           {inDeck ? (
             <button className="ghost-btn" onClick={() => store.undock(note.id)}>
               {t.removeFromDeck}

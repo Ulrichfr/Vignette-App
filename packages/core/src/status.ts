@@ -37,6 +37,21 @@ export function relativeAge(iso: string, now: Date = new Date(), units: AgeUnits
   return `${d}${units.d}`;
 }
 
+/** Vrai si le rappel de la note est échu (et la note encore vivante). */
+export function isDue(note: Note, now: Date = new Date()): boolean {
+  return (
+    note.remindAt !== null &&
+    !note.deletedAt &&
+    note.status !== 'archived' &&
+    new Date(note.remindAt).getTime() <= now.getTime()
+  );
+}
+
+/** Vrai si le rappel d'un item est échu (item non coché). */
+export function isItemDue(item: NoteItem, now: Date = new Date()): boolean {
+  return item.remindAt !== null && !item.checked && new Date(item.remindAt).getTime() <= now.getTime();
+}
+
 /** Filtre de la vue All Notes. `trash` = notes soft-supprimées, restaurables. */
 export type NotesFilter = 'all' | 'active' | 'archived' | 'trash';
 

@@ -45,6 +45,7 @@ type NoteRow = {
   status: NoteStatus;
   list_style: ListStyle;
   dock_position: number | null;
+  remind_at: string | null;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
@@ -56,6 +57,7 @@ type ItemRow = {
   position: number;
   text: string;
   checked: boolean;
+  remind_at: string | null;
 };
 
 const rowToNote = (r: NoteRow): Note => ({
@@ -65,6 +67,7 @@ const rowToNote = (r: NoteRow): Note => ({
   color: r.color,
   status: r.status,
   listStyle: r.list_style ?? 'dashes',
+  remindAt: r.remind_at ?? null,
   dockPosition: r.dock_position,
   createdAt: r.created_at,
   updatedAt: r.updated_at,
@@ -77,6 +80,7 @@ const rowToItem = (r: ItemRow): NoteItem => ({
   position: r.position,
   text: r.text,
   checked: r.checked,
+  remindAt: r.remind_at ?? null,
 });
 
 type Listener = () => void;
@@ -284,6 +288,7 @@ class Store {
       color,
       status: 'active',
       listStyle: 'dashes',
+      remindAt: null,
       dockPosition: positionAtEnd(this.state.notes),
       createdAt: t,
       updatedAt: t,
@@ -295,6 +300,7 @@ class Store {
       position: 1024,
       text: '',
       checked: false,
+      remindAt: null,
     };
     this.commit({
       ...this.state,
@@ -333,6 +339,20 @@ class Store {
 
   setListStyle(id: string, listStyle: ListStyle) {
     this.patchNote(id, { listStyle }, { list_style: listStyle });
+  }
+
+  /** Pose ou retire le rappel « coin corné ». */
+  setReminder(id: string, remindAt: string | null) {
+    this.patchNote(id, { remindAt }, { remind_at: remindAt });
+  }
+
+  /** Rappel griffonné à côté d'un item. */
+  setItemReminder(id: string, remindAt: string | null) {
+    this.commit({
+      ...this.state,
+      items: this.state.items.map((i) => (i.id === id ? { ...i, remindAt } : i)),
+    });
+    this.push(() => supabase!.from('note_items').update({ remind_at: remindAt }).eq('id', id));
   }
 
   markComplete(id: string) {
@@ -377,6 +397,7 @@ class Store {
       ownerId: userId,
       title: `${src.title}${copySuffix}`,
       status: 'active',
+      remindAt: null,
       dockPosition: null,
       createdAt: t,
       updatedAt: t,
@@ -388,6 +409,7 @@ class Store {
       position: (idx + 1) * 1024,
       text: i.text,
       checked: false,
+      remindAt: null,
     }));
     this.commit({
       ...this.state,
@@ -427,7 +449,7 @@ class Store {
     const id = crypto.randomUUID();
     this.commit({
       ...this.state,
-      items: [...this.state.items, { id, noteId, position, text: '', checked: false }],
+      items: [...this.state.items, { id, noteId, position, text: '', checked: false, remindAt: null }],
     });
     this.push(() =>
       supabase!.from('note_items').insert({ id, note_id: noteId, position, text: '' }),

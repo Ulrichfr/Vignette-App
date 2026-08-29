@@ -16,6 +16,9 @@ export interface Strings {
   deleteForever: string;
   duplicate: string;
   listDashes: string;
+  reminder: string;
+  reminderRemove: string;
+  reminderDue: string;
   listChecks: string;
   copySuffix: string;
   badgeTrash: string;
@@ -84,6 +87,9 @@ const STRINGS: Record<Lang, Strings> = {
     deleteForever: 'Supprimer définitivement',
     duplicate: 'Dupliquer',
     listDashes: 'Tirets',
+    reminder: 'Rappel',
+    reminderRemove: 'Retirer le rappel',
+    reminderDue: 'C’est l’heure !',
     listChecks: 'Cases à cocher',
     copySuffix: ' (copie)',
     badgeTrash: 'CORBEILLE',
@@ -150,6 +156,9 @@ const STRINGS: Record<Lang, Strings> = {
     deleteForever: 'Delete forever',
     duplicate: 'Duplicate',
     listDashes: 'Dashes',
+    reminder: 'Reminder',
+    reminderRemove: 'Remove reminder',
+    reminderDue: 'It’s time!',
     listChecks: 'Checkboxes',
     copySuffix: ' (copy)',
     badgeTrash: 'TRASH',

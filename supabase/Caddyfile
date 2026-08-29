@@ -61,6 +61,10 @@
 	# Landing / site vitrine à la racine (apps/site, statique).
 	handle {
 		root * /srv/site
+		# la CSS/HTML se revalident (l'edge Cloudflare servait des versions
+		# périmées pendant les itérations) ; les assets lourds restent cachés
+		@volatile path / /index.html /telechargements /telechargements.html /style.css*
+		header @volatile Cache-Control "no-cache, must-revalidate"
 		try_files {path} {path}.html /index.html
 		file_server
 	}

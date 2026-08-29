@@ -1,0 +1,16 @@
+{
+  "name": "@vignette/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "echo 'build desktop : pnpm tauri build (nécessite Rust)' ",
+    "ios": "tauri ios dev",
+    "android": "tauri android dev"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.1.0"
+  }
+}

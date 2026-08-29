@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Vignette",
+  "version": "0.1.0",
+  "identifier": "com.ulrichrozier.vignette",
+  "build": {
+    "beforeDevCommand": "pnpm --filter @vignette/web dev",
+    "devUrl": "http://localhost:5183/app/",
+    "beforeBuildCommand": "pnpm --filter @vignette/web build",
+    "frontendDist": "../../web/dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Vignette",
+        "width": 1180,
+        "height": 780,
+        "minWidth": 720,
+        "minHeight": 520,
+        "titleBarStyle": "Overlay"
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/icon.png"
+    ]
+  },
+  "plugins": {}
+}

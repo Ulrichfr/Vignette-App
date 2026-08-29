@@ -8,7 +8,8 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const { t } = useI18n();
   const [session, setSession] = useState<Session | null>(null);
   const [checking, setChecking] = useState(true);
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  // zone membre privée : les comptes se créent depuis le back office
+  const [mode] = useState<'signin'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -82,14 +83,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
           </label>
           {error && <p className="auth-error">{error}</p>}
           <button className="auth-submit" disabled={busy} type="submit">
-            {mode === 'signin' ? t.signIn : t.signUp}
-          </button>
-          <button
-            type="button"
-            className="auth-switch"
-            onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
-          >
-            {mode === 'signin' ? t.noAccount : t.haveAccount}
+            {t.signIn}
           </button>
         </form>
       </div>

@@ -138,11 +138,21 @@ nav::before {
 
 .nav-links a {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   text-decoration: none;
   color: var(--ink-soft);
   font-weight: 500;
   font-size: 14.5px;
   transition: color 0.15s ease;
+}
+
+.nl-ic {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  opacity: 0.75;
 }
 
 /* soulignement pastel animé */
@@ -749,6 +759,39 @@ footer a:hover {
   .nav-links a:nth-child(3) { background: var(--lilac); color: #35284e; }
   .nav-links a:nth-child(4) { background: var(--yellow); color: #4a3b10; }
   .nav-links a:nth-child(5) { background: var(--rose); color: #4a2136; }
+
+  .nl-ic {
+    width: 13px;
+    height: 13px;
+    opacity: 0.9;
+  }
+
+  /* le dock ne doit jamais recouvrir la fin de page */
+  body {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+}
+
+/* dock icônes seules sur petit écran : rien ne déborde, cibles généreuses */
+@media (max-width: 560px) {
+  .nav-links {
+    gap: 10px;
+  }
+
+  .nav-links .nl-txt {
+    display: none;
+  }
+
+  .nav-links a {
+    padding: 12px;
+    border-radius: 50%;
+  }
+
+  .nav-links .nl-ic {
+    width: 18px;
+    height: 18px;
+    opacity: 1;
+  }
 
   header.hero {
     padding: 52px 20px 20px;

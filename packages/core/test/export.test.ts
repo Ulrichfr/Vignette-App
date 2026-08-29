@@ -9,6 +9,7 @@ const note: Note = {
   color: 'mint',
   status: 'active',
   listStyle: 'dashes',
+  remindAt: null,
   dockPosition: 1024,
   createdAt: '2026-08-29T10:00:00Z',
   updatedAt: '2026-08-29T10:00:00Z',
@@ -16,8 +17,8 @@ const note: Note = {
 };
 
 const items: NoteItem[] = [
-  { id: 'i2', noteId: 'n1', position: 2, text: 'dry fruits', checked: false },
-  { id: 'i1', noteId: 'n1', position: 1, text: 'apple', checked: true },
+  { id: 'i2', noteId: 'n1', position: 2, text: 'dry fruits', checked: false, remindAt: null },
+  { id: 'i1', noteId: 'n1', position: 1, text: 'apple', checked: true, remindAt: null },
 ];
 
 describe('exports', () => {

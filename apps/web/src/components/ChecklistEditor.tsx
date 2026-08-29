@@ -1,4 +1,4 @@
-import { parseInline, type ListStyle, type NoteItem } from '@vignette/core';
+import { isItemDue, parseInline, type ListStyle, type NoteItem } from '@vignette/core';
 import { useRef, useState } from 'react';
 import { useI18n } from '../i18n';
 import { store } from '../store';
@@ -48,7 +48,13 @@ function RichText({ text }: { text: string }) {
  *  le tiret de tête sert de case à cocher. Au repos, la ligne est rendue riche ;
  *  un clic la passe en édition. */
 export function ChecklistEditor({ noteId, items, ink, listStyle = 'dashes', autoFocusLast }: Props) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const fmtRemind = (iso: string) =>
+    new Date(iso).toLocaleString(lang === 'fr' ? 'fr-FR' : 'en-GB', {
+      weekday: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   const rootRef = useRef<HTMLDivElement>(null);
   const [editingId, setEditingId] = useState<string | null>(
     autoFocusLast ? (items[items.length - 1]?.id ?? null) : null,
@@ -119,6 +125,49 @@ export function ChecklistEditor({ noteId, items, ink, listStyle = 'dashes', auto
                   {idx === 0 && items.length === 1 ? t.writeSomething : ' '}
                 </span>
               )}
+              {item.remindAt && (
+                <span
+                  className={`item-remind ${isItemDue(item) ? 'due' : ''}`}
+                  title={t.reminderRemove}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    store.setItemReminder(item.id, null);
+                  }}
+                >
+                  🕐 {fmtRemind(item.remindAt)}
+                </span>
+              )}
+            </span>
+          )}
+          {editingId !== item.id && (
+            <span className="item-remind-set">
+              <button
+                className="item-remind-btn"
+                title={t.reminder}
+                onClick={() => {
+                  if ('Notification' in window && Notification.permission === 'default') {
+                    void Notification.requestPermission();
+                  }
+                  const el = document.getElementById(
+                    `item-remind-${item.id}`,
+                  ) as HTMLInputElement | null;
+                  el?.showPicker?.();
+                }}
+              >
+                🕐
+              </button>
+              <input
+                id={`item-remind-${item.id}`}
+                type="datetime-local"
+                className="remind-input"
+                value={item.remindAt ? item.remindAt.slice(0, 16) : ''}
+                onChange={(e) =>
+                  store.setItemReminder(
+                    item.id,
+                    e.target.value ? new Date(e.target.value).toISOString() : null,
+                  )
+                }
+              />
             </span>
           )}
         </div>

@@ -352,6 +352,7 @@
 }
 
 .detail-card {
+  position: relative;
   border-radius: var(--radius-note);
   box-shadow: var(--shadow-rest);
   padding: 24px 26px 16px;
@@ -421,6 +422,140 @@
 .color-swatch.selected {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
+}
+
+/* --- rappel « coin corné » ------------------------------------------------ */
+
+.remind-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 92px;
+  height: 92px;
+  overflow: hidden;
+  border-radius: 0 var(--radius-note) 0 0;
+  cursor: pointer;
+}
+
+/* le pli : un triangle plus sombre qui rebique */
+.remind-fold {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-style: solid;
+  border-width: 0 64px 64px 0;
+  filter: brightness(0.96) drop-shadow(-2px 2px 3px rgb(0 0 0 / 0.18));
+  transition: border-width 0.3s var(--spring);
+}
+
+.remind-corner:hover .remind-fold {
+  border-width: 0 74px 74px 0;
+}
+
+.remind-time {
+  position: absolute;
+  top: 19px;
+  right: -4px;
+  width: 74px;
+  text-align: center;
+  transform: rotate(45deg);
+  font-size: 13px;
+  white-space: nowrap;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.remind-corner.due .remind-fold {
+  animation: due-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes due-pulse {
+  0%,
+  100% {
+    filter: brightness(0.96) drop-shadow(-2px 2px 3px rgb(0 0 0 / 0.18));
+  }
+  50% {
+    filter: brightness(0.85) drop-shadow(-2px 2px 6px rgb(0 0 0 / 0.3));
+  }
+}
+
+.remind-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.remind-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* horaire griffonné à côté d'un item */
+.item-remind {
+  margin-left: 12px;
+  font-size: 0.78em;
+  opacity: 0.7;
+  white-space: nowrap;
+  border-bottom: 1.5px dashed currentColor;
+  cursor: pointer;
+}
+
+.item-remind.due {
+  opacity: 1;
+  animation: due-blink 1.6s ease-in-out infinite;
+}
+
+@keyframes due-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.item-remind-set {
+  position: relative;
+  align-self: center;
+}
+
+.item-remind-btn {
+  font-size: 13px;
+  opacity: 0;
+  padding: 2px 4px;
+  transition: opacity 0.15s ease;
+}
+
+.checklist-line:hover .item-remind-btn {
+  opacity: 0.55;
+}
+
+.item-remind-btn:hover {
+  opacity: 1 !important;
+}
+
+/* l'onglet du deck frémit tant qu'un rappel est échu */
+.deck-tab.due {
+  animation: tab-shake 2.2s ease-in-out infinite;
+}
+
+@keyframes tab-shake {
+  0%,
+  84%,
+  100% {
+    transform: translateX(0);
+  }
+  88% {
+    transform: translateX(-7px) rotate(-1deg);
+  }
+  92% {
+    transform: translateX(2px);
+  }
+  96% {
+    transform: translateX(-4px);
+  }
 }
 
 /* --- partage & invitations ----------------------------------------------- */

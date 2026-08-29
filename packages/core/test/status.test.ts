@@ -9,6 +9,7 @@ function note(partial: Partial<Note> & { id: string }): Note {
     color: 'blue',
     status: 'active',
     listStyle: 'dashes',
+    remindAt: null,
     dockPosition: null,
     createdAt: '2026-08-29T10:00:00Z',
     updatedAt: '2026-08-29T10:00:00Z',
@@ -23,6 +24,7 @@ const item = (checked: boolean, i = 0): NoteItem => ({
   position: i,
   text: 'x',
   checked,
+  remindAt: null,
 });
 
 describe('canTransition', () => {

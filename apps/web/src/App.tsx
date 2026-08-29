@@ -1,5 +1,5 @@
-import type { NotesFilter } from '@vignette/core';
-import { useState } from 'react';
+import { isDue, isItemDue, type NotesFilter } from '@vignette/core';
+import { useEffect, useRef, useState } from 'react';
 import { AuthGate } from './components/AuthGate';
 import { Deck } from './components/Deck';
 import { InvitationsBanner } from './components/InvitationsBanner';
@@ -15,6 +15,35 @@ function Workspace() {
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = selectedId ?? state.notes.find((n) => !n.deletedAt)?.id ?? null;
+
+  // rappels échus → une notification système par note (tant que l'app est ouverte)
+  const notified = useRef(new Set<string>());
+  useEffect(() => {
+    const tick = () => {
+      const alive = new Set(
+        state.notes.filter((n) => !n.deletedAt && n.status !== 'archived').map((n) => n.id),
+      );
+      for (const n of state.notes) {
+        if (isDue(n) && !notified.current.has(n.id)) {
+          notified.current.add(n.id);
+          if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(`Vignette — ${n.title || '…'}`, { body: t.reminderDue });
+          }
+        }
+      }
+      for (const i of state.items) {
+        if (alive.has(i.noteId) && isItemDue(i) && !notified.current.has(i.id)) {
+          notified.current.add(i.id);
+          if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(`Vignette — ${i.text || '…'}`, { body: t.reminderDue });
+          }
+        }
+      }
+    };
+    tick();
+    const id = setInterval(tick, 30_000);
+    return () => clearInterval(id);
+  }, [state.notes, t]);
 
   return (
     <div className={`app ${selectedId ? 'detail-open' : ''}`}>

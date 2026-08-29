@@ -1,4 +1,4 @@
-import { deckNotes } from '@vignette/core';
+import { deckNotes, isDue, isItemDue } from '@vignette/core';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { colorSpec } from '../colors';
@@ -43,7 +43,11 @@ export function Deck() {
           return (
             <motion.button
               key={note.id}
-              className="deck-tab"
+              className={`deck-tab ${
+                isDue(note) || state.items.some((i) => i.noteId === note.id && isItemDue(i))
+                  ? 'due'
+                  : ''
+              }`}
               style={{ background: spec.base, color: spec.ink }}
               whileHover={{ x: -8 }}
               transition={SPRING}

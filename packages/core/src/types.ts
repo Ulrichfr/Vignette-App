@@ -24,6 +24,8 @@ export interface Note {
   listStyle: ListStyle;
   /** Ordre dans le deck ; null = pas dockée. Fractionnaire pour insertion sans renumérotation. */
   dockPosition: number | null;
+  /** Rappel « coin corné » : échéance optionnelle. */
+  remindAt: string | null;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -35,6 +37,8 @@ export interface NoteItem {
   position: number;
   text: string;
   checked: boolean;
+  /** Rappel griffonné à côté de l'item (optionnel). */
+  remindAt: string | null;
 }
 
 export type ShareRole = 'viewer' | 'editor';
