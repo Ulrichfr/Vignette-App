@@ -159,7 +159,7 @@ export function NoteDetail({ noteId, onDeleted, onBack }: NoteDetailProps) {
               className="soft-btn danger"
               onClick={() => {
                 void store.revoke(note.id, store.currentUserId!).then(() => store.refetch());
-                onDeleted();
+                onBack?.();
               }}
             >
               {t.leave}

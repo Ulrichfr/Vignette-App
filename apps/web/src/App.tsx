@@ -15,7 +15,40 @@ function Workspace() {
   const [filter, setFilter] = useState<NotesFilter>('all');
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [undoNoteId, setUndoNoteId] = useState<string | null>(null);
+  const undoTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const selected = selectedId ?? state.notes.find((n) => !n.deletedAt)?.id ?? null;
+
+  const noteDeleted = (id: string) => {
+    setSelectedId(null);
+    setUndoNoteId(id);
+    clearTimeout(undoTimer.current);
+    undoTimer.current = setTimeout(() => setUndoNoteId(null), 8000);
+  };
+
+  // raccourcis clavier : n = nouvelle note, / = recherche, Échap = fermer
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement;
+      const typing =
+        el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable;
+      if (e.key === 'Escape') {
+        if (typing) el.blur();
+        else setSelectedId(null);
+        return;
+      }
+      if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === 'n') {
+        e.preventDefault();
+        setSelectedId(store.createNote());
+      } else if (e.key === '/') {
+        e.preventDefault();
+        document.querySelector<HTMLInputElement>('.search-row input')?.focus();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   // abonnement push (rappels app fermée) dès que la permission est là
   useEffect(() => {
@@ -68,7 +101,7 @@ function Workspace() {
         {selected ? (
           <NoteDetail
             noteId={selected}
-            onDeleted={() => setSelectedId(null)}
+            onDeleted={() => noteDeleted(selected)}
             onBack={() => setSelectedId(null)}
           />
         ) : (
@@ -78,6 +111,20 @@ function Workspace() {
         )}
       </main>
       <Deck />
+      {undoNoteId && (
+        <div className="undo-toast" role="status">
+          <span>{t.deletedToast}</span>
+          <button
+            onClick={() => {
+              store.restore(undoNoteId);
+              setSelectedId(undoNoteId);
+              setUndoNoteId(null);
+            }}
+          >
+            {t.undo}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

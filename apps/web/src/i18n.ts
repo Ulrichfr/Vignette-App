@@ -21,6 +21,12 @@ export interface Strings {
   reminder: string;
   reminderRemove: string;
   reminderDue: string;
+  deletedToast: string;
+  undo: string;
+  settingsShortcuts: string;
+  shortcutNew: string;
+  shortcutSearch: string;
+  shortcutClose: string;
   listChecks: string;
   copySuffix: string;
   badgeTrash: string;
@@ -131,6 +137,12 @@ const STRINGS: Record<Lang, Strings> = {
     reminder: 'Rappel',
     reminderRemove: 'Retirer le rappel',
     reminderDue: 'C’est l’heure !',
+    deletedToast: 'Note mise à la corbeille',
+    undo: 'Annuler',
+    settingsShortcuts: 'Raccourcis',
+    shortcutNew: 'Nouvelle note',
+    shortcutSearch: 'Rechercher',
+    shortcutClose: 'Fermer la note',
     listChecks: 'Cases à cocher',
     copySuffix: ' (copie)',
     badgeTrash: 'CORBEILLE',
@@ -239,6 +251,12 @@ const STRINGS: Record<Lang, Strings> = {
     reminder: 'Reminder',
     reminderRemove: 'Remove reminder',
     reminderDue: 'It’s time!',
+    deletedToast: 'Note moved to trash',
+    undo: 'Undo',
+    settingsShortcuts: 'Shortcuts',
+    shortcutNew: 'New note',
+    shortcutSearch: 'Search',
+    shortcutClose: 'Close note',
     listChecks: 'Checkboxes',
     copySuffix: ' (copy)',
     badgeTrash: 'TRASH',

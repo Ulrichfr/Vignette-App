@@ -47,4 +47,8 @@ La web app, elle, est toujours servie par une instance : elle est en mode
   cochable depuis le widget.
 - **Fenêtres post-its sur le bureau** (desktop) : chaque note dockée devient
   une vraie fenêtre frameless always-on-top au bord de l'écran.
+- **Chiffrement local** : chiffrer le corps des notes au repos en mode local
+  (clé dans le trousseau de l'OS).
+- **Import Stickies** : importer les fichiers `.stickies` de macOS en gardant
+  couleurs et états.
 - **iOS** (l'init attend Homebrew/xcodegen sur le Mac) et **Windows**.

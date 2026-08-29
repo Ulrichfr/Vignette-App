@@ -125,6 +125,15 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
         </section>
 
         <section>
+          <h3>{t.settingsShortcuts}</h3>
+          <div className="settings-keys">
+            <span><kbd>N</kbd>{t.shortcutNew}</span>
+            <span><kbd>/</kbd>{t.shortcutSearch}</span>
+            <span><kbd>Échap</kbd>{t.shortcutClose}</span>
+          </div>
+        </section>
+
+        <section>
           <h3>{t.settingsAbout}</h3>
           <div className="settings-about">
             <a href="https://vignette.ulrichrozier.com" target="_blank" rel="noopener noreferrer">
