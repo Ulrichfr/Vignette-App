@@ -137,6 +137,21 @@ services:
       RUN_JANITOR: "true"
       DISABLE_HEALTHCHECK_LOGGING: "true"
 
+  admin-api:
+    image: node:22-alpine
+    container_name: vignette-admin-api
+    restart: unless-stopped
+    depends_on:
+      - auth
+      - rest
+    command: ["node", "/srv/server.mjs"]
+    volumes:
+      - ../apps/admin-api/server.mjs:/srv/server.mjs:ro
+      - ../backups:/backups:ro
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
+
   caddy:
     image: caddy:2-alpine
     container_name: vignette-caddy

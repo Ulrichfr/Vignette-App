@@ -75,17 +75,38 @@ img {
 
 /* --- nav ----------------------------------------------------------------- */
 
+/* header premium : pilule de verre flottante */
 nav {
   position: sticky;
-  top: 0;
+  top: 12px;
   z-index: 50;
   display: flex;
   align-items: center;
-  gap: 28px;
-  padding: 14px min(6vw, 64px);
-  background: color-mix(in srgb, var(--paper) 82%, transparent);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+  gap: 26px;
+  max-width: 1040px;
+  margin: 12px auto 0;
+  padding: 10px 10px 10px 22px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 10px 30px rgb(0 0 0 / 0.08);
+}
+
+/* verre sur un pseudo-élément : un backdrop-filter posé sur nav ferait de lui
+   le bloc conteneur des descendants fixed (dock mobile piégé dans la pilule) */
+nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--paper) 72%, transparent);
+  backdrop-filter: blur(16px) saturate(1.4);
+  z-index: -1;
+}
+
+@media (max-width: 1080px) {
+  nav {
+    margin: 12px 14px 0;
+  }
 }
 
 .brand {
@@ -94,6 +115,7 @@ nav {
   gap: 10px;
   font-weight: 800;
   font-size: 19px;
+  letter-spacing: -0.02em;
   text-decoration: none;
   margin-right: auto;
 }
@@ -101,38 +123,107 @@ nav {
 .brand img {
   width: 30px;
   height: 30px;
+  transition: transform 0.35s var(--spring);
 }
 
-nav a:not(.brand):not(.btn) {
+.brand:hover img {
+  transform: rotate(-8deg) scale(1.12);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.nav-links a {
+  position: relative;
   text-decoration: none;
   color: var(--ink-soft);
   font-weight: 500;
   font-size: 14.5px;
+  transition: color 0.15s ease;
 }
 
-nav a:not(.brand):not(.btn):hover {
+/* soulignement pastel animé */
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--yellow);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s var(--spring);
+  z-index: -1;
+}
+
+.nav-links a:hover {
   color: var(--ink);
+}
+
+.nav-links a:hover::after {
+  transform: scaleX(1);
+}
+
+.burger {
+  display: none;
+  border: none;
+  background: var(--paper-2);
+  color: var(--ink);
+  font-size: 17px;
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
 }
 
 /* --- boutons ------------------------------------------------------------- */
 
 .btn {
+  position: relative;
+  overflow: hidden;
   display: inline-block;
   padding: 12px 22px;
   border-radius: 12px;
   font-weight: 600;
   font-size: 15px;
   text-decoration: none;
-  transition: transform 0.25s var(--spring), filter 0.15s ease;
+  transition: transform 0.25s var(--spring), filter 0.15s ease, box-shadow 0.25s ease;
 }
 
 .btn:hover {
   transform: translateY(-2px) scale(1.02);
 }
 
+.btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* balayage lumineux au survol */
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgb(255 255 255 / 0.35) 50%, transparent 70%);
+  transform: translateX(-120%);
+}
+
+.btn:hover::after {
+  transition: transform 0.6s ease;
+  transform: translateX(120%);
+}
+
 .btn-primary {
-  background: var(--ink);
-  color: var(--paper);
+  background: linear-gradient(180deg, #3a3a41, #26262b 60%);
+  color: #f2efe8;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.18);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 8px 22px rgb(0 0 0 / 0.28);
 }
 
 .btn-ghost {
@@ -209,12 +300,22 @@ h1 .hl {
   font-size: 19px;
   line-height: 1.35;
   text-align: left;
-  transition: transform 0.35s var(--spring);
   user-select: none;
+  transform: rotate(var(--r, -4deg));
+  animation: float 5.5s ease-in-out var(--d, 0s) infinite alternate;
+}
+
+@keyframes float {
+  from {
+    transform: rotate(var(--r, -4deg)) translateY(0);
+  }
+  to {
+    transform: rotate(var(--r, -4deg)) translateY(-10px);
+  }
 }
 
 .float-note:hover {
-  transform: rotate(0deg) scale(1.06) !important;
+  animation-play-state: paused;
 }
 
 @media (max-width: 900px) {
@@ -529,6 +630,45 @@ footer a:hover {
   }
 }
 
+@keyframes drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-26px) rotate(var(--r, -0.8deg)) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--r, -0.8deg)) scale(1);
+  }
+}
+
+/* apparitions en cascade dans les grilles */
+.features .reveal:nth-child(2),
+.tutos .reveal:nth-child(2),
+.dl-grid .reveal:nth-child(2) {
+  transition-delay: 0.08s;
+}
+
+.features .reveal:nth-child(3),
+.tutos .reveal:nth-child(3),
+.dl-grid .reveal:nth-child(3) {
+  transition-delay: 0.16s;
+}
+
+.features .reveal:nth-child(4),
+.dl-grid .reveal:nth-child(4) {
+  transition-delay: 0.08s;
+}
+
+.features .reveal:nth-child(5),
+.dl-grid .reveal:nth-child(5) {
+  transition-delay: 0.16s;
+}
+
+.features .reveal:nth-child(6),
+.dl-grid .reveal:nth-child(6) {
+  transition-delay: 0.24s;
+}
+
 /* --- apparition au scroll -------------------------------------------------- */
 
 .reveal {
@@ -552,15 +692,63 @@ footer a:hover {
 
 /* --- mobile ---------------------------------------------------------------- */
 
-@media (max-width: 760px) {
+@media (max-width: 860px) {
   nav {
-    gap: 14px;
-    padding: 12px 18px;
+    gap: 12px;
+    padding: 8px 8px 8px 16px;
   }
 
-  nav a:not(.brand):not(.btn) {
+  /* dock flottant en bas : les liens deviennent des mini post-its */
+  .nav-links {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    z-index: 60;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+    backdrop-filter: blur(16px) saturate(1.4);
+    border: 1px solid color-mix(in srgb, var(--line) 85%, transparent);
+    box-shadow: var(--shadow-big);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-links::-webkit-scrollbar {
     display: none;
   }
+
+  /* centre quand ça tient, scrolle proprement quand ça déborde */
+  .nav-links a:first-child {
+    margin-left: auto;
+  }
+
+  .nav-links a:last-child {
+    margin-right: auto;
+  }
+
+  .nav-links a {
+    flex: none;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 7px 10px;
+    border-radius: 999px;
+    color: var(--ink);
+  }
+
+  .nav-links a::after {
+    display: none;
+  }
+
+  .nav-links a:nth-child(1) { background: var(--blue); color: #23384f; }
+  .nav-links a:nth-child(2) { background: var(--mint); color: #1f3d2b; }
+  .nav-links a:nth-child(3) { background: var(--lilac); color: #35284e; }
+  .nav-links a:nth-child(4) { background: var(--yellow); color: #4a3b10; }
+  .nav-links a:nth-child(5) { background: var(--rose); color: #4a2136; }
 
   header.hero {
     padding: 52px 20px 20px;
@@ -636,8 +824,34 @@ footer a:hover {
 }
 
 .dl-card .btn {
-  background: rgb(0 0 0 / 0.78);
+  background: linear-gradient(180deg, #3a3a41, #202024 60%);
   color: #fff;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.22);
+  padding: 12px 20px;
+}
+
+.btn .arr {
+  display: inline-block;
+  margin-left: 7px;
+  transition: transform 0.25s var(--spring);
+}
+
+.btn:hover .arr {
+  transform: translate(3px, -3px);
+}
+
+.dl-card .soon {
+  animation: soon-blink 2.6s ease-in-out infinite;
+}
+
+@keyframes soon-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
 }
 
 pre.clone {

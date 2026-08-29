@@ -45,6 +45,12 @@
 		file_server
 	}
 
+	# API back office (service-role, vérifie l'admin côté serveur).
+	handle /admin-api/* {
+		uri strip_prefix /admin-api
+		reverse_proxy admin-api:3005
+	}
+
 	# Back office sous /admin — build de apps/admin (base /admin/).
 	handle /admin* {
 		root * /srv

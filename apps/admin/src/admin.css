@@ -1,0 +1,58 @@
+/* Back office — mêmes tokens que DESIGN.md, densité utilitaire. */
+
+:root {
+  --paper: #f2efe8;
+  --paper-2: #e9e5dc;
+  --ink: #26262b;
+  --ink-soft: #6e6c66;
+  --line: #dcd8cd;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1e1e22;
+    --paper-2: #28282e;
+    --ink: #eceae4;
+    --ink-soft: #9c9aa0;
+    --line: #36363e;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 14px/1.55 system-ui, sans-serif;
+}
+
+button { font: inherit; border: none; cursor: pointer; border-radius: 9px; padding: 8px 14px; background: var(--ink); color: var(--paper); font-weight: 600; }
+button.ghost { background: var(--paper-2); color: var(--ink); }
+button.danger { background: transparent; color: #b3271e; padding: 4px 8px; }
+input { font: inherit; border: 1px solid var(--line); background: var(--paper-2); color: inherit; border-radius: 9px; padding: 9px 12px; outline: none; }
+
+.center { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+.login { display: flex; flex-direction: column; gap: 12px; width: min(320px, 90vw); background: var(--paper-2); border-radius: 16px; padding: 28px; }
+.login h1 { font-size: 18px; margin: 0 0 6px; }
+.err { color: #b3271e; margin: 0; font-size: 13px; }
+
+.dash { max-width: 960px; margin: 0 auto; padding: 28px 20px 60px; }
+.dash header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+.dash h1 { font-size: 20px; margin: 0; }
+.dash h2 { font-size: 16px; margin: 34px 0 12px; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; }
+.card { border-radius: 14px; padding: 16px 18px; color: #26262b; }
+.card b { display: block; font-size: 26px; }
+.card span { font-size: 12.5px; opacity: 0.7; }
+
+.create { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.create input { flex: 1; min-width: 180px; }
+
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+th { color: var(--ink-soft); font-weight: 600; font-size: 12px; }
+.tag { font-style: normal; font-size: 11px; background: var(--paper-2); border-radius: 6px; padding: 2px 7px; margin-left: 6px; }
+.muted { color: var(--ink-soft); }
+code { background: var(--paper-2); border-radius: 5px; padding: 1px 6px; }
