@@ -1,0 +1,153 @@
+import { useState } from 'react';
+import { setLang, useI18n, type Lang } from '../i18n';
+import { getAppIcon, setAppIcon, ICON_COLORS, type IconColor } from '../lib/appicon';
+import { buildBackup } from '../lib/backup';
+import { clearInstance } from '../lib/instance';
+import { instanceConfig } from '../lib/supabase';
+import { setTheme, useTheme, type Theme } from '../theme';
+import { store, useAppState } from '../store';
+
+/** Réglages : langue, thème, icône de l'app, données, instance, à propos. */
+export function SettingsPanel({ onClose }: { onClose: () => void }) {
+  const { t, lang } = useI18n();
+  const theme = useTheme();
+  const state = useAppState();
+  const [icon, setIcon] = useState<IconColor>(getAppIcon());
+
+  const pickIcon = (c: IconColor) => {
+    setIcon(c);
+    setAppIcon(c);
+  };
+
+  const exportAll = () => {
+    const stamp = new Date().toISOString().slice(0, 10);
+    const url = URL.createObjectURL(
+      new Blob([buildBackup(state.notes, state.items)], { type: 'application/json' }),
+    );
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `vignette-sauvegarde-${stamp}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const modeLabel =
+    instanceConfig?.mode === 'local'
+      ? t.onboardLocal
+      : instanceConfig?.mode === 'server'
+        ? (instanceConfig.url ?? '')
+        : t.onboardOfficial;
+
+  return (
+    <>
+      <div className="settings-backdrop" onClick={onClose} />
+      <aside className="settings-panel">
+        <header className="settings-head">
+          <h2>{t.settings}</h2>
+          <button className="ghost-btn icon-btn" onClick={onClose} aria-label="Fermer">
+            ✕
+          </button>
+        </header>
+
+        <section>
+          <h3>{t.settingsLanguage}</h3>
+          <div className="settings-chips">
+            {(['fr', 'en'] as Lang[]).map((l) => (
+              <button
+                key={l}
+                className={`filter-chip ${lang === l ? 'selected' : ''}`}
+                onClick={() => setLang(l)}
+              >
+                {l === 'fr' ? 'Français' : 'English'}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h3>{t.settingsTheme}</h3>
+          <div className="settings-chips">
+            {(['system', 'light', 'dark'] as Theme[]).map((th) => (
+              <button
+                key={th}
+                className={`filter-chip ${theme === th ? 'selected' : ''}`}
+                onClick={() => setTheme(th)}
+              >
+                {th === 'system' ? t.themeSystem : th === 'light' ? t.themeLight : t.themeDark}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h3>{t.settingsIcon}</h3>
+          <p className="settings-hint">{t.settingsIconHint}</p>
+          <div className="settings-icons">
+            {ICON_COLORS.map((c) => (
+              <button
+                key={c}
+                className={`settings-icon ${icon === c ? 'selected' : ''}`}
+                title={c}
+                onClick={() => pickIcon(c)}
+              >
+                <img src={`${import.meta.env.BASE_URL}icons/${c}.svg`} alt={c} />
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h3>{t.settingsData}</h3>
+          <div className="settings-chips">
+            <button className="soft-btn" onClick={exportAll}>
+              {t.backupExport}
+            </button>
+          </div>
+          <p className="settings-hint">{t.settingsImportHint}</p>
+        </section>
+
+        <section>
+          <h3>{t.settingsInstance}</h3>
+          <p className="settings-hint" style={{ overflowWrap: 'anywhere' }}>
+            {modeLabel}
+          </p>
+          {instanceConfig?.mode !== 'builtin' && (
+            <button
+              className="soft-btn"
+              onClick={() => {
+                clearInstance();
+                window.location.reload();
+              }}
+            >
+              {t.settingsChangeInstance}
+            </button>
+          )}
+        </section>
+
+        <section>
+          <h3>{t.settingsAbout}</h3>
+          <div className="settings-about">
+            <a href="https://vignette.ulrichrozier.com" target="_blank" rel="noopener noreferrer">
+              {t.onboardLinkSite} ↗
+            </a>
+            <a
+              href="https://github.com/Ulrichfr/Vignette-App"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t.onboardLinkSource} ↗
+            </a>
+            <a
+              href="https://github.com/Ulrichfr/Vignette-App/blob/main/docs/DEMARRER.md"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t.onboardLinkTutorials} ↗
+            </a>
+          </div>
+          <p className="settings-hint">Vignette 0.1.0</p>
+        </section>
+      </aside>
+    </>
+  );
+}

@@ -6,13 +6,13 @@ import {
   type Note,
   type NotesFilter,
 } from '@vignette/core';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { colorSpec } from '../colors';
-import { setLang, useI18n, type Strings } from '../i18n';
-import { cycleTheme, useTheme } from '../theme';
+import { useI18n, type Strings } from '../i18n';
 import { itemsOf, store, useAppState } from '../store';
 import { signOut } from './AuthGate';
-import { IcExport, IcImport, IcMoon, IcSearch, IcSignOut, IcSun, IcSystem } from './icons';
+import { IcExport, IcGear, IcImport, IcSearch, IcSignOut } from './icons';
+import { SettingsPanel } from './SettingsPanel';
 import { buildBackup, parseBackup } from '../lib/backup';
 
 interface Props {
@@ -31,13 +31,11 @@ function statusBadge(note: Note, t: Strings): { label: string; className: string
   return { label: t.badgeActive, className: 'badge active' };
 }
 
-const THEME_ICON = { system: <IcSystem />, light: <IcSun />, dark: <IcMoon /> } as const;
-
 export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSelect }: Props) {
-  const { t, lang } = useI18n();
-  const theme = useTheme();
+  const { t } = useI18n();
   const state = useAppState();
   const fileRef = useRef<HTMLInputElement>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const importFiles = async (files: FileList | null) => {
     if (!files) return;
@@ -103,13 +101,10 @@ export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSele
           </button>
           <button
             className="ghost-btn icon-btn"
-            title={lang === 'fr' ? 'Switch to English' : 'Passer en français'}
-            onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')}
+            title={t.settings}
+            onClick={() => setSettingsOpen(true)}
           >
-            {lang === 'fr' ? 'EN' : 'FR'}
-          </button>
-          <button className="ghost-btn icon-btn" title={`Theme: ${theme}`} onClick={cycleTheme}>
-            {THEME_ICON[theme]}
+            <IcGear />
           </button>
           <button className="ghost-btn icon-btn" title={t.signOut} onClick={signOut}>
             <IcSignOut />
@@ -170,6 +165,7 @@ export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSele
         })}
         {notes.length === 0 && <p className="empty-hint">{t.emptyList}</p>}
       </div>
+      {settingsOpen && <SettingsPanel onClose={() => setSettingsOpen(false)} />}
     </section>
   );
 }

@@ -88,6 +88,19 @@ export interface Strings {
   haveAccount: string;
   noAccount: string;
   signOut: string;
+  settings: string;
+  settingsLanguage: string;
+  settingsTheme: string;
+  themeSystem: string;
+  themeLight: string;
+  themeDark: string;
+  settingsIcon: string;
+  settingsIconHint: string;
+  settingsData: string;
+  settingsImportHint: string;
+  settingsInstance: string;
+  settingsChangeInstance: string;
+  settingsAbout: string;
   authError: string;
   forgotPassword: string;
   resetSent: string;
@@ -185,6 +198,19 @@ const STRINGS: Record<Lang, Strings> = {
     haveAccount: 'Déjà un compte ? Se connecter',
     noAccount: 'Pas de compte ? En créer un',
     signOut: 'Se déconnecter',
+    settings: 'Réglages',
+    settingsLanguage: 'Langue',
+    settingsTheme: 'Thème',
+    themeSystem: 'Système',
+    themeLight: 'Clair',
+    themeDark: 'Sombre',
+    settingsIcon: 'Icône de l’app',
+    settingsIconHint: 'Appliquée au favicon et à l’écran d’accueil (installe ou réinstalle la PWA pour la voir sur ton téléphone).',
+    settingsData: 'Données',
+    settingsImportHint: 'Pour restaurer une sauvegarde ou importer des listes : le bouton d’import en haut de la liste.',
+    settingsInstance: 'Instance',
+    settingsChangeInstance: 'Changer d’instance…',
+    settingsAbout: 'À propos',
     authError: 'Impossible de se connecter — vérifie tes identifiants.',
     forgotPassword: 'Mot de passe oublié ?',
     resetSent: 'Email de réinitialisation envoyé — regarde ta boîte.',
@@ -280,6 +306,19 @@ const STRINGS: Record<Lang, Strings> = {
     haveAccount: 'Already have an account? Sign in',
     noAccount: 'No account? Create one',
     signOut: 'Sign out',
+    settings: 'Settings',
+    settingsLanguage: 'Language',
+    settingsTheme: 'Theme',
+    themeSystem: 'System',
+    themeLight: 'Light',
+    themeDark: 'Dark',
+    settingsIcon: 'App icon',
+    settingsIconHint: 'Applied to the favicon and home screen (install or reinstall the PWA to see it on your phone).',
+    settingsData: 'Data',
+    settingsImportHint: 'To restore a backup or import lists: the import button at the top of the list.',
+    settingsInstance: 'Instance',
+    settingsChangeInstance: 'Change instance…',
+    settingsAbout: 'About',
     authError: 'Could not sign in — check your credentials.',
     forgotPassword: 'Forgot your password?',
     resetSent: 'Reset email sent — check your inbox.',

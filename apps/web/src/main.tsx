@@ -4,8 +4,11 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { applyAppIcon } from './lib/appicon';
 import './styles.css';
 import './app.css';
+
+applyAppIcon();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

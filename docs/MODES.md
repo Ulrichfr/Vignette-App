@@ -38,6 +38,10 @@ La web app, elle, est toujours servie par une instance : elle est en mode
   local-first.
 - **Migration locale → instance en un clic** : envoyer ses notes locales vers
   un compte fraîchement connecté.
+- **Icônes alternatives natives** : le choix d'icône des Réglages s'applique au
+  favicon et à la PWA ; sur macOS/iOS/Android il faudra les mécanismes de
+  chaque plateforme (NSApp.applicationIconImage, activity-alias Android,
+  alternate icons iOS).
 - **Widgets OS** : épingler UNE de ses listes en widget (écran d'accueil
   iOS/Android, bureau/menu bar macOS) — la liste choisie parmi toutes,
   cochable depuis le widget.
