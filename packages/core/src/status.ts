@@ -16,16 +16,16 @@ export function isNoteComplete(items: NoteItem[]): boolean {
   return items.length > 0 && items.every((i) => i.checked);
 }
 
-/** Libellé de fraîcheur relative ("23m", "1h", "3j"), pour "edited il y a X". */
+/** Libellé de fraîcheur relative ("23m", "1h", "3d"), pour "edited il y a X". */
 export function relativeAge(iso: string, now: Date = new Date()): string {
   const ms = now.getTime() - new Date(iso).getTime();
   const min = Math.max(0, Math.floor(ms / 60_000));
-  if (min < 1) return 'maintenant';
+  if (min < 1) return 'now';
   if (min < 60) return `${min}m`;
   const h = Math.floor(min / 60);
   if (h < 24) return `${h}h`;
   const d = Math.floor(h / 24);
-  return `${d}j`;
+  return `${d}d`;
 }
 
 /** Filtre de la vue All Notes. */

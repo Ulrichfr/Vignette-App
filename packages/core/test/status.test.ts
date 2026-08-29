@@ -48,8 +48,8 @@ describe('relativeAge', () => {
   it('minutes, heures, jours', () => {
     expect(relativeAge('2026-08-29T11:37:00Z', now)).toBe('23m');
     expect(relativeAge('2026-08-29T09:00:00Z', now)).toBe('3h');
-    expect(relativeAge('2026-08-26T12:00:00Z', now)).toBe('3j');
-    expect(relativeAge('2026-08-29T11:59:40Z', now)).toBe('maintenant');
+    expect(relativeAge('2026-08-26T12:00:00Z', now)).toBe('3d');
+    expect(relativeAge('2026-08-29T11:59:40Z', now)).toBe('now');
   });
 });
 

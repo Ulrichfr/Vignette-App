@@ -1,0 +1,99 @@
+/* Tokens du design system — voir DESIGN.md (source de vérité). */
+
+:root {
+  --paper: #f2efe8;
+  --paper-2: #e9e5dc;
+  --ink: #26262b;
+  --ink-soft: #6e6c66;
+  --line: #dcd8cd;
+
+  --radius-note: 16px;
+  --radius-panel: 20px;
+  --radius-chip: 8px;
+
+  --shadow-rest: 0 1px 2px rgb(0 0 0 / 0.06), 0 8px 24px rgb(0 0 0 / 0.1);
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.08), 0 16px 32px rgb(0 0 0 / 0.14);
+
+  --font-ui: 'Inter Variable', system-ui, sans-serif;
+  --font-hand: 'Caveat Variable', 'Comic Sans MS', cursive;
+}
+
+[data-theme='dark'] {
+  --paper: #1e1e22;
+  --paper-2: #28282e;
+  --ink: #eceae4;
+  --ink-soft: #9c9aa0;
+  --line: #36363e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+::placeholder {
+  color: var(--ink-soft);
+  opacity: 0.7;
+}
+
+/* Écriture manuscrite : la voix du produit. */
+.hand {
+  font-family: var(--font-hand);
+  font-size: 1.45rem;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+/* Libellé vertical des onglets du deck. */
+.tab-label {
+  writing-mode: vertical-rl;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Ligne de perforation (signature visuelle des maquettes). */
+.perforation {
+  border-left: 1.5px dashed rgb(0 0 0 / 0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.15s !important;
+    transition-duration: 0.15s !important;
+  }
+}
