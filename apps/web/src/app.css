@@ -22,7 +22,7 @@
 
 /* --- mobile (préparation iOS/Android : liste plein écran, détail en overlay) */
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .window {
     grid-template-columns: 1fr;
     padding-right: 46px;
@@ -83,7 +83,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  row-gap: 8px;
   margin-bottom: 18px;
+}
+
+.list-header h1 {
+  white-space: nowrap;
 }
 
 .list-header h1 {
