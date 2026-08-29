@@ -17,7 +17,7 @@
   <a href="docs/PARTAGE.md">Partager</a>
 </p>
 
-![Vignette — vue Toutes les notes](docs/captures/shot-light.png)
+![Démo : le deck en action](docs/captures/demo-deck.gif)
 
 ## Ce que fait Vignette
 

@@ -68,6 +68,11 @@ export interface Strings {
   noAccount: string;
   signOut: string;
   authError: string;
+  forgotPassword: string;
+  resetSent: string;
+  newPassword: string;
+  savePassword: string;
+  passwordSaved: string;
   tagline: string;
   ageUnits: AgeUnits;
   dateLocale: string;
@@ -139,6 +144,11 @@ const STRINGS: Record<Lang, Strings> = {
     noAccount: 'Pas de compte ? En créer un',
     signOut: 'Se déconnecter',
     authError: 'Impossible de se connecter — vérifie tes identifiants.',
+    forgotPassword: 'Mot de passe oublié ?',
+    resetSent: 'Email de réinitialisation envoyé — regarde ta boîte.',
+    newPassword: 'Nouveau mot de passe',
+    savePassword: 'Enregistrer le mot de passe',
+    passwordSaved: 'Mot de passe changé — te voilà chez toi.',
     tagline: 'Tes listes, collées au bord de l’écran.',
     ageUnits: { now: 'à l’instant', m: ' min', h: ' h', d: ' j' },
     dateLocale: 'fr-FR',
@@ -208,6 +218,11 @@ const STRINGS: Record<Lang, Strings> = {
     noAccount: 'No account? Create one',
     signOut: 'Sign out',
     authError: 'Could not sign in — check your credentials.',
+    forgotPassword: 'Forgot your password?',
+    resetSent: 'Reset email sent — check your inbox.',
+    newPassword: 'New password',
+    savePassword: 'Save password',
+    passwordSaved: 'Password changed — welcome home.',
     tagline: 'Your lists, stuck to the edge of your screen.',
     ageUnits: { now: 'now', m: 'm', h: 'h', d: 'd' },
     dateLocale: 'en-GB',

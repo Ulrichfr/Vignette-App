@@ -8,7 +8,7 @@
   <link rel="icon" href="assets/icons/favicon.ico" sizes="48x48">
   <link rel="icon" href="assets/icons/vignette-blue.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="style.css?v=20260830f">
+  <link rel="stylesheet" href="style.css?v=20260830g">
 </head>
 <body>
 
@@ -109,6 +109,18 @@ pnpm install &amp;&amp; pnpm build</pre>
     for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+  document.querySelectorAll('pre.clone').forEach((pre) => {
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'Copier';
+    btn.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(pre.innerText.replace(/^Copier\n/, ''));
+      btn.textContent = 'Copié ✓';
+      setTimeout(() => (btn.textContent = 'Copier'), 1600);
+    });
+    pre.appendChild(btn);
+  });
 </script>
 
 </body>

@@ -94,8 +94,22 @@ class Store {
   private listeners = new Set<Listener>();
   private userId: string | null = null;
   private channel: ReturnType<NonNullable<typeof supabase>['channel']> | null = null;
-  /** Écritures encore en vol, pour ne pas écraser l'optimiste avec un écho périmé. */
+  /** Écritures encore en vol (gestion d'erreur/resync). */
   private pending = 0;
+  /** Lignes modifiées localement récemment : leurs échos Realtime sont ignorés
+   *  ligne par ligne, sans bloquer les événements des co-éditeurs ailleurs. */
+  private recent = new Map<string, number>();
+
+  private touchRecent(...ids: string[]) {
+    const t = Date.now();
+    for (const id of ids) this.recent.set(id, t);
+  }
+
+  private isRecent(id: string | undefined): boolean {
+    if (!id) return false;
+    const t = this.recent.get(id);
+    return t !== undefined && Date.now() - t < 4000;
+  }
 
   getState = (): AppState => this.state;
 
@@ -215,7 +229,7 @@ class Store {
   }
 
   private onNoteChange(event: string, next: NoteRow, prev: Partial<NoteRow>) {
-    if (this.pending > 0) return; // nos propres écritures : l'optimiste fait foi
+    if (this.isRecent(event === 'DELETE' ? prev.id : next.id)) return; // écho local
     if (event === 'DELETE') {
       this.commit({ ...this.state, notes: this.state.notes.filter((n) => n.id !== prev.id) });
       return;
@@ -231,7 +245,7 @@ class Store {
   }
 
   private onItemChange(event: string, next: ItemRow, prev: Partial<ItemRow>) {
-    if (this.pending > 0) return;
+    if (this.isRecent(event === 'DELETE' ? prev.id : next.id)) return; // écho local
     if (event === 'DELETE') {
       this.commit({ ...this.state, items: this.state.items.filter((i) => i.id !== prev.id) });
       return;
@@ -269,6 +283,7 @@ class Store {
   /* ------------------------------------------------------------- actions */
 
   private patchNote(id: string, patch: Partial<Note>, row: Partial<NoteRow>) {
+    this.touchRecent(id);
     this.commit({
       ...this.state,
       notes: this.state.notes.map((n) => (n.id === id ? { ...n, ...patch, updatedAt: now() } : n)),
@@ -302,6 +317,7 @@ class Store {
       checked: false,
       remindAt: null,
     };
+    this.touchRecent(id, item.id);
     this.commit({
       ...this.state,
       notes: [...this.state.notes, note],
@@ -348,6 +364,7 @@ class Store {
 
   /** Réordonne le deck : positions régulières selon l'ordre donné. */
   reorderDeck(ids: string[]) {
+    this.touchRecent(...ids);
     const pos = new Map(ids.map((id, i) => [id, (i + 1) * 1024]));
     this.commit({
       ...this.state,
@@ -425,6 +442,7 @@ class Store {
 
   /** Rappel griffonné à côté d'un item. */
   setItemReminder(id: string, remindAt: string | null) {
+    this.touchRecent(id);
     this.commit({
       ...this.state,
       items: this.state.items.map((i) => (i.id === id ? { ...i, remindAt } : i)),
@@ -433,6 +451,7 @@ class Store {
   }
 
   markComplete(id: string) {
+    this.touchRecent(id, ...this.state.items.filter((i) => i.noteId === id).map((i) => i.id));
     this.commit({
       ...this.state,
       notes: this.state.notes.map((n) =>
@@ -524,6 +543,7 @@ class Store {
     const maxPos = Math.max(0, ...siblings.map((i) => i.position));
     const position = afterPosition !== undefined ? afterPosition + 0.5 : maxPos + 1024;
     const id = crypto.randomUUID();
+    this.touchRecent(id);
     this.commit({
       ...this.state,
       items: [...this.state.items, { id, noteId, position, text: '', checked: false, remindAt: null }],
@@ -535,6 +555,7 @@ class Store {
   }
 
   updateItem(id: string, patch: Partial<Pick<NoteItem, 'text' | 'checked'>>) {
+    this.touchRecent(id);
     this.commit({
       ...this.state,
       items: this.state.items.map((i) => (i.id === id ? { ...i, ...patch } : i)),
@@ -543,6 +564,7 @@ class Store {
   }
 
   removeItem(id: string) {
+    this.touchRecent(id);
     this.commit({ ...this.state, items: this.state.items.filter((i) => i.id !== id) });
     this.push(() => supabase!.from('note_items').delete().eq('id', id));
   }

@@ -13,7 +13,11 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  // vrai après un clic sur le lien « mot de passe oublié » reçu par email
+  const [recovery, setRecovery] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
 
   useEffect(() => {
     if (!supabase) {
@@ -24,7 +28,10 @@ export function AuthGate({ children }: { children: ReactNode }) {
       setSession(data.session);
       setChecking(false);
     });
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
+    const { data: sub } = supabase.auth.onAuthStateChange((event, s) => {
+      if (event === 'PASSWORD_RECOVERY') setRecovery(true);
+      setSession(s);
+    });
     return () => sub.subscription.unsubscribe();
   }, []);
 
@@ -41,6 +48,46 @@ export function AuthGate({ children }: { children: ReactNode }) {
   }
 
   if (checking) return <div className="auth-screen" />;
+
+  // formulaire « nouveau mot de passe » après clic sur le lien de l'email
+  if (recovery && session) {
+    const save = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setBusy(true);
+      setError(null);
+      const { error: err } = await supabase!.auth.updateUser({ password: newPassword });
+      setBusy(false);
+      if (err) setError(err.message);
+      else {
+        setInfo(t.passwordSaved);
+        setRecovery(false);
+      }
+    };
+    return (
+      <div className="auth-screen">
+        <form className="auth-card" onSubmit={save}>
+          <h1 className="auth-logo">Vignette</h1>
+          <p className="auth-tagline hand">{t.tagline}</p>
+          <label>
+            {t.newPassword}
+            <input
+              type="password"
+              value={newPassword}
+              autoComplete="new-password"
+              required
+              minLength={8}
+              autoFocus
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+          </label>
+          {error && <p className="auth-error">{error}</p>}
+          <button className="auth-submit" disabled={busy} type="submit">
+            {t.savePassword}
+          </button>
+        </form>
+      </div>
+    );
+  }
 
   if (!session) {
     const submit = async (e: React.FormEvent) => {
@@ -82,8 +129,27 @@ export function AuthGate({ children }: { children: ReactNode }) {
             />
           </label>
           {error && <p className="auth-error">{error}</p>}
+          {info && <p className="auth-info">{info}</p>}
           <button className="auth-submit" disabled={busy} type="submit">
             {t.signIn}
+          </button>
+          <button
+            type="button"
+            className="auth-switch"
+            onClick={async () => {
+              if (!email) {
+                setError(t.authError);
+                return;
+              }
+              setError(null);
+              const { error: err } = await supabase!.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/app/`,
+              });
+              if (err) setError(err.message);
+              else setInfo(t.resetSent);
+            }}
+          >
+            {t.forgotPassword}
           </button>
         </form>
       </div>

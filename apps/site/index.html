@@ -8,7 +8,7 @@
   <link rel="icon" href="assets/icons/favicon.ico" sizes="48x48">
   <link rel="icon" href="assets/icons/vignette-blue.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="style.css?v=20260830f">
+  <link rel="stylesheet" href="style.css?v=20260830g">
 </head>
 <body>
 
@@ -49,13 +49,53 @@
     <a class="btn btn-primary" href="/app/">Ouvrir la web app <span class="arr">↗</span></a>
     <a class="btn btn-ghost" href="https://github.com/Ulrichfr/Vignette-App" data-gh>Voir le code sur GitHub <span class="arr">↗</span></a>
   </div>
+
+  <p class="hero-proof">Open source · zéro pisteur · synchro &lt; 1 s · tes données chez toi</p>
+
+  <!-- vrai post-it, vraiment cliquable -->
+  <div class="hero-demo">
+    <span class="demo-caption hand">vas-y, coche — c'est un vrai post-it ↓</span>
+    <div class="demo-note">
+      <span class="demo-fold" aria-hidden="true"></span>
+      <span class="demo-remind hand">sam. 18:00</span>
+      <h3>Aujourd'hui</h3>
+      <div class="demo-items hand">
+        <button type="button"><i>–</i><s>découvrir Vignette</s></button>
+        <button type="button"><i>–</i><s>cocher cette ligne</s></button>
+        <button type="button"><i>–</i><s>l'adopter</s></button>
+      </div>
+    </div>
+  </div>
 </header>
+
+<!-- bande de post-its qui défile doucement -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span class="mq hand" style="background:var(--mint); color:#1f3d2b">– arroser les plantes 🌱</span>
+    <span class="mq hand" style="background:var(--yellow); color:#4a3b10">– idée géniale à 3h du matin</span>
+    <span class="mq hand" style="background:var(--blue); color:#23384f">– rappeler mamie ✓</span>
+    <span class="mq hand" style="background:var(--rose); color:#4a2136">– cadeau pour Lola</span>
+    <span class="mq hand" style="background:var(--lilac); color:#35284e">– films à voir absolument</span>
+    <span class="mq hand" style="background:var(--coral); color:#4e2317">– courir 5 km (un jour)</span>
+    <span class="mq hand" style="background:var(--sand); color:#443722">– lire Le Comte de Monte-Cristo</span>
+    <span class="mq hand" style="background:var(--blue); color:#23384f">– pain, œufs, café ✓✓✓</span>
+    <span class="mq hand" style="background:var(--mint); color:#1f3d2b">– arroser les plantes 🌱</span>
+    <span class="mq hand" style="background:var(--yellow); color:#4a3b10">– idée géniale à 3h du matin</span>
+    <span class="mq hand" style="background:var(--blue); color:#23384f">– rappeler mamie ✓</span>
+    <span class="mq hand" style="background:var(--rose); color:#4a2136">– cadeau pour Lola</span>
+    <span class="mq hand" style="background:var(--lilac); color:#35284e">– films à voir absolument</span>
+    <span class="mq hand" style="background:var(--coral); color:#4e2317">– courir 5 km (un jour)</span>
+    <span class="mq hand" style="background:var(--sand); color:#443722">– lire Le Comte de Monte-Cristo</span>
+    <span class="mq hand" style="background:var(--blue); color:#23384f">– pain, œufs, café ✓✓✓</span>
+  </div>
+</div>
 
 <div class="hero-shot reveal">
   <div class="browser-frame">
     <div class="bar"><i></i><i></i><i></i></div>
-    <img src="assets/captures/shot-light.png" alt="Vignette — vue Toutes les notes avec le deck de post-its docké au bord droit" loading="eager">
+    <img src="assets/captures/demo-deck.gif" alt="Démo : une note se déplie depuis le deck, deux items se cochent, la note se replie" loading="eager">
   </div>
+  <p class="hero-shot-caption hand">↑ en direct : une pichenette, deux coches, et hop</p>
 </div>
 
 <section id="fonctionnalites">
@@ -159,6 +199,38 @@
   </div>
 </section>
 
+<section id="autoheberger">
+  <p class="kicker">— à la maison</p>
+  <h2>Chez toi en cinq minutes.</h2>
+  <p class="section-intro">Docker, Node, et c'est tout. Tes notes dorment dans TON Postgres, sur TA machine — pas dans le cloud de quelqu'un d'autre.</p>
+  <div class="steps">
+    <div class="step reveal" style="background:var(--blue)">
+      <span class="step-num hand">1.</span>
+      <h3>Clone</h3>
+      <p>Le dépôt contient tout : l'app, le serveur, les migrations, ce site.</p>
+    </div>
+    <div class="step reveal" style="background:var(--mint)">
+      <span class="step-num hand">2.</span>
+      <h3>Lance</h3>
+      <p>Un script génère tes secrets, un docker compose démarre les cinq conteneurs (~450 Mo de RAM).</p>
+    </div>
+    <div class="step reveal" style="background:var(--lilac)">
+      <span class="step-num hand">3.</span>
+      <h3>Colle</h3>
+      <p>Le schéma s'applique, le front se construit, ta première note se docke au bord de l'écran.</p>
+    </div>
+  </div>
+  <pre class="clone reveal"><span class="c"># tout, en cinq commandes</span>
+git clone https://github.com/Ulrichfr/Vignette-App.git &amp;&amp; cd Vignette-App
+node supabase/scripts/gen-env.mjs
+docker compose -f supabase/docker-compose.yml up -d
+./supabase/scripts/apply-migrations.sh
+pnpm install &amp;&amp; pnpm build</pre>
+  <p style="margin-top:18px">
+    <a class="btn btn-ghost" href="https://github.com/Ulrichfr/Vignette-App/blob/main/docs/AUTO-HEBERGEMENT.md" data-gh-doc>Le guide complet pas à pas <span class="arr">↗</span></a>
+  </p>
+</section>
+
 <section id="tutoriels">
   <p class="kicker">— pas à pas</p>
   <h2>Trois tutos pour tout faire.</h2>
@@ -208,6 +280,27 @@
     for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+  // le post-it du hero est un vrai post-it
+  document.querySelectorAll('.demo-items button').forEach((b) => {
+    b.addEventListener('click', () => {
+      b.classList.toggle('done');
+      b.querySelector('i').textContent = b.classList.contains('done') ? '✓' : '–';
+    });
+  });
+
+  // boutons copier des blocs de code
+  document.querySelectorAll('pre.clone').forEach((pre) => {
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'Copier';
+    btn.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(pre.innerText.replace(/^Copier\n/, ''));
+      btn.textContent = 'Copié ✓';
+      setTimeout(() => (btn.textContent = 'Copier'), 1600);
+    });
+    pre.appendChild(btn);
+  });
 </script>
 
 </body>

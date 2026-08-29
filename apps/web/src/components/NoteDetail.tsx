@@ -1,4 +1,5 @@
 import { isDue, noteToMarkdown, noteToText, relativeAge } from '@vignette/core';
+import { toLocalInput } from '../lib/dates';
 import { useState } from 'react';
 import { COLOR_NAMES, PALETTE, colorSpec } from '../colors';
 import { useI18n } from '../i18n';
@@ -265,7 +266,7 @@ export function NoteDetail({ noteId, onDeleted, onBack }: NoteDetailProps) {
               id="remind-input"
               type="datetime-local"
               className="remind-input"
-              value={note.remindAt ? note.remindAt.slice(0, 16) : ''}
+              value={note.remindAt ? toLocalInput(note.remindAt) : ''}
               onChange={(e) =>
                 store.setReminder(
                   note.id,

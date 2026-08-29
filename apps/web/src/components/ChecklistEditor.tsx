@@ -1,4 +1,5 @@
 import { isItemDue, parseInline, type ListStyle, type NoteItem } from '@vignette/core';
+import { toLocalInput } from '../lib/dates';
 import { useRef, useState } from 'react';
 import { useI18n } from '../i18n';
 import { store } from '../store';
@@ -160,7 +161,7 @@ export function ChecklistEditor({ noteId, items, ink, listStyle = 'dashes', auto
                 id={`item-remind-${item.id}`}
                 type="datetime-local"
                 className="remind-input"
-                value={item.remindAt ? item.remindAt.slice(0, 16) : ''}
+                value={item.remindAt ? toLocalInput(item.remindAt) : ''}
                 onChange={(e) =>
                   store.setItemReminder(
                     item.id,

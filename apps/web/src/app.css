@@ -853,6 +853,12 @@
   color: #8c2a1c;
 }
 
+.auth-info {
+  margin: 0;
+  font-size: 13px;
+  color: #1f5c38;
+}
+
 .auth-submit {
   margin-top: 6px;
   background: #23384f;
