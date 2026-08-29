@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc --noEmit && VITE_SUPABASE_URL= vite build",
     "build:dev-url": "tsc --noEmit && vite build",
-    "build:desktop": "tsc --noEmit && VITE_SUPABASE_URL=${VIGNETTE_API_URL:-https://vignette.ulrichrozier.com} vite build",
+    "build:desktop": "tsc --noEmit && VITE_SUPABASE_URL=${VIGNETTE_API_URL:-https://vignette.ulrichrozier.com} vite build --base ./",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },
