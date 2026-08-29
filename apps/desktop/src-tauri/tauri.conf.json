@@ -6,7 +6,7 @@
   "build": {
     "beforeDevCommand": "pnpm --filter @vignette/web dev",
     "devUrl": "http://localhost:5183/app/",
-    "beforeBuildCommand": "pnpm --filter @vignette/web build",
+    "beforeBuildCommand": "pnpm --filter @vignette/web build:desktop",
     "frontendDist": "../../web/dist"
   },
   "app": {
