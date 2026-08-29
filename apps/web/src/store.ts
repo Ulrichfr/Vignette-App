@@ -346,6 +346,83 @@ class Store {
     this.patchNote(id, { remindAt }, { remind_at: remindAt });
   }
 
+  /** Réordonne le deck : positions régulières selon l'ordre donné. */
+  reorderDeck(ids: string[]) {
+    const pos = new Map(ids.map((id, i) => [id, (i + 1) * 1024]));
+    this.commit({
+      ...this.state,
+      notes: this.state.notes.map((n) =>
+        pos.has(n.id) ? { ...n, dockPosition: pos.get(n.id)! } : n,
+      ),
+    });
+    this.push(async () => {
+      for (const [id, p] of pos) {
+        const r = await supabase!.from('notes').update({ dock_position: p }).eq('id', id);
+        if (r.error) return r;
+      }
+      return { error: null };
+    });
+  }
+
+  /** Crée une note complète (import) : titre + items, non dockée. */
+  createNoteWithItems(
+    title: string,
+    entries: { text: string; checked: boolean }[],
+    color: NoteColor = 'yellow',
+  ): string | null {
+    const userId = this.userId;
+    if (!userId) return null;
+    const id = crypto.randomUUID();
+    const t = now();
+    const note: Note = {
+      id,
+      ownerId: userId,
+      title,
+      color,
+      status: 'active',
+      listStyle: entries.some((e) => e.checked) ? 'checks' : 'dashes',
+      remindAt: null,
+      dockPosition: null,
+      createdAt: t,
+      updatedAt: t,
+      deletedAt: null,
+    };
+    const items: NoteItem[] = entries.map((e, i) => ({
+      id: crypto.randomUUID(),
+      noteId: id,
+      position: (i + 1) * 1024,
+      text: e.text,
+      checked: e.checked,
+      remindAt: null,
+    }));
+    this.commit({
+      ...this.state,
+      notes: [...this.state.notes, note],
+      items: [...this.state.items, ...items],
+    });
+    this.push(async () => {
+      const res = await supabase!.from('notes').insert({
+        id,
+        owner_id: userId,
+        title,
+        color,
+        status: 'active',
+        list_style: note.listStyle,
+      });
+      if (res.error || items.length === 0) return res;
+      return supabase!.from('note_items').insert(
+        items.map((i) => ({
+          id: i.id,
+          note_id: id,
+          position: i.position,
+          text: i.text,
+          checked: i.checked,
+        })),
+      );
+    });
+    return id;
+  }
+
   /** Rappel griffonné à côté d'un item. */
   setItemReminder(id: string, remindAt: string | null) {
     this.commit({

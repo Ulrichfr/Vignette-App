@@ -77,4 +77,11 @@ describe('filterNotes', () => {
   it('trash montre uniquement les supprimées', () => {
     expect(filterNotes(notes, 'trash').map((n) => n.id)).toEqual(['Gone']);
   });
+  it('la recherche couvre aussi le contenu des items', () => {
+    const items: NoteItem[] = [
+      { id: 'i1', noteId: 'Office', position: 1, text: 'acheter des pommes', checked: false, remindAt: null },
+    ];
+    expect(filterNotes(notes, 'all', 'pommes', items).map((n) => n.id)).toEqual(['Office']);
+    expect(filterNotes(notes, 'all', 'introuvable', items)).toEqual([]);
+  });
 });

@@ -10,6 +10,11 @@
     "typecheck": "pnpm -r typecheck"
   },
   "packageManager": "pnpm@10.33.2",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
   "devDependencies": {
     "typescript": "^5.7.2"
   }

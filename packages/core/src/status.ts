@@ -55,8 +55,17 @@ export function isItemDue(item: NoteItem, now: Date = new Date()): boolean {
 /** Filtre de la vue All Notes. `trash` = notes soft-supprimées, restaurables. */
 export type NotesFilter = 'all' | 'active' | 'archived' | 'trash';
 
-export function filterNotes(notes: Note[], filter: NotesFilter, query = ''): Note[] {
+export function filterNotes(
+  notes: Note[],
+  filter: NotesFilter,
+  query = '',
+  items: NoteItem[] = [],
+): Note[] {
   const q = query.trim().toLowerCase();
+  // la recherche couvre le titre ET le contenu des items
+  const matchingNoteIds = q
+    ? new Set(items.filter((i) => i.text.toLowerCase().includes(q)).map((i) => i.noteId))
+    : null;
   return notes
     .filter((n) => (filter === 'trash' ? n.deletedAt !== null : !n.deletedAt))
     .filter((n) => {
@@ -64,6 +73,6 @@ export function filterNotes(notes: Note[], filter: NotesFilter, query = ''): Not
       if (filter === 'archived') return n.status === 'archived';
       return true;
     })
-    .filter((n) => (q ? n.title.toLowerCase().includes(q) : true))
+    .filter((n) => (q ? n.title.toLowerCase().includes(q) || matchingNoteIds!.has(n.id) : true))
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }

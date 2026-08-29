@@ -1,8 +1,16 @@
-import { filterNotes, relativeAge, stripInline, type Note, type NotesFilter } from '@vignette/core';
+import {
+  filterNotes,
+  parseImport,
+  relativeAge,
+  stripInline,
+  type Note,
+  type NotesFilter,
+} from '@vignette/core';
+import { useRef } from 'react';
 import { colorSpec } from '../colors';
 import { setLang, useI18n, type Strings } from '../i18n';
 import { cycleTheme, useTheme } from '../theme';
-import { itemsOf, useAppState } from '../store';
+import { itemsOf, store, useAppState } from '../store';
 import { signOut } from './AuthGate';
 
 interface Props {
@@ -27,7 +35,19 @@ export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSele
   const { t, lang } = useI18n();
   const theme = useTheme();
   const state = useAppState();
-  const notes = filterNotes(state.notes, filter, query);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const importFiles = async (files: FileList | null) => {
+    if (!files) return;
+    let lastId: string | null = null;
+    for (const file of Array.from(files)) {
+      const parsed = parseImport(await file.text(), file.name.replace(/\.(md|txt)$/i, ''));
+      lastId = store.createNoteWithItems(parsed.title, parsed.items);
+    }
+    if (lastId) onSelect(lastId);
+    if (fileRef.current) fileRef.current.value = '';
+  };
+  const notes = filterNotes(state.notes, filter, query, state.items);
   const total = state.notes.filter((n) => !n.deletedAt).length;
 
   const trashCount = state.notes.filter((n) => n.deletedAt).length;
@@ -43,6 +63,17 @@ export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSele
       <header className="list-header">
         <h1>{t.allNotes}</h1>
         <span className="header-tools">
+          <button className="ghost-btn icon-btn" title={t.import} onClick={() => fileRef.current?.click()}>
+            ⤒
+          </button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept=".md,.txt,text/markdown,text/plain"
+            multiple
+            style={{ display: 'none' }}
+            onChange={(e) => void importFiles(e.target.files)}
+          />
           <button
             className="ghost-btn icon-btn"
             title={lang === 'fr' ? 'Switch to English' : 'Passer en français'}

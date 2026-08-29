@@ -65,8 +65,17 @@ services:
       GOTRUE_JWT_ISSUER: ${API_EXTERNAL_URL}
       GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
       GOTRUE_EXTERNAL_ANONYMOUS_USERS_ENABLED: "false"
-      # Pas de SMTP branché pour l'instant → comptes confirmés d'office.
-      GOTRUE_MAILER_AUTOCONFIRM: "true"
+      # SMTP iCloud (validé par Orchestration : smtp.mail.me.com:587, STARTTLS,
+      # SPF/DKIM déjà en zone). SMTP_PASS = mot de passe d'application Apple,
+      # SMTP_ADMIN_EMAIL = adresse réellement déclarée dans le domaine iCloud.
+      # Tant que SMTP_PASS est vide dans .env, laisser AUTOCONFIRM à true.
+      GOTRUE_SMTP_HOST: ${SMTP_HOST:-}
+      GOTRUE_SMTP_PORT: ${SMTP_PORT:-587}
+      GOTRUE_SMTP_USER: ${SMTP_USER:-}
+      GOTRUE_SMTP_PASS: ${SMTP_PASS:-}
+      GOTRUE_SMTP_ADMIN_EMAIL: ${SMTP_ADMIN_EMAIL:-}
+      GOTRUE_SMTP_SENDER_NAME: "Vignette"
+      GOTRUE_MAILER_AUTOCONFIRM: ${MAILER_AUTOCONFIRM:-true}
       GOTRUE_EXTERNAL_PHONE_ENABLED: "false"
       GOTRUE_SMS_AUTOCONFIRM: "false"
 

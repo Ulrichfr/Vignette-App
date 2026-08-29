@@ -1,6 +1,6 @@
 import { deckNotes, isDue, isItemDue } from '@vignette/core';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { AnimatePresence, motion, Reorder } from 'framer-motion';
+import { useEffect, useMemo, useState } from 'react';
 import { colorSpec } from '../colors';
 import { useI18n } from '../i18n';
 import { itemsOf, store, useAppState } from '../store';
@@ -25,6 +25,7 @@ export function Deck() {
   const [openId, setOpenId] = useState<string | null>(null);
   const notes = deckNotes(state.notes);
   const open = openId ? notes.find((n) => n.id === openId) : undefined;
+  const orderedIds = useMemo(() => notes.map((n) => n.id), [notes]);
 
   useEffect(() => {
     if (!openId) return;
@@ -37,12 +38,20 @@ export function Deck() {
 
   return (
     <>
-      <div className="deck-rail">
+      <Reorder.Group
+        as="div"
+        axis="y"
+        className="deck-rail"
+        values={orderedIds}
+        onReorder={(ids) => store.reorderDeck(ids as string[])}
+      >
         {notes.map((note) => {
           const spec = colorSpec(note.color);
           return (
-            <motion.button
+            <Reorder.Item
+              as="button"
               key={note.id}
+              value={note.id}
               className={`deck-tab ${
                 isDue(note) || state.items.some((i) => i.noteId === note.id && isItemDue(i))
                   ? 'due'
@@ -50,12 +59,13 @@ export function Deck() {
               }`}
               style={{ background: spec.base, color: spec.ink }}
               whileHover={{ x: -8 }}
+              whileDrag={{ x: -14, scale: 1.05 }}
               transition={SPRING}
               layoutId={`deck-${note.id}`}
               onClick={() => setOpenId(note.id === openId ? null : note.id)}
             >
               <span className="tab-label">{tabLabel(note.title)}</span>
-            </motion.button>
+            </Reorder.Item>
           );
         })}
         <button
@@ -68,7 +78,7 @@ export function Deck() {
         >
           +
         </button>
-      </div>
+      </Reorder.Group>
 
       <AnimatePresence>
         {open && (

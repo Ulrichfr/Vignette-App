@@ -11,3 +11,10 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 );
+
+// PWA : coquille hors-ligne + installabilité (prod uniquement)
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    void navigator.serviceWorker.register('/app/sw.js', { scope: '/app/' });
+  });
+}
