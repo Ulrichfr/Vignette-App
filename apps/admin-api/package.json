@@ -1,0 +1,9 @@
+{
+  "name": "@vignette/admin-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "web-push": "^3.6.7"
+  }
+}

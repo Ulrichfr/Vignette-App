@@ -16,6 +16,34 @@ self.addEventListener('activate', (e) => {
   self.clients.claim();
 });
 
+// rappels poussés par le serveur (app fermée incluse)
+self.addEventListener('push', (e) => {
+  let data = { title: 'Vignette', body: 'C’est l’heure !' };
+  try {
+    data = { ...data, ...e.data.json() };
+  } catch {
+    // payload non JSON : on garde le défaut
+  }
+  e.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: '/app/icon-192.png',
+      badge: '/app/icon-192.png',
+      lang: 'fr',
+    }),
+  );
+});
+
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close();
+  e.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+      const open = list.find((c) => c.url.includes('/app/'));
+      return open ? open.focus() : clients.openWindow('/app/');
+    }),
+  );
+});
+
 self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
   if (e.request.method !== 'GET' || url.origin !== location.origin) return;

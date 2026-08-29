@@ -1,4 +1,5 @@
 import { isItemDue, parseInline, type ListStyle, type NoteItem } from '@vignette/core';
+import { ensurePushSubscription } from '../lib/push';
 import { toLocalInput } from '../lib/dates';
 import { useRef, useState } from 'react';
 import { useI18n } from '../i18n';
@@ -146,8 +147,12 @@ export function ChecklistEditor({ noteId, items, ink, listStyle = 'dashes', auto
                 className="item-remind-btn"
                 title={t.reminder}
                 onClick={() => {
-                  if ('Notification' in window && Notification.permission === 'default') {
-                    void Notification.requestPermission();
+                  if ('Notification' in window && Notification.permission !== 'denied') {
+                    void Notification.requestPermission().then((p) => {
+                      if (p === 'granted' && store.currentUserId) {
+                        void ensurePushSubscription(store.currentUserId);
+                      }
+                    });
                   }
                   const el = document.getElementById(
                     `item-remind-${item.id}`,

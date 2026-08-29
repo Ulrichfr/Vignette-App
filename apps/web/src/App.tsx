@@ -6,7 +6,8 @@ import { InvitationsBanner } from './components/InvitationsBanner';
 import { NoteDetail } from './components/NoteDetail';
 import { NotesList } from './components/NotesList';
 import { useI18n } from './i18n';
-import { useAppState } from './store';
+import { ensurePushSubscription } from './lib/push';
+import { store, useAppState } from './store';
 
 function Workspace() {
   const { t } = useI18n();
@@ -15,6 +16,13 @@ function Workspace() {
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = selectedId ?? state.notes.find((n) => !n.deletedAt)?.id ?? null;
+
+  // abonnement push (rappels app fermée) dès que la permission est là
+  useEffect(() => {
+    if (state.ready && store.currentUserId) {
+      void ensurePushSubscription(store.currentUserId);
+    }
+  }, [state.ready]);
 
   // rappels échus → une notification système par note (tant que l'app est ouverte)
   const notified = useRef(new Set<string>());

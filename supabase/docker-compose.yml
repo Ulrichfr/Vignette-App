@@ -153,13 +153,23 @@ services:
     depends_on:
       - auth
       - rest
-    command: ["node", "/srv/server.mjs"]
+    # copie le code (monté ro) puis installe web-push dans un volume dédié
+    command:
+      [
+        "sh",
+        "-c",
+        "cp /src/server.mjs /src/package.json /srv/ && cd /srv && npm install --omit=dev --no-audit --no-fund --loglevel=error && node server.mjs",
+      ]
     volumes:
-      - ../apps/admin-api/server.mjs:/srv/server.mjs:ro
+      - ../apps/admin-api:/src:ro
+      - admin-api-deps:/srv
       - ../backups:/backups:ro
     environment:
       JWT_SECRET: ${JWT_SECRET}
       SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-}
 
   caddy:
     image: caddy:2-alpine
@@ -184,3 +194,4 @@ services:
 
 volumes:
   vignette-db-data:
+  admin-api-deps:

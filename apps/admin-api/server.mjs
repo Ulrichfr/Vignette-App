@@ -5,6 +5,7 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { readdirSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
+import webpush from 'web-push';
 
 const PORT = 3005;
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -23,6 +24,114 @@ const svc = {
   Authorization: `Bearer ${SERVICE_KEY}`,
   'Content-Type': 'application/json',
 };
+
+/* ------------------------------------------------ web push (rappels) */
+
+const VAPID_PUBLIC = process.env.VAPID_PUBLIC_KEY ?? '';
+const VAPID_PRIVATE = process.env.VAPID_PRIVATE_KEY ?? '';
+const PUSH_ENABLED = Boolean(VAPID_PUBLIC && VAPID_PRIVATE);
+if (PUSH_ENABLED) {
+  webpush.setVapidDetails(process.env.VAPID_SUBJECT || 'mailto:u@ulrichrozier.com', VAPID_PUBLIC, VAPID_PRIVATE);
+}
+
+async function subsFor(userIds) {
+  if (userIds.length === 0) return [];
+  const list = userIds.map((u) => `"${u}"`).join(',');
+  const r = await fetch(`${REST_URL}/push_subscriptions?user_id=in.(${list})`, { headers: svc });
+  return r.json();
+}
+
+async function recipientsOf(note) {
+  const shares = await (
+    await fetch(
+      `${REST_URL}/note_shares?note_id=eq.${note.id}&accepted_at=not.is.null&select=user_id`,
+      { headers: svc },
+    )
+  ).json();
+  return [note.owner_id, ...shares.map((s) => s.user_id)];
+}
+
+async function pushTo(userIds, title, body) {
+  const subs = await subsFor(userIds);
+  for (const s of subs) {
+    try {
+      await webpush.sendNotification(
+        { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } },
+        JSON.stringify({ title, body }),
+        { TTL: 3600 },
+      );
+    } catch (err) {
+      if (err.statusCode === 404 || err.statusCode === 410) {
+        // abonnement mort : on le retire
+        await fetch(`${REST_URL}/push_subscriptions?endpoint=eq.${encodeURIComponent(s.endpoint)}`, {
+          method: 'DELETE',
+          headers: svc,
+        });
+      } else {
+        console.error('push:', err.statusCode ?? err.message);
+      }
+    }
+  }
+  return subs.length;
+}
+
+/** Scanner : pousse chaque rappel échu une seule fois (notes puis items). */
+async function scanReminders() {
+  const nowIso = new Date().toISOString();
+  try {
+    const dueNotes = await (
+      await fetch(
+        `${REST_URL}/notes?remind_at=lte.${nowIso}&remind_notified_at=is.null&deleted_at=is.null&status=neq.archived&select=id,owner_id,title`,
+        { headers: svc },
+      )
+    ).json();
+    for (const n of dueNotes) {
+      const count = await pushTo(await recipientsOf(n), `Vignette — ${n.title || 'Une note'}`, 'C’est l’heure !');
+      await fetch(`${REST_URL}/notes?id=eq.${n.id}`, {
+        method: 'PATCH',
+        headers: svc,
+        body: JSON.stringify({ remind_notified_at: nowIso }),
+      });
+      if (count) console.log(`rappel note "${n.title}" → ${count} abonnement(s)`);
+    }
+
+    const dueItems = await (
+      await fetch(
+        `${REST_URL}/note_items?remind_at=lte.${nowIso}&remind_notified_at=is.null&checked=eq.false&select=id,text,note_id`,
+        { headers: svc },
+      )
+    ).json();
+    for (const i of dueItems) {
+      const notes = await (
+        await fetch(
+          `${REST_URL}/notes?id=eq.${i.note_id}&deleted_at=is.null&status=neq.archived&select=id,owner_id,title`,
+          { headers: svc },
+        )
+      ).json();
+      if (notes[0]) {
+        const count = await pushTo(
+          await recipientsOf(notes[0]),
+          `Vignette — ${i.text || 'Une tâche'}`,
+          `C’est l’heure ! (${notes[0].title || 'note'})`,
+        );
+        if (count) console.log(`rappel item "${i.text}" → ${count} abonnement(s)`);
+      }
+      await fetch(`${REST_URL}/note_items?id=eq.${i.id}`, {
+        method: 'PATCH',
+        headers: svc,
+        body: JSON.stringify({ remind_notified_at: nowIso }),
+      });
+    }
+  } catch (err) {
+    console.error('scanReminders:', err.message);
+  }
+}
+
+if (PUSH_ENABLED) {
+  setInterval(scanReminders, 60_000);
+  setTimeout(scanReminders, 5_000);
+  console.log('scanner de rappels actif (60 s)');
+}
 
 function verifyJwt(token) {
   const parts = token.split('.');
@@ -127,6 +236,10 @@ createServer(async (req, res) => {
   try {
     const url = new URL(req.url, 'http://x');
     if (url.pathname === '/health') return json(res, 200, { ok: true });
+    // clé publique VAPID : nécessaire au navigateur pour s'abonner, non secrète
+    if (url.pathname === '/vapid-public') {
+      return json(res, 200, { key: PUSH_ENABLED ? VAPID_PUBLIC : null });
+    }
 
     const token = (req.headers.authorization ?? '').replace(/^Bearer /, '');
     const payload = verifyJwt(token);

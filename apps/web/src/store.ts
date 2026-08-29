@@ -46,6 +46,7 @@ type NoteRow = {
   list_style: ListStyle;
   dock_position: number | null;
   remind_at: string | null;
+  remind_notified_at?: string | null;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
@@ -447,7 +448,9 @@ class Store {
       ...this.state,
       items: this.state.items.map((i) => (i.id === id ? { ...i, remindAt } : i)),
     });
-    this.push(() => supabase!.from('note_items').update({ remind_at: remindAt }).eq('id', id));
+    this.push(() =>
+      supabase!.from('note_items').update({ remind_at: remindAt, remind_notified_at: null }).eq('id', id),
+    );
   }
 
   markComplete(id: string) {
