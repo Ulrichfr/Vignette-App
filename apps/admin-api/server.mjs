@@ -190,13 +190,14 @@ async function stats() {
     });
     return Number(r.headers.get('content-range')?.split('/')[1] ?? 0);
   };
-  const [profiles, notes, items, shares] = await Promise.all([
+  const [profiles, notes, items, shares, pushSubs] = await Promise.all([
     count('profiles'),
     count('notes'),
     count('note_items'),
     count('note_shares'),
+    count('push_subscriptions'),
   ]);
-  return { profiles, notes, items, shares };
+  return { profiles, notes, items, shares, pushSubs };
 }
 
 function backups() {

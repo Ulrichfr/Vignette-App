@@ -930,9 +930,25 @@
   align-items: flex-end;
   justify-content: center;
   gap: 10px;
-  padding-right: 0;
+  padding: 12px 0;
   z-index: 30;
   pointer-events: none;
+  /* beaucoup de notes dockées : on défile, sans barre visible */
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.deck-rail::-webkit-scrollbar {
+  display: none;
+}
+
+/* quand le deck déborde, l'alignement centré casse le scroll : marges auto */
+.deck-rail > :first-child {
+  margin-top: auto;
+}
+
+.deck-rail > :last-child {
+  margin-bottom: auto;
 }
 
 .deck-rail > * {

@@ -21,6 +21,7 @@ interface Stats {
   notes: number;
   items: number;
   shares: number;
+  pushSubs: number;
 }
 
 interface Backup {
@@ -160,6 +161,7 @@ export default function App() {
         <div className="card" style={{ background: '#bfe8cf' }}><b>{stats?.notes ?? '…'}</b><span>notes</span></div>
         <div className="card" style={{ background: '#ddcff6' }}><b>{stats?.items ?? '…'}</b><span>items</span></div>
         <div className="card" style={{ background: '#f8df7c' }}><b>{stats?.shares ?? '…'}</b><span>partages</span></div>
+        <div className="card" style={{ background: '#f5a896' }}><b>{stats?.pushSubs ?? '…'}</b><span>abonnements push</span></div>
       </div>
 
       <section>

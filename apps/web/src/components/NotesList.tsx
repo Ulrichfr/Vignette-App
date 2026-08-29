@@ -85,7 +85,7 @@ export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSele
       <header className="list-header">
         <h1>{t.allNotes}</h1>
         <span className="header-tools">
-          <button className="ghost-btn icon-btn" title={t.import} onClick={() => fileRef.current?.click()}>
+          <button className="ghost-btn icon-btn" title={t.import} aria-label={t.import} onClick={() => fileRef.current?.click()}>
             <IcImport />
           </button>
           <input
@@ -96,17 +96,18 @@ export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSele
             style={{ display: 'none' }}
             onChange={(e) => void importFiles(e.target.files)}
           />
-          <button className="ghost-btn icon-btn" title={t.backupExport} onClick={exportAll}>
+          <button className="ghost-btn icon-btn" title={t.backupExport} aria-label={t.backupExport} onClick={exportAll}>
             <IcExport />
           </button>
           <button
             className="ghost-btn icon-btn"
             title={t.settings}
+            aria-label={t.settings}
             onClick={() => setSettingsOpen(true)}
           >
             <IcGear />
           </button>
-          <button className="ghost-btn icon-btn" title={t.signOut} onClick={signOut}>
+          <button className="ghost-btn icon-btn" title={t.signOut} aria-label={t.signOut} onClick={signOut}>
             <IcSignOut />
           </button>
         </span>
