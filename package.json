@@ -1,0 +1,16 @@
+{
+  "name": "vignette",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Vignette — post-its dockés au bord de l'écran, synchronisés et partageables",
+  "scripts": {
+    "dev": "pnpm --filter @vignette/web dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "packageManager": "pnpm@10.33.2",
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}
