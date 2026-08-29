@@ -2,6 +2,7 @@ import type { NotesFilter } from '@vignette/core';
 import { useState } from 'react';
 import { AuthGate } from './components/AuthGate';
 import { Deck } from './components/Deck';
+import { InvitationsBanner } from './components/InvitationsBanner';
 import { NoteDetail } from './components/NoteDetail';
 import { NotesList } from './components/NotesList';
 import { useI18n } from './i18n';
@@ -17,6 +18,7 @@ function Workspace() {
 
   return (
     <div className="app">
+      <InvitationsBanner />
       <main className="window">
         <NotesList
           filter={filter}

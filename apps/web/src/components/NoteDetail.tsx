@@ -4,6 +4,7 @@ import { COLOR_NAMES, PALETTE, colorSpec } from '../colors';
 import { useI18n } from '../i18n';
 import { itemsOf, store, useAppState } from '../store';
 import { ChecklistEditor } from './ChecklistEditor';
+import { SharePanel } from './SharePanel';
 
 function download(filename: string, content: string) {
   const url = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=utf-8' }));
@@ -18,11 +19,13 @@ export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: (
   const { t } = useI18n();
   const state = useAppState();
   const [exportOpen, setExportOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const note = state.notes.find((n) => n.id === noteId && !n.deletedAt);
   if (!note) return <section className="detail-pane empty" />;
 
   const spec = colorSpec(note.color);
   const items = itemsOf(state, note.id);
+  const isOwner = note.ownerId === store.currentUserId;
   const inDeck = note.dockPosition !== null && note.status !== 'archived';
   const statusLabel =
     note.status === 'archived' ? t.badgeArchived : note.status === 'completed' ? t.badgeDone : t.badgeActive;
@@ -78,15 +81,27 @@ export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: (
               </span>
             )}
           </span>
-          <button
-            className="soft-btn danger"
-            onClick={() => {
-              store.softDelete(note.id);
-              onDeleted();
-            }}
-          >
-            {t.delete}
-          </button>
+          {isOwner ? (
+            <button
+              className="soft-btn danger"
+              onClick={() => {
+                store.softDelete(note.id);
+                onDeleted();
+              }}
+            >
+              {t.delete}
+            </button>
+          ) : (
+            <button
+              className="soft-btn danger"
+              onClick={() => {
+                void store.revoke(note.id, store.currentUserId!).then(() => store.refetch());
+                onDeleted();
+              }}
+            >
+              {t.leave}
+            </button>
+          )}
         </span>
       </header>
 
@@ -126,6 +141,14 @@ export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: (
           ))}
         </span>
         <span className="detail-toolbar-actions">
+          {isOwner && (
+            <button
+              className={`ghost-btn ${shareOpen ? 'active' : ''}`}
+              onClick={() => setShareOpen((v) => !v)}
+            >
+              {t.share}
+            </button>
+          )}
           {inDeck ? (
             <button className="ghost-btn" onClick={() => store.undock(note.id)}>
               {t.removeFromDeck}
@@ -148,6 +171,8 @@ export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: (
           )}
         </span>
       </div>
+
+      {shareOpen && isOwner && <SharePanel noteId={note.id} />}
     </section>
   );
 }

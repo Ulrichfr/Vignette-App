@@ -36,6 +36,19 @@ export interface Strings {
   emptyList: string;
   emptyDetail: string;
   newNote: string;
+  share: string;
+  shareEmailPlaceholder: string;
+  roleViewer: string;
+  roleEditor: string;
+  invite: string;
+  pending: string;
+  revoke: string;
+  owner: string;
+  invitationFrom: (name: string, title: string) => string;
+  accept: string;
+  decline: string;
+  leave: string;
+  shareError: string;
   signIn: string;
   signUp: string;
   email: string;
@@ -83,6 +96,19 @@ const STRINGS: Record<Lang, Strings> = {
     emptyList: 'Rien ici — crée une note depuis le deck.',
     emptyDetail: 'Choisis une note, ou décolle-en une du deck →',
     newNote: 'Nouvelle note',
+    share: 'Partager',
+    shareEmailPlaceholder: 'email@exemple.fr',
+    roleViewer: 'Lecture',
+    roleEditor: 'Édition',
+    invite: 'Inviter',
+    pending: 'en attente',
+    revoke: 'Retirer',
+    owner: 'Propriétaire',
+    invitationFrom: (name, title) => `${name} partage « ${title || 'Sans titre'} »`,
+    accept: 'Accepter',
+    decline: 'Refuser',
+    leave: 'Quitter la note',
+    shareError: 'Invitation impossible — vérifie l’email.',
     signIn: 'Se connecter',
     signUp: 'Créer un compte',
     email: 'Email',
@@ -128,6 +154,19 @@ const STRINGS: Record<Lang, Strings> = {
     emptyList: 'Nothing here — create a note from the deck.',
     emptyDetail: 'Pick a note, or peel a new one from the deck →',
     newNote: 'New note',
+    share: 'Share',
+    shareEmailPlaceholder: 'email@example.com',
+    roleViewer: 'View',
+    roleEditor: 'Edit',
+    invite: 'Invite',
+    pending: 'pending',
+    revoke: 'Remove',
+    owner: 'Owner',
+    invitationFrom: (name, title) => `${name} shared “${title || 'Untitled'}”`,
+    accept: 'Accept',
+    decline: 'Decline',
+    leave: 'Leave note',
+    shareError: 'Could not invite — check the email.',
     signIn: 'Sign in',
     signUp: 'Create account',
     email: 'Email',

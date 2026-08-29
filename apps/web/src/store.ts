@@ -8,9 +8,24 @@ import {
 } from '@vignette/core';
 import { supabase } from './lib/supabase';
 
+export interface Invitation {
+  noteId: string;
+  title: string;
+  ownerName: string;
+  role: string;
+}
+
+export interface NoteMember {
+  userId: string;
+  displayName: string;
+  role: string;
+  accepted: boolean;
+}
+
 export interface AppState {
   notes: Note[];
   items: NoteItem[];
+  invitations: Invitation[];
   /** false tant que le premier fetch n'est pas terminé. */
   ready: boolean;
 }
@@ -68,7 +83,7 @@ type Listener = () => void;
  * arrière-plan, et application des événements Realtime (partage multi-comptes).
  */
 class Store {
-  private state: AppState = { notes: [], items: [], ready: false };
+  private state: AppState = { notes: [], items: [], invitations: [], ready: false };
   private listeners = new Set<Listener>();
   private userId: string | null = null;
   private channel: ReturnType<NonNullable<typeof supabase>['channel']> | null = null;
@@ -76,6 +91,10 @@ class Store {
   private pending = 0;
 
   getState = (): AppState => this.state;
+
+  get currentUserId(): string | null {
+    return this.userId;
+  }
 
   subscribe = (fn: Listener): (() => void) => {
     this.listeners.add(fn);
@@ -97,7 +116,7 @@ class Store {
       this.channel = null;
     }
     if (!userId || !supabase) {
-      this.commit({ notes: [], items: [], ready: false });
+      this.commit({ notes: [], items: [], invitations: [], ready: false });
       return;
     }
     await this.refetch();
@@ -118,19 +137,71 @@ class Store {
 
   async refetch() {
     if (!supabase) return;
-    const [notesRes, itemsRes] = await Promise.all([
+    const [notesRes, itemsRes, invRes] = await Promise.all([
       supabase.from('notes').select('*').is('deleted_at', null),
       supabase.from('note_items').select('*'),
+      supabase.rpc('my_invitations'),
     ]);
     if (notesRes.error || itemsRes.error) {
       console.error('vignette: fetch failed', notesRes.error ?? itemsRes.error);
       return;
     }
+    type InvRow = { note_id: string; title: string; owner_name: string; role: string };
     this.commit({
       notes: (notesRes.data as NoteRow[]).map(rowToNote),
       items: (itemsRes.data as ItemRow[]).map(rowToItem),
+      invitations: ((invRes.data ?? []) as InvRow[]).map((r) => ({
+        noteId: r.note_id,
+        title: r.title,
+        ownerName: r.owner_name,
+        role: r.role,
+      })),
       ready: true,
     });
+  }
+
+  /* ------------------------------------------------------------- partage */
+
+  /** Invite par email ; renvoie null si OK, sinon un message d'erreur serveur. */
+  async invite(noteId: string, email: string, role: 'viewer' | 'editor'): Promise<string | null> {
+    if (!supabase) return 'offline';
+    const { error } = await supabase.rpc('invite_to_note', {
+      nid: noteId,
+      invitee_email: email,
+      share_role: role,
+    });
+    return error ? error.message : null;
+  }
+
+  async members(noteId: string): Promise<NoteMember[]> {
+    if (!supabase) return [];
+    const { data, error } = await supabase.rpc('note_members', { nid: noteId });
+    if (error) {
+      console.error('vignette: note_members failed', error);
+      return [];
+    }
+    type Row = { user_id: string; display_name: string; role: string; accepted: boolean };
+    return (data as Row[]).map((r) => ({
+      userId: r.user_id,
+      displayName: r.display_name,
+      role: r.role,
+      accepted: r.accepted,
+    }));
+  }
+
+  async revoke(noteId: string, userId: string) {
+    if (!supabase) return;
+    await supabase.from('note_shares').delete().eq('note_id', noteId).eq('user_id', userId);
+  }
+
+  async respondInvitation(noteId: string, accept: boolean) {
+    if (!supabase) return;
+    this.commit({
+      ...this.state,
+      invitations: this.state.invitations.filter((i) => i.noteId !== noteId),
+    });
+    await supabase.rpc('respond_invitation', { nid: noteId, accept });
+    await this.refetch();
   }
 
   private onNoteChange(event: string, next: NoteRow, prev: Partial<NoteRow>) {
@@ -223,19 +294,21 @@ class Store {
       notes: [...this.state.notes, note],
       items: [...this.state.items, item],
     });
-    this.push(() =>
-      supabase!.from('notes').insert({
+    // séquencé : l'item ne doit partir qu'après la note (RLS vérifie la parenté)
+    this.push(async () => {
+      const res = await supabase!.from('notes').insert({
         id,
         owner_id: userId,
         title: '',
         color,
         status: 'active',
         dock_position: note.dockPosition,
-      }),
-    );
-    this.push(() =>
-      supabase!.from('note_items').insert({ id: item.id, note_id: id, position: item.position, text: '' }),
-    );
+      });
+      if (res.error) return res;
+      return supabase!
+        .from('note_items')
+        .insert({ id: item.id, note_id: id, position: item.position, text: '' });
+    });
     return id;
   }
 

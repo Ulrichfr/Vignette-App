@@ -357,6 +357,122 @@
   outline-offset: 2px;
 }
 
+/* --- partage & invitations ----------------------------------------------- */
+
+.share-panel {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.share-form {
+  display: flex;
+  gap: 8px;
+}
+
+.share-form input {
+  flex: 1;
+  min-width: 0;
+  background: var(--paper-2);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.share-form select {
+  background: var(--paper-2);
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  color: inherit;
+}
+
+.share-error {
+  margin: 0;
+  font-size: 13px;
+  color: #b3271e;
+}
+
+.share-members {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.share-members li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.share-name {
+  font-weight: 600;
+}
+
+.share-role {
+  color: var(--ink-soft);
+  flex: 1;
+}
+
+.share-revoke {
+  color: #b3271e;
+  font-size: 12px;
+}
+
+.ghost-btn.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.invitations {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.invitation {
+  background: #f8df7c; /* note-yellow : une invitation est un post-it */
+  color: #4a3b10;
+  border-radius: 12px;
+  box-shadow: var(--shadow-lift);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transform: rotate(-0.6deg);
+}
+
+.invitation-text {
+  font-size: 1.2rem;
+}
+
+.invitation-actions {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.invitation .soft-btn {
+  background: #4a3b10;
+  color: #f8df7c;
+}
+
+.invitation .ghost-btn {
+  background: rgb(255 255 255 / 0.4);
+  color: inherit;
+}
+
 /* --- checklist manuscrite ------------------------------------------------ */
 
 .checklist {
