@@ -28,6 +28,16 @@ export function IcImport({ size = 16 }: { size?: number }) {
   );
 }
 
+export function IcExport({ size = 16 }: { size?: number }) {
+  return (
+    <svg {...base} width={size} height={size} aria-hidden>
+      <path d="M12 4v10" />
+      <path d="M7.5 9.5L12 14l4.5-4.5" />
+      <path d="M4 19h16" />
+    </svg>
+  );
+}
+
 export function IcSearch({ size = 15 }: { size?: number }) {
   return (
     <svg {...base} width={size} height={size} aria-hidden>

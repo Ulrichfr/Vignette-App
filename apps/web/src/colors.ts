@@ -18,6 +18,11 @@ export const PALETTE: Record<string, ColorSpec> = {
   coral: { base: '#F5A896', edge: '#EC8D75', ink: '#4E2317' },
   rose: { base: '#F7C8DC', edge: '#EFA9C8', ink: '#4A2136' },
   sand: { base: '#EBDCC4', edge: '#DFC9A5', ink: '#443722' },
+  sky: { base: '#C3E8EC', edge: '#A4DAE0', ink: '#1D3F44' },
+  lime: { base: '#DCEBAB', edge: '#C9E086', ink: '#3A431A' },
+  peach: { base: '#FBD5AE', edge: '#F5C289', ink: '#4F3517' },
+  grape: { base: '#C7C9F4', edge: '#ABAEEE', ink: '#2C2E56' },
+  graphite: { base: '#D9D9D6', edge: '#C4C4C0', ink: '#303032' },
 };
 
 export const COLOR_NAMES = Object.keys(PALETTE);

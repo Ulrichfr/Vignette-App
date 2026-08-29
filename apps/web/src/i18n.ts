@@ -6,6 +6,8 @@ export type Lang = 'fr' | 'en';
 export interface Strings {
   allNotes: string;
   import: string;
+  backupExport: string;
+  backupImported: (n: number) => string;
   searchPlaceholder: string;
   notesCount: (n: number) => string;
   filterAll: string;
@@ -75,6 +77,8 @@ export interface Strings {
   onboardCustomHint: string;
   onboardLocalHint: string;
   onboardLinkGuide: string;
+  onboardCustomInstall: string;
+  onboardLinkTutorials: string;
   onboardLinkSite: string;
   onboardLinkSource: string;
   signIn: string;
@@ -98,7 +102,9 @@ export interface Strings {
 const STRINGS: Record<Lang, Strings> = {
   fr: {
     allNotes: 'Toutes les notes',
-    import: 'Importer…',
+    import: 'Importer (.md, .txt, sauvegarde .json)',
+    backupExport: 'Tout exporter (sauvegarde)',
+    backupImported: (n: number) => `Sauvegarde restaurée : ${n} note${n > 1 ? 's' : ''}.`,
     searchPlaceholder: 'Rechercher dans les notes',
     notesCount: (n: number) => `${n} note${n > 1 ? 's' : ''}`,
     filterAll: 'Toutes',
@@ -168,6 +174,8 @@ const STRINGS: Record<Lang, Strings> = {
     onboardCustomHint: 'monte la tienne en 5 commandes',
     onboardLocalHint: 'tu pourras te connecter plus tard',
     onboardLinkGuide: 'Guide d’auto-hébergement',
+    onboardCustomInstall: 'Pas encore d’instance ? Installe la tienne',
+    onboardLinkTutorials: 'Tutoriels',
     onboardLinkSite: 'Site du projet',
     onboardLinkSource: 'Code source',
     signIn: 'Se connecter',
@@ -189,7 +197,9 @@ const STRINGS: Record<Lang, Strings> = {
   },
   en: {
     allNotes: 'All Notes',
-    import: 'Import…',
+    import: 'Import (.md, .txt, .json backup)',
+    backupExport: 'Export everything (backup)',
+    backupImported: (n: number) => `Backup restored: ${n} note${n === 1 ? '' : 's'}.`,
     searchPlaceholder: 'Search all notes',
     notesCount: (n: number) => `${n} note${n === 1 ? '' : 's'}`,
     filterAll: 'All',
@@ -259,6 +269,8 @@ const STRINGS: Record<Lang, Strings> = {
     onboardCustomHint: 'set up yours in 5 commands',
     onboardLocalHint: 'you can connect later',
     onboardLinkGuide: 'Self-hosting guide',
+    onboardCustomInstall: 'No instance yet? Set up yours',
+    onboardLinkTutorials: 'Tutorials',
     onboardLinkSite: 'Project website',
     onboardLinkSource: 'Source code',
     signIn: 'Sign in',

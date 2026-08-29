@@ -12,7 +12,8 @@ import { setLang, useI18n, type Strings } from '../i18n';
 import { cycleTheme, useTheme } from '../theme';
 import { itemsOf, store, useAppState } from '../store';
 import { signOut } from './AuthGate';
-import { IcImport, IcMoon, IcSearch, IcSignOut, IcSun, IcSystem } from './icons';
+import { IcExport, IcImport, IcMoon, IcSearch, IcSignOut, IcSun, IcSystem } from './icons';
+import { buildBackup, parseBackup } from '../lib/backup';
 
 interface Props {
   filter: NotesFilter;
@@ -42,11 +43,33 @@ export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSele
     if (!files) return;
     let lastId: string | null = null;
     for (const file of Array.from(files)) {
-      const parsed = parseImport(await file.text(), file.name.replace(/\.(md|txt)$/i, ''));
+      const text = await file.text();
+      if (file.name.toLowerCase().endsWith('.json')) {
+        try {
+          const backup = parseBackup(text);
+          store.importBackup(backup.notes, backup.items);
+        } catch {
+          console.warn('vignette: sauvegarde illisible', file.name);
+        }
+        continue;
+      }
+      const parsed = parseImport(text, file.name.replace(/\.(md|txt)$/i, ''));
       lastId = store.createNoteWithItems(parsed.title, parsed.items);
     }
     if (lastId) onSelect(lastId);
     if (fileRef.current) fileRef.current.value = '';
+  };
+
+  const exportAll = () => {
+    const stamp = new Date().toISOString().slice(0, 10);
+    const url = URL.createObjectURL(
+      new Blob([buildBackup(state.notes, state.items)], { type: 'application/json' }),
+    );
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `vignette-sauvegarde-${stamp}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
   const notes = filterNotes(state.notes, filter, query, state.items);
   const total = state.notes.filter((n) => !n.deletedAt).length;
@@ -70,11 +93,14 @@ export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSele
           <input
             ref={fileRef}
             type="file"
-            accept=".md,.txt,text/markdown,text/plain"
+            accept=".md,.txt,.json,text/markdown,text/plain,application/json"
             multiple
             style={{ display: 'none' }}
             onChange={(e) => void importFiles(e.target.files)}
           />
+          <button className="ghost-btn icon-btn" title={t.backupExport} onClick={exportAll}>
+            <IcExport />
+          </button>
           <button
             className="ghost-btn icon-btn"
             title={lang === 'fr' ? 'Switch to English' : 'Passer en français'}

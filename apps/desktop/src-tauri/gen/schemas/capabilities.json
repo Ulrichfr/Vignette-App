@@ -1,1 +1,0 @@
-{"default":{"identifier":"default","description":"Capacités par défaut de la fenêtre principale","local":true,"windows":["main"],"permissions":["core:default","notification:default"]}}

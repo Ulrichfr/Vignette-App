@@ -10,3 +10,7 @@ backups/
 .DS_Store
 .gstack/
 apps/desktop/keystore/
+apps/desktop/src-tauri/gen/schemas/
+apps/desktop/src-tauri/gen/apple/build/
+apps/desktop/src-tauri/gen/android/app/build/
+apps/desktop/src-tauri/gen/android/.gradle/

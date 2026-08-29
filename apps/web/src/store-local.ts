@@ -265,6 +265,24 @@ export class LocalStore {
     });
   }
 
+  importBackup(notes: Note[], items: NoteItem[]) {
+    const t = now();
+    const idMap = new Map<string, string>();
+    const newNotes: Note[] = notes.map((n) => {
+      const id = crypto.randomUUID();
+      idMap.set(n.id, id);
+      return { ...n, id, ownerId: LOCAL_USER, dockPosition: null, createdAt: t, updatedAt: t };
+    });
+    const newItems: NoteItem[] = items
+      .filter((i) => idMap.has(i.noteId))
+      .map((i) => ({ ...i, id: crypto.randomUUID(), noteId: idMap.get(i.noteId)! }));
+    this.commit({
+      ...this.state,
+      notes: [...this.state.notes, ...newNotes],
+      items: [...this.state.items, ...newItems],
+    });
+  }
+
   /* --- items --- */
 
   addItem(noteId: string, afterPosition?: number): string {

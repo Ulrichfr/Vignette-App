@@ -442,6 +442,53 @@ class Store {
     return id;
   }
 
+  /** Restaure une sauvegarde : recrée notes et items (nouvelles identités). */
+  importBackup(notes: Note[], items: NoteItem[]) {
+    const userId = this.userId;
+    if (!userId) return;
+    const t = now();
+    const idMap = new Map<string, string>();
+    const newNotes: Note[] = notes.map((n) => {
+      const id = crypto.randomUUID();
+      idMap.set(n.id, id);
+      return { ...n, id, ownerId: userId, dockPosition: null, createdAt: t, updatedAt: t };
+    });
+    const newItems: NoteItem[] = items
+      .filter((i) => idMap.has(i.noteId))
+      .map((i) => ({ ...i, id: crypto.randomUUID(), noteId: idMap.get(i.noteId)! }));
+    this.touchRecent(...newNotes.map((n) => n.id), ...newItems.map((i) => i.id));
+    this.commit({
+      ...this.state,
+      notes: [...this.state.notes, ...newNotes],
+      items: [...this.state.items, ...newItems],
+    });
+    this.push(async () => {
+      const res = await supabase!.from('notes').insert(
+        newNotes.map((n) => ({
+          id: n.id,
+          owner_id: userId,
+          title: n.title,
+          color: n.color,
+          status: n.status,
+          list_style: n.listStyle,
+          remind_at: n.remindAt,
+          deleted_at: n.deletedAt,
+        })),
+      );
+      if (res.error || newItems.length === 0) return res;
+      return supabase!.from('note_items').insert(
+        newItems.map((i) => ({
+          id: i.id,
+          note_id: i.noteId,
+          position: i.position,
+          text: i.text,
+          checked: i.checked,
+          remind_at: i.remindAt,
+        })),
+      );
+    });
+  }
+
   /** Rappel griffonné à côté d'un item. */
   setItemReminder(id: string, remindAt: string | null) {
     this.touchRecent(id);

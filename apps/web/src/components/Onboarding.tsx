@@ -74,6 +74,14 @@ export function Onboarding() {
                 {t.onboardConnect}
               </button>
             </form>
+            <a
+              className="onboard-card-link"
+              href="https://github.com/Ulrichfr/Vignette-App/blob/main/docs/AUTO-HEBERGEMENT.md"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t.onboardCustomInstall} ↗
+            </a>
           </div>
 
           <button
@@ -96,6 +104,13 @@ export function Onboarding() {
           </a>
           <a href="https://vignette.ulrichrozier.com" target="_blank" rel="noopener noreferrer">
             {t.onboardLinkSite} ↗
+          </a>
+          <a
+            href="https://vignette.ulrichrozier.com/#tutoriels"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t.onboardLinkTutorials} ↗
           </a>
           <a href="https://github.com/Ulrichfr/Vignette-App" target="_blank" rel="noopener noreferrer">
             {t.onboardLinkSource} ↗

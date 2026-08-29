@@ -23,6 +23,11 @@ transition linéaire.
 | `note-coral`   | `#F5A896` | corail                    |
 | `note-rose`    | `#F7C8DC` | rose                      |
 | `note-sand`    | `#EBDCC4` | sable                     |
+| `note-sky`     | `#C3E8EC` | ciel d'eau                |
+| `note-lime`    | `#DCEBAB` | vert anis                 |
+| `note-peach`   | `#FBD5AE` | pêche                     |
+| `note-grape`   | `#C7C9F4` | violine                   |
+| `note-graphite`| `#D9D9D6` | graphite doux             |
 
 Chaque couleur a deux dérivés calculés : `-edge` (bande latérale / onglet, saturée
 +8 %, assombrie 6 %) et `-ink` (texte sur la note : mélange 80 % `ink` + 20 % teinte).
