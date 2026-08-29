@@ -3,6 +3,12 @@
 Ce guide suppose que Vignette tourne déjà — soit l'instance de démonstration,
 soit la tienne (voir [AUTO-HEBERGEMENT.md](AUTO-HEBERGEMENT.md)).
 
+## 0. Choisir un mode (apps natives)
+
+Au premier lancement, l'app demande où vivent tes notes : l'instance
+officielle, la tienne, ou **local sans serveur** (aucun compte — saute
+directement à l'étape 2). Détail : [MODES.md](MODES.md).
+
 ## 1. Se connecter
 
 Les inscriptions publiques sont fermées : Vignette est une zone membre. Un

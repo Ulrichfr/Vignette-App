@@ -71,6 +71,12 @@ export interface Strings {
   onboardLocal: string;
   onboardLocalDesc: string;
   onboardError: string;
+  onboardOfficialHint: string;
+  onboardCustomHint: string;
+  onboardLocalHint: string;
+  onboardLinkGuide: string;
+  onboardLinkSite: string;
+  onboardLinkSource: string;
   signIn: string;
   signUp: string;
   email: string;
@@ -150,7 +156,7 @@ const STRINGS: Record<Lang, Strings> = {
     onboardTitle: 'Où vivent tes notes ?',
     onboardIntro: 'Tu pourras changer d’avis plus tard.',
     onboardOfficial: 'Vignette officiel',
-    onboardOfficialDesc: 'L’instance de vignette.ulrichrozier.com — un compte fourni par Ulrich.',
+    onboardOfficialDesc: 'L’instance officielle Vignette — vignette.ulrichrozier.com.',
     onboardCustom: 'Ma propre instance',
     onboardCustomDesc: 'Ton serveur auto-hébergé : donne son adresse, l’app fait le reste.',
     onboardCustomPlaceholder: 'https://vignette.mondomaine.fr',
@@ -158,6 +164,12 @@ const STRINGS: Record<Lang, Strings> = {
     onboardLocal: 'Local, sans serveur',
     onboardLocalDesc: 'Tout reste sur cet appareil. Pas de compte, pas de partage — juste tes listes.',
     onboardError: 'Impossible de joindre cette instance — vérifie l’adresse.',
+    onboardOfficialHint: 'comptes sur invitation',
+    onboardCustomHint: 'monte la tienne en 5 commandes',
+    onboardLocalHint: 'tu pourras te connecter plus tard',
+    onboardLinkGuide: 'Guide d’auto-hébergement',
+    onboardLinkSite: 'Site du projet',
+    onboardLinkSource: 'Code source',
     signIn: 'Se connecter',
     signUp: 'Créer un compte',
     email: 'Email',
@@ -235,7 +247,7 @@ const STRINGS: Record<Lang, Strings> = {
     onboardTitle: 'Where do your notes live?',
     onboardIntro: 'You can change your mind later.',
     onboardOfficial: 'Official Vignette',
-    onboardOfficialDesc: 'The vignette.ulrichrozier.com instance — accounts provided by Ulrich.',
+    onboardOfficialDesc: 'The official Vignette instance — vignette.ulrichrozier.com.',
     onboardCustom: 'My own instance',
     onboardCustomDesc: 'Your self-hosted server: give its address, the app does the rest.',
     onboardCustomPlaceholder: 'https://vignette.mydomain.com',
@@ -243,6 +255,12 @@ const STRINGS: Record<Lang, Strings> = {
     onboardLocal: 'Local, serverless',
     onboardLocalDesc: 'Everything stays on this device. No account, no sharing — just your lists.',
     onboardError: 'Could not reach this instance — check the address.',
+    onboardOfficialHint: 'accounts by invitation',
+    onboardCustomHint: 'set up yours in 5 commands',
+    onboardLocalHint: 'you can connect later',
+    onboardLinkGuide: 'Self-hosting guide',
+    onboardLinkSite: 'Project website',
+    onboardLinkSource: 'Source code',
     signIn: 'Sign in',
     signUp: 'Create account',
     email: 'Email',

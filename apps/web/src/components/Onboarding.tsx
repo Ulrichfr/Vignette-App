@@ -36,6 +36,7 @@ export function Onboarding() {
           <img src={`${import.meta.env.BASE_URL}icon.svg`} alt="" />
           Vignette
         </h1>
+        <p className="auth-tagline hand" style={{ margin: '2px 0 0' }}>{t.tagline}</p>
         <h2 className="onboard-title">{t.onboardTitle}</h2>
         <p className="onboard-intro hand">{t.onboardIntro}</p>
 
@@ -48,11 +49,13 @@ export function Onboarding() {
           >
             <h3>{t.onboardOfficial}</h3>
             <p>{t.onboardOfficialDesc}</p>
+            <span className="onboard-hint hand">{t.onboardOfficialHint}</span>
           </button>
 
           <div className="onboard-card" style={{ background: '#bfe8cf', color: '#1f3d2b' }}>
             <h3>{t.onboardCustom}</h3>
             <p>{t.onboardCustomDesc}</p>
+            <span className="onboard-hint hand">{t.onboardCustomHint}</span>
             <form
               className="onboard-custom"
               onSubmit={(e) => {
@@ -81,10 +84,24 @@ export function Onboarding() {
           >
             <h3>{t.onboardLocal}</h3>
             <p>{t.onboardLocalDesc}</p>
+            <span className="onboard-hint hand">{t.onboardLocalHint}</span>
           </button>
         </div>
 
         {error && <p className="auth-error">{error}</p>}
+
+        <div className="onboard-links">
+          <a href="https://github.com/Ulrichfr/Vignette-App/blob/main/docs/AUTO-HEBERGEMENT.md" target="_blank" rel="noopener noreferrer">
+            {t.onboardLinkGuide} ↗
+          </a>
+          <a href="https://vignette.ulrichrozier.com" target="_blank" rel="noopener noreferrer">
+            {t.onboardLinkSite} ↗
+          </a>
+          <a href="https://github.com/Ulrichfr/Vignette-App" target="_blank" rel="noopener noreferrer">
+            {t.onboardLinkSource} ↗
+          </a>
+        </div>
+        <p className="onboard-version">Vignette 0.1.0</p>
       </div>
     </div>
   );

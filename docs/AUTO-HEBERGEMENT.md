@@ -59,6 +59,14 @@ un tunnel Cloudflare, un reverse proxy TLS, Tailscale. Pense à mettre à jour
 `SITE_URL` et `API_EXTERNAL_URL` dans `supabase/.env` avec ton URL publique
 puis `docker compose up -d auth`.
 
+## Connecter les apps natives
+
+Les apps macOS/Linux/Android demandent au premier lancement où vivent tes
+notes : choisis « Ma propre instance » et donne l'URL publique de ton serveur.
+L'app découvre la configuration via `GET /admin-api/instance` — rien d'autre à
+saisir. (Pour repartir de zéro sur un appareil : vider les données du site/app,
+l'écran de choix revient.)
+
 ## Sauvegardes
 
 `scripts/backup-db.sh` fait un `pg_dump` gzippé dans `backups/` avec rotation

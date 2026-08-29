@@ -12,7 +12,9 @@
 
 <p align="center">
   <a href="https://vignette.ulrichrozier.com">Site & démo</a> ·
+  <a href="https://vignette.ulrichrozier.com/telechargements">Téléchargements</a> ·
   <a href="docs/DEMARRER.md">Démarrer</a> ·
+  <a href="docs/MODES.md">Les trois modes</a> ·
   <a href="docs/AUTO-HEBERGEMENT.md">Auto-héberger</a> ·
   <a href="docs/PARTAGE.md">Partager</a>
 </p>
@@ -35,6 +37,9 @@
   exports Markdown/texte.
 - **FR/EN, clair/sombre** — français par défaut, mode sombre où les post-its
   restent des post-its.
+- **Trois modes** — l'instance officielle, la tienne (une URL suffit, l'app
+  découvre le reste), ou le mode local pur, sans serveur ni compte
+  ([docs/MODES.md](docs/MODES.md)).
 
 ![Une note dépliée depuis le deck](docs/captures/shot-deck.png)
 ![Vignette sur iPhone et Android](docs/captures/scene-mobile.png)
