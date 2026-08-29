@@ -95,6 +95,18 @@ create trigger note_items_touch after insert or update or delete on public.note_
 -- ----------------------------------------------------------- helpers RLS
 -- security definer pour éviter la récursion RLS entre notes et note_shares.
 
+-- Test de partage seul (sans lookup de notes) : utilisable dans les policies de
+-- notes elles-mêmes — un lookup de la table dans sa propre policy ne voit pas la
+-- ligne en cours d'insertion (snapshot), ce qui casse INSERT … RETURNING.
+create function public.has_note_share(nid uuid, need_edit boolean)
+returns boolean language sql security definer set search_path = public stable as $$
+  select exists (
+    select 1 from public.note_shares s
+    where s.note_id = nid and s.user_id = auth.uid() and s.accepted_at is not null
+      and (not need_edit or s.role = 'editor')
+  );
+$$;
+
 create function public.can_read_note(nid uuid)
 returns boolean language sql security definer set search_path = public stable as $$
   select exists (
@@ -164,15 +176,15 @@ create policy profiles_select on public.profiles for select
 create policy profiles_update on public.profiles for update
   using (id = auth.uid()) with check (id = auth.uid());
 
--- notes
+-- notes : expressions directes sur la ligne (jamais de lookup de notes ici).
 create policy notes_select on public.notes for select
-  using (public.can_read_note(id));
+  using (owner_id = auth.uid() or public.has_note_share(id, false));
 
 create policy notes_insert on public.notes for insert
   with check (owner_id = auth.uid());
 
 create policy notes_update on public.notes for update
-  using (public.can_edit_note(id));
+  using (owner_id = auth.uid() or public.has_note_share(id, true));
 
 create policy notes_delete on public.notes for delete
   using (owner_id = auth.uid());
@@ -204,6 +216,14 @@ create policy note_shares_delete on public.note_shares for delete
   using (user_id = auth.uid() or public.is_note_owner(note_id));
 
 -- --------------------------------------------------------------- realtime
+
+do $$
+begin
+  if not exists (select 1 from pg_publication where pubname = 'supabase_realtime') then
+    create publication supabase_realtime;
+  end if;
+end
+$$;
 
 alter publication supabase_realtime add table public.notes;
 alter publication supabase_realtime add table public.note_items;

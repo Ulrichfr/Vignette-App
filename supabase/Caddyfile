@@ -1,0 +1,36 @@
+# Routage Vignette — mêmes réécritures que le gateway officiel Supabase
+# (/auth/v1 → /, /rest/v1 → /, /realtime/v1 → /socket, /realtime/v1/api → /api).
+
+:80 {
+	handle /auth/v1/* {
+		uri strip_prefix /auth/v1
+		reverse_proxy auth:9999
+	}
+
+	handle /rest/v1/* {
+		uri strip_prefix /rest/v1
+		reverse_proxy rest:3000
+	}
+
+	handle /realtime/v1/api/* {
+		uri strip_prefix /realtime/v1
+		reverse_proxy realtime-dev.vignette-realtime:4000 {
+			header_up Host {upstream_hostport}
+		}
+	}
+
+	handle /realtime/v1/* {
+		uri strip_prefix /realtime/v1
+		rewrite * /socket{uri}
+		reverse_proxy realtime-dev.vignette-realtime:4000 {
+			header_up Host {upstream_hostport}
+		}
+	}
+
+	# Web app statique (build de apps/web) ; en dev, Vite sert l'app à la place.
+	handle {
+		root * /srv/web
+		try_files {path} /index.html
+		file_server
+	}
+}
