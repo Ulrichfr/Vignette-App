@@ -89,8 +89,9 @@ ne sort jamais du serveur. Sauvegardes : dump 3h40 + NAS 4h30 + GDrive hebdo.
 
 ## Publier une nouvelle version
 
-Trois fichiers portent la version et doivent bouger ENSEMBLE :
+Quatre fichiers portent la version et doivent bouger ENSEMBLE :
 `apps/web/package.json`, `apps/desktop/src-tauri/tauri.conf.json`,
+`apps/admin-api/server.mjs` (endpoint `/instance`),
 `apps/site/dl/latest.json` (manifeste lu par le vérificateur de mise à jour
 des apps — bump le champ version, les URLs des binaires et les notes).
 Ensuite : rebuild natifs signés → copier dans apps/site/dl/ → SHA256SUMS.txt
