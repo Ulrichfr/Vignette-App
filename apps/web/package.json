@@ -12,6 +12,7 @@
   "dependencies": {
     "@fontsource-variable/caveat": "^5.1.0",
     "@fontsource-variable/inter": "^5.1.0",
+    "@supabase/supabase-js": "^2.48.0",
     "@vignette/core": "workspace:*",
     "framer-motion": "^12.0.0",
     "react": "^19.0.0",

@@ -16,16 +16,25 @@ export function isNoteComplete(items: NoteItem[]): boolean {
   return items.length > 0 && items.every((i) => i.checked);
 }
 
-/** Libellé de fraîcheur relative ("23m", "1h", "3d"), pour "edited il y a X". */
-export function relativeAge(iso: string, now: Date = new Date()): string {
+export interface AgeUnits {
+  now: string;
+  m: string;
+  h: string;
+  d: string;
+}
+
+const EN_UNITS: AgeUnits = { now: 'now', m: 'm', h: 'h', d: 'd' };
+
+/** Libellé de fraîcheur relative ("23m", "1h", "3d"), unités localisables. */
+export function relativeAge(iso: string, now: Date = new Date(), units: AgeUnits = EN_UNITS): string {
   const ms = now.getTime() - new Date(iso).getTime();
   const min = Math.max(0, Math.floor(ms / 60_000));
-  if (min < 1) return 'now';
-  if (min < 60) return `${min}m`;
+  if (min < 1) return units.now;
+  if (min < 60) return `${min}${units.m}`;
   const h = Math.floor(min / 60);
-  if (h < 24) return `${h}h`;
+  if (h < 24) return `${h}${units.h}`;
   const d = Math.floor(h / 24);
-  return `${d}d`;
+  return `${d}${units.d}`;
 }
 
 /** Filtre de la vue All Notes. */

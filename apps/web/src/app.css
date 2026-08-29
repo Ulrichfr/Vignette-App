@@ -388,6 +388,100 @@
   opacity: 0.55;
 }
 
+.header-tools {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.icon-btn {
+  padding: 7px 10px;
+  min-width: 34px;
+  text-align: center;
+}
+
+/* --- auth ----------------------------------------------------------------- */
+
+.auth-screen {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper);
+}
+
+.auth-card {
+  width: min(360px, 90vw);
+  background: #bcd9f8; /* note-blue : l'écran de connexion est un post-it */
+  color: #23384f;
+  border-radius: var(--radius-note);
+  box-shadow: var(--shadow-lift);
+  padding: 32px 30px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transform: rotate(-1.2deg);
+}
+
+.auth-logo {
+  font-size: 30px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.auth-tagline {
+  margin: -8px 0 6px;
+  font-size: 1.3rem;
+  opacity: 0.85;
+}
+
+.auth-card label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.auth-card input {
+  background: rgb(255 255 255 / 0.55);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.auth-error {
+  margin: 0;
+  font-size: 13px;
+  color: #8c2a1c;
+}
+
+.auth-submit {
+  margin-top: 6px;
+  background: #23384f;
+  color: #ecf3fc;
+  border-radius: 10px;
+  padding: 11px;
+  font-weight: 600;
+  transition: filter 0.15s ease;
+}
+
+.auth-submit:hover {
+  filter: brightness(1.12);
+}
+
+.auth-submit:disabled {
+  opacity: 0.6;
+}
+
+.auth-switch {
+  font-size: 13px;
+  opacity: 0.75;
+  text-decoration: underline;
+}
+
 /* --- deck ---------------------------------------------------------------- */
 
 .deck-rail {

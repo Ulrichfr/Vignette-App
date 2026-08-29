@@ -1,17 +1,9 @@
-import { relativeAge } from '@vignette/core';
+import { noteToMarkdown, noteToText, relativeAge } from '@vignette/core';
 import { useState } from 'react';
 import { COLOR_NAMES, PALETTE, colorSpec } from '../colors';
-import { noteToMarkdown, noteToText } from '@vignette/core';
+import { useI18n } from '../i18n';
 import { itemsOf, store, useAppState } from '../store';
 import { ChecklistEditor } from './ChecklistEditor';
-
-function shortDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-}
-
-function longDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-}
 
 function download(filename: string, content: string) {
   const url = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=utf-8' }));
@@ -23,6 +15,7 @@ function download(filename: string, content: string) {
 }
 
 export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: () => void }) {
+  const { t } = useI18n();
   const state = useAppState();
   const [exportOpen, setExportOpen] = useState(false);
   const note = state.notes.find((n) => n.id === noteId && !n.deletedAt);
@@ -32,7 +25,15 @@ export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: (
   const items = itemsOf(state, note.id);
   const inDeck = note.dockPosition !== null && note.status !== 'archived';
   const statusLabel =
-    note.status === 'archived' ? 'ARCHIVED' : note.status === 'completed' ? 'DONE' : 'ACTIVE';
+    note.status === 'archived' ? t.badgeArchived : note.status === 'completed' ? t.badgeDone : t.badgeActive;
+
+  const shortDate = (iso: string) =>
+    new Date(iso).toLocaleDateString(t.dateLocale, { day: 'numeric', month: 'short' });
+  const longDate = (iso: string) =>
+    new Date(iso).toLocaleDateString(t.dateLocale, { day: 'numeric', month: 'short', year: 'numeric' });
+  const age = relativeAge(note.updatedAt, new Date(), t.ageUnits);
+  const updatedLabel =
+    age === t.ageUnits.now ? `${t.updated} ${t.justNow}` : `${t.updated} ${t.agoPrefix}${age}${t.agoSuffix}`;
 
   return (
     <section className="detail-pane">
@@ -40,22 +41,21 @@ export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: (
         <span className="detail-status">
           <span className="status-dot" style={{ background: spec.base }} />
           {statusLabel}
-          {inDeck ? ' · IN THE DECK' : ''}
+          {inDeck ? ` · ${t.inTheDeck}` : ''}
         </span>
         <span className="detail-actions">
-          {note.status !== 'completed' && (
+          {note.status !== 'completed' ? (
             <button className="soft-btn" onClick={() => store.markComplete(note.id)}>
-              Mark complete
+              {t.markComplete}
             </button>
-          )}
-          {note.status === 'completed' && (
+          ) : (
             <button className="soft-btn" onClick={() => store.setStatus(note.id, 'active')}>
-              Reopen
+              {t.reopen}
             </button>
           )}
           <span className="export-wrap">
             <button className="soft-btn" onClick={() => setExportOpen((v) => !v)}>
-              Export…
+              {t.export}
             </button>
             {exportOpen && (
               <span className="export-menu" onMouseLeave={() => setExportOpen(false)}>
@@ -65,7 +65,7 @@ export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: (
                     setExportOpen(false);
                   }}
                 >
-                  Markdown
+                  {t.exportMarkdown}
                 </button>
                 <button
                   onClick={() => {
@@ -73,7 +73,7 @@ export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: (
                     setExportOpen(false);
                   }}
                 >
-                  Plain text
+                  {t.exportText}
                 </button>
               </span>
             )}
@@ -85,7 +85,7 @@ export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: (
               onDeleted();
             }}
           >
-            Delete
+            {t.delete}
           </button>
         </span>
       </header>
@@ -95,19 +95,20 @@ export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: (
           <input
             className="detail-title"
             value={note.title}
-            placeholder="Untitled note"
+            placeholder={t.untitled}
             style={{ color: spec.ink }}
             onChange={(e) => store.rename(note.id, e.target.value)}
           />
-          <span className="detail-edited">edited {shortDate(note.updatedAt)}</span>
+          <span className="detail-edited">
+            {t.edited} {shortDate(note.updatedAt)}
+          </span>
         </div>
 
         <ChecklistEditor noteId={note.id} items={items} ink={spec.ink} />
 
         <footer className="detail-footer">
           <span>
-            Created {longDate(note.createdAt)} · Updated{' '}
-            {relativeAge(note.updatedAt) === 'now' ? 'just now' : `${relativeAge(note.updatedAt)} ago`}
+            {t.created} {longDate(note.createdAt)} · {updatedLabel}
           </span>
         </footer>
       </article>
@@ -127,22 +128,22 @@ export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: (
         <span className="detail-toolbar-actions">
           {inDeck ? (
             <button className="ghost-btn" onClick={() => store.undock(note.id)}>
-              Remove from deck
+              {t.removeFromDeck}
             </button>
           ) : (
             note.status !== 'archived' && (
               <button className="ghost-btn" onClick={() => store.dock(note.id)}>
-                Add to deck
+                {t.addToDeck}
               </button>
             )
           )}
           {note.status === 'archived' ? (
             <button className="ghost-btn" onClick={() => store.setStatus(note.id, 'active')}>
-              Unarchive
+              {t.unarchive}
             </button>
           ) : (
             <button className="ghost-btn" onClick={() => store.setStatus(note.id, 'archived')}>
-              Archive
+              {t.archive}
             </button>
           )}
         </span>

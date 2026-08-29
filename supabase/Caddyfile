@@ -2,6 +2,17 @@
 # (/auth/v1 → /, /rest/v1 → /, /realtime/v1 → /socket, /realtime/v1/api → /api).
 
 :80 {
+	# CORS préflight (rôle tenu par Kong dans la stack officielle) ; les
+	# réponses réelles portent déjà les en-têtes CORS de GoTrue/PostgREST.
+	@preflight method OPTIONS
+	handle @preflight {
+		header Access-Control-Allow-Origin "*"
+		header Access-Control-Allow-Headers "authorization, apikey, content-type, x-client-info, prefer, range, accept-profile, content-profile, x-supabase-api-version, x-upsert"
+		header Access-Control-Allow-Methods "GET, POST, PATCH, PUT, DELETE, OPTIONS"
+		header Access-Control-Max-Age "86400"
+		respond "" 204
+	}
+
 	handle /auth/v1/* {
 		uri strip_prefix /auth/v1
 		reverse_proxy auth:9999
@@ -20,8 +31,8 @@
 	}
 
 	handle /realtime/v1/* {
-		uri strip_prefix /realtime/v1
-		rewrite * /socket{uri}
+		# une seule directive : rewrite s'exécute avant uri dans l'ordre Caddy
+		uri path_regexp ^/realtime/v1 /socket
 		reverse_proxy realtime-dev.vignette-realtime:4000 {
 			header_up Host {upstream_hostport}
 		}

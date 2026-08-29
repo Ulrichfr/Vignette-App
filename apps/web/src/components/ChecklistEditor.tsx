@@ -1,5 +1,6 @@
 import type { NoteItem } from '@vignette/core';
 import { useRef } from 'react';
+import { useI18n } from '../i18n';
 import { store } from '../store';
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 /** Liste d'items manuscrite : Enter ajoute une ligne, Backspace sur vide supprime,
  *  le tiret de tête sert de case à cocher. */
 export function ChecklistEditor({ noteId, items, ink, autoFocusLast }: Props) {
+  const { t } = useI18n();
   const rootRef = useRef<HTMLDivElement>(null);
 
   const focusLine = (index: number) => {
@@ -35,7 +37,7 @@ export function ChecklistEditor({ noteId, items, ink, autoFocusLast }: Props) {
           <input
             data-line
             value={item.text}
-            placeholder={idx === 0 && items.length === 1 ? 'write something…' : ''}
+            placeholder={idx === 0 && items.length === 1 ? t.writeSomething : ''}
             className={item.checked ? 'checked' : ''}
             autoFocus={autoFocusLast && idx === items.length - 1}
             onChange={(e) => store.updateItem(item.id, { text: e.target.value })}

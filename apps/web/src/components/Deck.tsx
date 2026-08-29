@@ -2,6 +2,7 @@ import { deckNotes } from '@vignette/core';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { colorSpec } from '../colors';
+import { useI18n } from '../i18n';
 import { itemsOf, store, useAppState } from '../store';
 import { ChecklistEditor } from './ChecklistEditor';
 
@@ -19,6 +20,7 @@ function tabLabel(title: string): string {
 
 /** Le deck : onglets pastel dockés au bord droit, dépliage au clic. */
 export function Deck() {
+  const { t } = useI18n();
   const state = useAppState();
   const [openId, setOpenId] = useState<string | null>(null);
   const notes = deckNotes(state.notes);
@@ -54,7 +56,7 @@ export function Deck() {
         })}
         <button
           className="deck-add"
-          title="New note"
+          title={t.newNote}
           onClick={() => {
             const id = store.createNote();
             setOpenId(id);
@@ -88,7 +90,7 @@ export function Deck() {
                 <input
                   className="deck-open-title"
                   value={open.title}
-                  placeholder="Untitled note"
+                  placeholder={t.untitled}
                   style={{ color: colorSpec(open.color).ink }}
                   onChange={(e) => store.rename(open.id, e.target.value)}
                 />

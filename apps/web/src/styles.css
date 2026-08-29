@@ -26,6 +26,17 @@
   --line: #36363e;
 }
 
+/* Réglage « système » : pas d'attribut data-theme, on suit le média. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper: #1e1e22;
+    --paper-2: #28282e;
+    --ink: #eceae4;
+    --ink-soft: #9c9aa0;
+    --line: #36363e;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
