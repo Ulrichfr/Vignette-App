@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { isNative, openExternal } from '../lib/update';
 import { useI18n } from '../i18n';
 import { OFFICIAL_URL, probeInstance, saveInstance } from '../lib/instance';
 
@@ -77,7 +78,7 @@ export function Onboarding() {
             <a
               className="onboard-card-link"
               href="https://github.com/Ulrichfr/Vignette-App/blob/main/docs/AUTO-HEBERGEMENT.md"
-              target="_blank"
+              target="_blank" onClick={(e) => { if (isNative) { e.preventDefault(); void openExternal(e.currentTarget.href); } }}
               rel="noopener noreferrer"
             >
               {t.onboardCustomInstall} ↗
@@ -99,20 +100,20 @@ export function Onboarding() {
         {error && <p className="auth-error">{error}</p>}
 
         <div className="onboard-links">
-          <a href="https://github.com/Ulrichfr/Vignette-App/blob/main/docs/AUTO-HEBERGEMENT.md" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/Ulrichfr/Vignette-App/blob/main/docs/AUTO-HEBERGEMENT.md" target="_blank" onClick={(e) => { if (isNative) { e.preventDefault(); void openExternal(e.currentTarget.href); } }} rel="noopener noreferrer">
             {t.onboardLinkGuide} ↗
           </a>
-          <a href="https://vignette.ulrichrozier.com" target="_blank" rel="noopener noreferrer">
+          <a href="https://vignette.ulrichrozier.com" target="_blank" onClick={(e) => { if (isNative) { e.preventDefault(); void openExternal(e.currentTarget.href); } }} rel="noopener noreferrer">
             {t.onboardLinkSite} ↗
           </a>
           <a
             href="https://vignette.ulrichrozier.com/#tutoriels"
-            target="_blank"
+            target="_blank" onClick={(e) => { if (isNative) { e.preventDefault(); void openExternal(e.currentTarget.href); } }}
             rel="noopener noreferrer"
           >
             {t.onboardLinkTutorials} ↗
           </a>
-          <a href="https://github.com/Ulrichfr/Vignette-App" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/Ulrichfr/Vignette-App" target="_blank" onClick={(e) => { if (isNative) { e.preventDefault(); void openExternal(e.currentTarget.href); } }} rel="noopener noreferrer">
             {t.onboardLinkSource} ↗
           </a>
         </div>

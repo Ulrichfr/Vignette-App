@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import { setLang, useI18n, type Lang } from '../i18n';
 import { getAppIcon, setAppIcon, ICON_COLORS, type IconColor } from '../lib/appicon';
+import {
+  APP_VERSION,
+  checkForUpdate,
+  isNative,
+  openExternal,
+  type UpdateInfo,
+} from '../lib/update';
 import { buildBackup } from '../lib/backup';
 import { clearInstance } from '../lib/instance';
 import { instanceConfig } from '../lib/supabase';
@@ -13,6 +20,20 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
   const theme = useTheme();
   const state = useAppState();
   const [icon, setIcon] = useState<IconColor>(getAppIcon());
+  const [updateState, setUpdateState] = useState<'idle' | 'checking' | 'uptodate' | 'error'>(
+    'idle',
+  );
+  const [update, setUpdate] = useState<UpdateInfo | null>(null);
+
+  const runUpdateCheck = () => {
+    setUpdateState('checking');
+    checkForUpdate()
+      .then((u) => {
+        setUpdate(u);
+        setUpdateState(u ? 'idle' : 'uptodate');
+      })
+      .catch(() => setUpdateState('error'));
+  };
 
   const pickIcon = (c: IconColor) => {
     setIcon(c);
@@ -134,27 +155,63 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
         </section>
 
         <section>
+          <h3>{t.settingsUpdate}</h3>
+          <p className="settings-hint">{t.updateCurrent(APP_VERSION)}</p>
+          {update ? (
+            <div className="settings-update">
+              <p className="update-available">{t.updateAvailable(update.version)}</p>
+              {update.notes?.fr && <p className="settings-hint">{update.notes.fr}</p>}
+              {isNative ? (
+                <button className="soft-btn" onClick={() => void openExternal(update.url)}>
+                  {t.updateDownload} ↗
+                </button>
+              ) : (
+                <button className="soft-btn" onClick={() => window.location.reload()}>
+                  {t.updateReload}
+                </button>
+              )}
+            </div>
+          ) : (
+            <button
+              className="soft-btn"
+              disabled={updateState === 'checking'}
+              onClick={runUpdateCheck}
+            >
+              {updateState === 'checking' ? t.updateChecking : t.updateCheck}
+            </button>
+          )}
+          {updateState === 'uptodate' && <p className="settings-hint">{t.updateUpToDate}</p>}
+          {updateState === 'error' && <p className="settings-hint">{t.updateError}</p>}
+        </section>
+
+        <section>
           <h3>{t.settingsAbout}</h3>
           <div className="settings-about">
-            <a href="https://vignette.ulrichrozier.com" target="_blank" rel="noopener noreferrer">
-              {t.onboardLinkSite} ↗
-            </a>
-            <a
-              href="https://github.com/Ulrichfr/Vignette-App"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t.onboardLinkSource} ↗
-            </a>
-            <a
-              href="https://github.com/Ulrichfr/Vignette-App/blob/main/docs/DEMARRER.md"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t.onboardLinkTutorials} ↗
-            </a>
+            {(
+              [
+                ['https://vignette.ulrichrozier.com', t.onboardLinkSite],
+                ['https://github.com/Ulrichfr/Vignette-App', t.onboardLinkSource],
+                [
+                  'https://github.com/Ulrichfr/Vignette-App/blob/main/docs/DEMARRER.md',
+                  t.onboardLinkTutorials,
+                ],
+              ] as const
+            ).map(([href, label]) => (
+              <a
+                key={href}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  void openExternal(href);
+                }}
+              >
+                {label} ↗
+              </a>
+            ))}
           </div>
-          <p className="settings-hint">Vignette 0.1.0</p>
+          <p className="settings-hint">Vignette {APP_VERSION}</p>
         </section>
       </aside>
     </>

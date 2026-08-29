@@ -7,6 +7,7 @@ import { NoteDetail } from './components/NoteDetail';
 import { NotesList } from './components/NotesList';
 import { useI18n } from './i18n';
 import { ensurePushSubscription } from './lib/push';
+import { checkForUpdate, isNative, openExternal, type UpdateInfo } from './lib/update';
 import { store, useAppState } from './store';
 
 function Workspace() {
@@ -16,6 +17,8 @@ function Workspace() {
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [undoNoteId, setUndoNoteId] = useState<string | null>(null);
+  const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
+  const [updateDismissed, setUpdateDismissed] = useState(false);
   const undoTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const selected = selectedId ?? state.notes.find((n) => !n.deletedAt)?.id ?? null;
 
@@ -25,6 +28,17 @@ function Workspace() {
     clearTimeout(undoTimer.current);
     undoTimer.current = setTimeout(() => setUndoNoteId(null), 8000);
   };
+
+  // nouvelle version publiée ? (démarrage différé + toutes les 6 h, silencieux si injoignable)
+  useEffect(() => {
+    const check = () => checkForUpdate().then(setUpdateInfo).catch(() => {});
+    const first = setTimeout(check, 8_000);
+    const id = setInterval(check, 6 * 3_600_000);
+    return () => {
+      clearTimeout(first);
+      clearInterval(id);
+    };
+  }, []);
 
   // raccourcis clavier : n = nouvelle note, / = recherche, Échap = fermer
   useEffect(() => {
@@ -111,6 +125,21 @@ function Workspace() {
         )}
       </main>
       <Deck />
+      {updateInfo && !updateDismissed && !undoNoteId && (
+        <div className="undo-toast update-toast" role="status">
+          <span>{t.updateAvailable(updateInfo.version)}</span>
+          <button
+            onClick={() =>
+              isNative ? void openExternal(updateInfo.url) : window.location.reload()
+            }
+          >
+            {isNative ? t.updateDownload : t.updateReload}
+          </button>
+          <button aria-label="✕" onClick={() => setUpdateDismissed(true)}>
+            ✕
+          </button>
+        </div>
+      )}
       {undoNoteId && (
         <div className="undo-toast" role="status">
           <span>{t.deletedToast}</span>

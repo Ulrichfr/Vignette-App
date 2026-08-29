@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "date": "2026-08-30",
+  "notes": {
+    "fr": "Première version publique : deck, partage temps réel, rappels coin corné, trois modes, réglages.",
+    "en": "First public release: deck, realtime sharing, dog-ear reminders, three modes, settings."
+  },
+  "page": "https://vignette.ulrichrozier.com/telechargements.html",
+  "platforms": {
+    "linux-appimage": { "url": "https://vignette.ulrichrozier.com/dl/Vignette_0.1.0_amd64.AppImage" },
+    "linux-deb": { "url": "https://vignette.ulrichrozier.com/dl/Vignette_0.1.0_amd64.deb" },
+    "android": { "url": "https://vignette.ulrichrozier.com/dl/Vignette_0.1.0_arm64.apk" },
+    "macos": { "url": "https://vignette.ulrichrozier.com/dl/Vignette_0.1.0_aarch64.dmg" }
+  }
+}

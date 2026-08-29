@@ -14,4 +14,5 @@ apps/desktop/src-tauri/gen/schemas/
 apps/desktop/src-tauri/gen/apple/build/
 apps/desktop/src-tauri/gen/android/app/build/
 apps/desktop/src-tauri/gen/android/.gradle/
-apps/site/dl/
+apps/site/dl/*
+!apps/site/dl/latest.json

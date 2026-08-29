@@ -65,6 +65,11 @@
 		# périmées pendant les itérations) ; les assets lourds restent cachés
 		@volatile path / /index.html /telechargements /telechargements.html /style.css*
 		header @volatile Cache-Control "no-cache, must-revalidate"
+		# manifeste de version : lu par les apps natives (webview tauri://) → CORS,
+		# et jamais mis en cache pour que la détection de màj soit immédiate
+		@latest path /dl/latest.json
+		header @latest Access-Control-Allow-Origin "*"
+		header @latest Cache-Control "no-cache, must-revalidate"
 		try_files {path} {path}.html /index.html
 		file_server
 	}

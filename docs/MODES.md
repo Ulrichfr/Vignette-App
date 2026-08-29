@@ -47,6 +47,9 @@ La web app, elle, est toujours servie par une instance : elle est en mode
   cochable depuis le widget.
 - **Fenêtres post-its sur le bureau** (desktop) : chaque note dockée devient
   une vraie fenêtre frameless always-on-top au bord de l'écran.
+- **Mise à jour en place** : l'app détecte déjà les nouvelles versions
+  (manifeste `dl/latest.json`) et mène au téléchargement ; l'étape suivante est
+  l'updater Tauri signé qui remplace le binaire tout seul.
 - **Chiffrement local** : chiffrer le corps des notes au repos en mode local
   (clé dans le trousseau de l'OS).
 - **Import Stickies** : importer les fichiers `.stickies` de macOS en gardant

@@ -86,3 +86,13 @@ vieux fichiers aux visiteurs — c'est arrivé, ne pas recommencer.
 passe SMTP est un mot de passe d'application Apple révocable sur
 appleid.apple.com. La clé ANON est publique par conception ; la SERVICE_ROLE
 ne sort jamais du serveur. Sauvegardes : dump 3h40 + NAS 4h30 + GDrive hebdo.
+
+## Publier une nouvelle version
+
+Trois fichiers portent la version et doivent bouger ENSEMBLE :
+`apps/web/package.json`, `apps/desktop/src-tauri/tauri.conf.json`,
+`apps/site/dl/latest.json` (manifeste lu par le vérificateur de mise à jour
+des apps — bump le champ version, les URLs des binaires et les notes).
+Ensuite : rebuild natifs signés → copier dans apps/site/dl/ → SHA256SUMS.txt
+→ deploy.sh. Le manifeste est servi avec CORS * et no-cache (Caddyfile) parce
+que les webviews tauri:// le lisent cross-origin — ne pas retirer ces en-têtes.

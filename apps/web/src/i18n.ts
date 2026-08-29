@@ -27,6 +27,15 @@ export interface Strings {
   shortcutNew: string;
   shortcutSearch: string;
   shortcutClose: string;
+  settingsUpdate: string;
+  updateCurrent: (v: string) => string;
+  updateCheck: string;
+  updateChecking: string;
+  updateUpToDate: string;
+  updateAvailable: (v: string) => string;
+  updateDownload: string;
+  updateReload: string;
+  updateError: string;
   listChecks: string;
   copySuffix: string;
   badgeTrash: string;
@@ -143,6 +152,15 @@ const STRINGS: Record<Lang, Strings> = {
     shortcutNew: 'Nouvelle note',
     shortcutSearch: 'Rechercher',
     shortcutClose: 'Fermer la note',
+    settingsUpdate: 'Mise à jour',
+    updateCurrent: (v) => `Version installée : ${v}`,
+    updateCheck: 'Vérifier les mises à jour',
+    updateChecking: 'Vérification…',
+    updateUpToDate: 'Vignette est à jour ✓',
+    updateAvailable: (v) => `Vignette ${v} est disponible`,
+    updateDownload: 'Télécharger',
+    updateReload: 'Recharger',
+    updateError: 'Vérification impossible (hors ligne ?)',
     listChecks: 'Cases à cocher',
     copySuffix: ' (copie)',
     badgeTrash: 'CORBEILLE',
@@ -257,6 +275,15 @@ const STRINGS: Record<Lang, Strings> = {
     shortcutNew: 'New note',
     shortcutSearch: 'Search',
     shortcutClose: 'Close note',
+    settingsUpdate: 'Updates',
+    updateCurrent: (v) => `Installed version: ${v}`,
+    updateCheck: 'Check for updates',
+    updateChecking: 'Checking…',
+    updateUpToDate: 'Vignette is up to date ✓',
+    updateAvailable: (v) => `Vignette ${v} is available`,
+    updateDownload: 'Download',
+    updateReload: 'Reload',
+    updateError: 'Could not check (offline?)',
     listChecks: 'Checkboxes',
     copySuffix: ' (copy)',
     badgeTrash: 'TRASH',
