@@ -38,10 +38,24 @@
 		}
 	}
 
-	# Web app statique (build de apps/web) ; en dev, Vite sert l'app à la place.
+	# Web app (zone membre) sous /app — build de apps/web (base /app/).
+	handle /app* {
+		root * /srv
+		try_files {path} /app/index.html
+		file_server
+	}
+
+	# Back office sous /admin — build de apps/admin (base /admin/).
+	handle /admin* {
+		root * /srv
+		try_files {path} /admin/index.html
+		file_server
+	}
+
+	# Landing / site vitrine à la racine (apps/site, statique).
 	handle {
-		root * /srv/web
-		try_files {path} /index.html
+		root * /srv/site
+		try_files {path} {path}.html /index.html
 		file_server
 	}
 }

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7bbad"/>
+      <stop offset="1" stop-color="#F5A896"/>
+    </linearGradient>
+    <linearGradient id="fold" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f1ad9c"/>
+      <stop offset="1" stop-color="#de856e"/>
+    </linearGradient>
+    <filter id="drop" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="28" flood-color="#000000" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+  <g transform="rotate(-3 512 512)" filter="url(#drop)">
+    <path fill="url(#paper)" d="M262 112 H762 Q912 112 912 262 V642 L642 912 H262 Q112 912 112 762 V262 Q112 112 262 112 Z"/>
+    <path fill="url(#fold)" d="M912 642 L642 912 C652 770 770 652 912 642 Z"/>
+    <g stroke="#4E2317" stroke-width="32" stroke-linecap="round" fill="none" opacity="0.92">
+      <path d="M268 372 q 22 -10 46 -5"/>
+      <path d="M394 366 q 100 -16 190 -7 t 148 10"/>
+      <path d="M268 518 q 22 -10 46 -5"/>
+      <path d="M394 512 q 84 -14 152 -6 t 110 9"/>
+      <path d="M262 664 l 30 34 l 52 -62"/>
+      <path d="M394 658 q 64 -12 112 -5 t 70 8" opacity="0.55"/>
+    </g>
+  </g>
+</svg>

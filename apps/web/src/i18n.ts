@@ -11,6 +11,14 @@ export interface Strings {
   filterAll: string;
   filterActive: string;
   filterArchived: string;
+  filterTrash: string;
+  restore: string;
+  deleteForever: string;
+  duplicate: string;
+  listDashes: string;
+  listChecks: string;
+  copySuffix: string;
+  badgeTrash: string;
   badgeActive: string;
   badgeArchived: string;
   badgeDone: string;
@@ -71,6 +79,14 @@ const STRINGS: Record<Lang, Strings> = {
     filterAll: 'Toutes',
     filterActive: 'Actives',
     filterArchived: 'Archivées',
+    filterTrash: 'Corbeille',
+    restore: 'Restaurer',
+    deleteForever: 'Supprimer définitivement',
+    duplicate: 'Dupliquer',
+    listDashes: 'Tirets',
+    listChecks: 'Cases à cocher',
+    copySuffix: ' (copie)',
+    badgeTrash: 'CORBEILLE',
     badgeActive: 'ACTIVE',
     badgeArchived: 'ARCHIVÉE',
     badgeDone: 'FAIT',
@@ -129,6 +145,14 @@ const STRINGS: Record<Lang, Strings> = {
     filterAll: 'All',
     filterActive: 'Active',
     filterArchived: 'Archived',
+    filterTrash: 'Trash',
+    restore: 'Restore',
+    deleteForever: 'Delete forever',
+    duplicate: 'Duplicate',
+    listDashes: 'Dashes',
+    listChecks: 'Checkboxes',
+    copySuffix: ' (copy)',
+    badgeTrash: 'TRASH',
     badgeActive: 'ACTIVE',
     badgeArchived: 'ARCHIVED',
     badgeDone: 'DONE',

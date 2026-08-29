@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vignette — tes listes, collées au bord de l'écran</title>
+  <meta name="description" content="Vignette est une app de post-its open source : des listes dockées au bord de l'écran, synchronisées en temps réel et partageables. Web, macOS, iOS et Android.">
+  <link rel="icon" href="assets/icons/favicon.ico" sizes="48x48">
+  <link rel="icon" href="assets/icons/vignette-blue.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="/">
+    <img src="assets/icons/vignette-blue.svg" alt="">
+    Vignette
+  </a>
+  <a href="#fonctionnalites">Fonctionnalités</a>
+  <a href="#captures">Captures</a>
+  <a href="#tutoriels">Tutoriels</a>
+  <a href="/telechargements">Téléchargements</a>
+  <a href="https://github.com/Ulrichfr/Vignette" data-gh>GitHub</a>
+  <a class="btn btn-primary" href="/app/">Ouvrir l'app</a>
+</nav>
+
+<div class="mini-deck" aria-hidden="true">
+  <span style="background:var(--blue)">OFFICE</span>
+  <span style="background:var(--mint)">COURSES</span>
+  <span style="background:var(--lilac)">WEEK-END</span>
+  <span style="background:var(--yellow)">IDÉES</span>
+</div>
+
+<header class="hero">
+  <span class="float-note" style="background:var(--mint); color:#1f3d2b; top:120px; left:-150px; transform:rotate(-7deg); width:150px">– appeler le plombier<br>– arroser les plantes</span>
+  <span class="float-note" style="background:var(--rose); color:#4a2136; top:300px; right:-160px; transform:rotate(5deg); width:140px">– cadeau pour Lola ✓</span>
+
+  <span class="hero-badge">Open source · auto-hébergeable · synchronisé</span>
+  <h1>Tes listes, <span class="hl">collées</span><br>au bord de l'écran.</h1>
+  <p>
+    Vignette transforme tes listes de choses à faire en post-its qui vivent dockés
+    au bord de l'écran, se déplient d'une pichenette, se synchronisent en temps réel
+    et se partagent avec les gens que tu aimes.
+  </p>
+  <div class="hero-ctas">
+    <a class="btn btn-primary" href="/app/">Ouvrir la web app</a>
+    <a class="btn btn-ghost" href="https://github.com/Ulrichfr/Vignette" data-gh>Voir le code sur GitHub</a>
+  </div>
+</header>
+
+<div class="hero-shot reveal">
+  <div class="browser-frame">
+    <div class="bar"><i></i><i></i><i></i></div>
+    <img src="assets/captures/shot-light.png" alt="Vignette — vue Toutes les notes avec le deck de post-its docké au bord droit" loading="eager">
+  </div>
+</div>
+
+<section id="fonctionnalites">
+  <p class="kicker">— promesses tenues</p>
+  <h2>Petites notes, grandes attentions.</h2>
+  <p class="section-intro">Tout ce qu'un post-it fait sur ton frigo, en mieux, partout.</p>
+  <div class="features">
+    <div class="feature reveal" style="background:var(--blue); --tilt:-0.8deg">
+      <span class="hand">le deck</span>
+      <h3>Dockées au bord de l'écran</h3>
+      <p>Tes notes vivent en onglets pastel sur le bord de l'écran et se déplient d'une pichenette, avec de vraies animations à ressort.</p>
+    </div>
+    <div class="feature reveal" style="background:var(--mint); --tilt:0.7deg">
+      <span class="hand">en direct</span>
+      <h3>Synchronisées en temps réel</h3>
+      <p>Coche un item sur ton téléphone, il se barre instantanément sur ton Mac. Aucun bouton « rafraîchir » n'a survécu à ce projet.</p>
+    </div>
+    <div class="feature reveal" style="background:var(--lilac); --tilt:-0.6deg">
+      <span class="hand">à deux</span>
+      <h3>Partageables par email</h3>
+      <p>Invite qui tu veux sur une note, en lecture ou en édition. L'invitation arrive comme un petit post-it jaune, à accepter ou refuser.</p>
+    </div>
+    <div class="feature reveal" style="background:var(--yellow); --tilt:0.8deg">
+      <span class="hand">chez toi</span>
+      <h3>Open source & self-hosted</h3>
+      <p>Tes données vivent sur ton serveur, dans un Postgres que tu contrôles. Un docker compose, et c'est chez toi.</p>
+    </div>
+    <div class="feature reveal" style="background:var(--rose); --tilt:-0.7deg">
+      <span class="hand">bilingue</span>
+      <h3>Français, anglais, sombre ou clair</h3>
+      <p>Interface en français par défaut, bascule anglais en un clic, et un mode sombre où les post-its restent des post-its.</p>
+    </div>
+    <div class="feature reveal" style="background:var(--sand); --tilt:0.6deg">
+      <span class="hand">sans piège</span>
+      <h3>Exports, corbeille, archives</h3>
+      <p>Markdown ou texte brut en un clic, corbeille restaurable, duplication, archivage. Tes listes ne sont jamais prisonnières.</p>
+    </div>
+  </div>
+</section>
+
+<section id="captures">
+  <p class="kicker">— sous toutes les coutures</p>
+  <h2>Belle de jour, belle de nuit.</h2>
+  <p class="section-intro">L'écriture est manuscrite, le papier est pastel, les animations sont physiques. C'est une app qu'on a envie de toucher.</p>
+  <div class="gallery">
+    <figure class="wide reveal">
+      <div class="browser-frame">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <img src="assets/captures/shot-deck.png" alt="Une note lilas dépliée depuis le deck, par-dessus l'app" loading="lazy">
+      </div>
+      <figcaption>Une pichenette sur l'onglet, la note se déplie — la ligne de perforation en prime.</figcaption>
+    </figure>
+    <figure class="reveal">
+      <div class="browser-frame">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <img src="assets/captures/shot-light.png" alt="Vignette en mode clair" loading="lazy">
+      </div>
+      <figcaption>Mode clair : du papier crème et sept pastels.</figcaption>
+    </figure>
+    <figure class="reveal">
+      <div class="browser-frame">
+        <div class="bar"><i></i><i></i><i></i></div>
+        <img src="assets/captures/shot-dark.png" alt="Vignette en mode sombre" loading="lazy">
+      </div>
+      <figcaption>Mode sombre : la nuit tombe, pas les post-its.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="plateformes">
+  <p class="kicker">— bientôt partout</p>
+  <h2>Sur ton bureau, dans ta poche.</h2>
+  <p class="section-intro">Une seule base de code (web, Tauri) pour macOS, Windows, Linux, iOS et Android — avec les post-its posés directement sur le bureau.</p>
+  <figure class="reveal" style="margin:0 0 22px">
+    <img src="assets/captures/scene-macos.png" alt="Vignette sur macOS : post-its dockés au bord de l'écran, par-dessus le fond d'écran" style="border-radius:18px; box-shadow: var(--shadow-big)" loading="lazy">
+    <figcaption style="font-size:13.5px;color:var(--ink-soft);padding-top:10px">macOS : le deck vit au bord de l'écran, par-dessus le bureau.</figcaption>
+  </figure>
+  <figure class="reveal" style="margin:0">
+    <img src="assets/captures/scene-mobile.png" alt="Vignette sur iPhone (clair) et Android (sombre)" style="border-radius:18px; box-shadow: var(--shadow-big)" loading="lazy">
+    <figcaption style="font-size:13.5px;color:var(--ink-soft);padding-top:10px">iPhone et Android : les mêmes notes, synchronisées à la seconde.</figcaption>
+  </figure>
+</section>
+
+<section id="icones">
+  <p class="kicker">— l'icône</p>
+  <h2>Sept couleurs, un seul geste.</h2>
+  <p class="section-intro">Le coin qui se décolle, la liste manuscrite, la coche du travail fait.</p>
+  <div class="icon-row reveal">
+    <img src="assets/icons/vignette-blue.svg" alt="Icône Vignette bleue">
+    <img src="assets/icons/vignette-mint.svg" alt="Icône Vignette menthe">
+    <img src="assets/icons/vignette-lilac.svg" alt="Icône Vignette lilas">
+    <img src="assets/icons/vignette-yellow.svg" alt="Icône Vignette jaune">
+    <img src="assets/icons/vignette-coral.svg" alt="Icône Vignette corail">
+    <img src="assets/icons/vignette-rose.svg" alt="Icône Vignette rose">
+    <img src="assets/icons/vignette-sand.svg" alt="Icône Vignette sable">
+  </div>
+</section>
+
+<section id="tutoriels">
+  <p class="kicker">— pas à pas</p>
+  <h2>Trois tutos pour tout faire.</h2>
+  <p class="section-intro">De la première note au serveur chez toi, tout est documenté dans le dépôt.</p>
+  <div class="tutos">
+    <a class="tuto reveal" href="https://github.com/Ulrichfr/Vignette#readme" data-gh-doc>
+      <span class="num hand">01.</span>
+      <h3>Démarrer en cinq minutes</h3>
+      <p>Créer un compte, écrire une première note, la docker au bord de l'écran et la marquer faite.</p>
+    </a>
+    <a class="tuto reveal" href="https://github.com/Ulrichfr/Vignette/blob/main/docs/AUTO-HEBERGEMENT.md" data-gh-doc>
+      <span class="num hand">02.</span>
+      <h3>Auto-héberger avec Docker</h3>
+      <p>Un docker compose, un script de secrets, deux migrations : Vignette tourne sur ta machine, données comprises.</p>
+    </a>
+    <a class="tuto reveal" href="https://github.com/Ulrichfr/Vignette/blob/main/docs/PARTAGE.md" data-gh-doc>
+      <span class="num hand">03.</span>
+      <h3>Partager avec des amis</h3>
+      <p>Inviter par email, choisir lecture ou édition, accepter une invitation et collaborer en temps réel.</p>
+    </a>
+  </div>
+</section>
+
+<section class="final">
+  <a class="note-cta" href="/app/">
+    <span class="hand">pssst… la zone membre est par ici</span>
+    <h2>Ouvre Vignette,<br>écris ta première note.</h2>
+  </a>
+</section>
+
+<footer>
+  <a class="brand" href="/">
+    <img src="assets/icons/vignette-yellow.svg" alt="">
+    Vignette
+  </a>
+  <span>Fait à la main, hébergé à la maison.</span>
+  <span class="links">
+    <a href="/telechargements">Téléchargements</a>
+    <a href="https://github.com/Ulrichfr/Vignette" data-gh>GitHub</a>
+    <a href="https://ulrichrozier.com">ulrichrozier.com</a>
+  </span>
+</footer>
+
+<script>
+  // apparitions au scroll
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+</script>
+
+</body>
+</html>

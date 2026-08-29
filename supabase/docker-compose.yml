@@ -146,11 +146,17 @@ services:
       - rest
       - realtime
     ports:
-      # TLS terminé par Cloudflare ; loopback uniquement (convention audit 21/08/2026).
+      # TLS terminé par Cloudflare. Passerelle docker0 : joignable par le
+      # conteneur cloudflared (host.docker.internal) sans exposer au LAN —
+      # le loopback pur serait invisible du tunnel (502), dixit Orchestration.
+      - "172.17.0.1:8360:80"
+      # et loopback pour le dev local
       - "127.0.0.1:8360:80"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - ../apps/web/dist:/srv/web:ro
+      - ../apps/web/dist:/srv/app:ro
+      - ../apps/site:/srv/site:ro
+      - ../apps/admin/dist:/srv/admin:ro
 
 volumes:
   vignette-db-data:

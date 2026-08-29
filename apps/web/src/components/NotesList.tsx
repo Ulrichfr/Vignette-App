@@ -1,4 +1,4 @@
-import { filterNotes, relativeAge, type Note, type NotesFilter } from '@vignette/core';
+import { filterNotes, relativeAge, stripInline, type Note, type NotesFilter } from '@vignette/core';
 import { colorSpec } from '../colors';
 import { setLang, useI18n, type Strings } from '../i18n';
 import { cycleTheme, useTheme } from '../theme';
@@ -15,6 +15,7 @@ interface Props {
 }
 
 function statusBadge(note: Note, t: Strings): { label: string; className: string } {
+  if (note.deletedAt) return { label: t.badgeTrash, className: 'badge trash' };
   if (note.status === 'archived') return { label: t.badgeArchived, className: 'badge archived' };
   if (note.status === 'completed') return { label: t.badgeDone, className: 'badge done' };
   return { label: t.badgeActive, className: 'badge active' };
@@ -29,10 +30,12 @@ export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSele
   const notes = filterNotes(state.notes, filter, query);
   const total = state.notes.filter((n) => !n.deletedAt).length;
 
+  const trashCount = state.notes.filter((n) => n.deletedAt).length;
   const FILTERS: { key: NotesFilter; label: string }[] = [
     { key: 'all', label: t.filterAll },
     { key: 'active', label: t.filterActive },
     { key: 'archived', label: t.filterArchived },
+    ...(trashCount > 0 ? [{ key: 'trash' as NotesFilter, label: t.filterTrash }] : []),
   ];
 
   return (
@@ -83,7 +86,7 @@ export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSele
           const spec = colorSpec(note.color);
           const badge = statusBadge(note, t);
           const preview = itemsOf(state, note.id)
-            .map((i) => `- ${i.text}`)
+            .map((i) => `- ${stripInline(i.text)}`)
             .join('  ')
             .trim();
           return (

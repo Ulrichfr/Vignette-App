@@ -12,6 +12,63 @@
   padding-right: 64px; /* place pour le rail du deck */
 }
 
+.back-btn {
+  display: none;
+  font-size: 26px;
+  line-height: 1;
+  padding: 0 10px 4px 2px;
+  color: var(--ink-soft);
+}
+
+/* --- mobile (préparation iOS/Android : liste plein écran, détail en overlay) */
+
+@media (max-width: 900px) {
+  .window {
+    grid-template-columns: 1fr;
+    padding-right: 46px;
+  }
+
+  /* spécificité > .detail-pane de base (défini plus bas dans le fichier) */
+  .window > .detail-pane {
+    display: none;
+  }
+
+  .app.detail-open .window > .detail-pane {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    border-left: none;
+    background: var(--paper);
+  }
+
+  .back-btn {
+    display: inline-block;
+  }
+
+  .deck-tab {
+    width: 38px;
+    min-height: 80px;
+  }
+
+  .deck-open-note {
+    right: 12px;
+    width: min(340px, 86vw);
+  }
+
+  .list-pane {
+    padding: calc(16px + env(safe-area-inset-top)) 14px 12px 18px;
+  }
+
+  .list-header h1 {
+    font-size: 19px;
+  }
+
+  .detail-pane {
+    padding-top: calc(16px + env(safe-area-inset-top));
+  }
+}
+
 /* --- liste (All Notes) -------------------------------------------------- */
 
 .list-pane {
@@ -171,6 +228,15 @@
 
 .badge.done {
   color: #2e7d4f;
+}
+
+.badge.trash {
+  color: #b3271e;
+}
+
+.detail-card.trashed {
+  opacity: 0.75;
+  filter: saturate(0.7);
 }
 
 .row-age {
@@ -502,6 +568,84 @@
 .checklist-line input.checked {
   text-decoration: line-through;
   opacity: 0.55;
+}
+
+.rich-line {
+  flex: 1;
+  min-width: 0;
+  cursor: text;
+  overflow-wrap: anywhere;
+}
+
+.rich-line.checked {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+.rich-line a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+.rich-line code {
+  font-family: ui-monospace, monospace;
+  font-size: 0.72em;
+  background: rgb(0 0 0 / 0.09);
+  border-radius: 6px;
+  padding: 2px 7px;
+}
+
+.rich-empty {
+  opacity: 0.55;
+}
+
+/* case à cocher dessinée (style 'checks') */
+.checklist-box {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  align-self: center;
+  border: 2px solid currentColor;
+  border-radius: 7px;
+  opacity: 0.8;
+  font-family: inherit;
+  font-size: 18px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease;
+}
+
+.checklist-box:hover {
+  transform: scale(1.1);
+}
+
+.checklist-box.checked {
+  opacity: 1;
+}
+
+.style-toggle {
+  display: inline-flex;
+  background: var(--paper-2);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.style-toggle button {
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+.style-toggle button.selected {
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
 }
 
 .header-tools {

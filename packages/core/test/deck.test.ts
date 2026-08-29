@@ -15,6 +15,7 @@ function note(partial: Partial<Note> & { id: string }): Note {
     title: partial.id,
     color: 'blue',
     status: 'active',
+    listStyle: 'dashes',
     dockPosition: null,
     createdAt: '2026-08-29T10:00:00Z',
     updatedAt: '2026-08-29T10:00:00Z',

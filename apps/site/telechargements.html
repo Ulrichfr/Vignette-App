@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Téléchargements — Vignette</title>
+  <meta name="description" content="Ouvrir Vignette sur le web, récupérer le code source, et bientôt les apps macOS, Windows, Linux, iOS et Android.">
+  <link rel="icon" href="assets/icons/favicon.ico" sizes="48x48">
+  <link rel="icon" href="assets/icons/vignette-blue.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="/">
+    <img src="assets/icons/vignette-blue.svg" alt="">
+    Vignette
+  </a>
+  <a href="/#fonctionnalites">Fonctionnalités</a>
+  <a href="/#captures">Captures</a>
+  <a href="/#tutoriels">Tutoriels</a>
+  <a href="/telechargements">Téléchargements</a>
+  <a href="https://github.com/Ulrichfr/Vignette" data-gh>GitHub</a>
+  <a class="btn btn-primary" href="/app/">Ouvrir l'app</a>
+</nav>
+
+<header class="hero">
+  <span class="hero-badge">Une seule base de code, toutes les plateformes</span>
+  <h1><span class="hl">Emporte</span> tes notes partout.</h1>
+  <p>La web app est prête aujourd'hui. Les apps natives arrivent — même moteur, même synchro, mêmes post-its.</p>
+</header>
+
+<section style="padding-top: 12px">
+  <div class="dl-grid">
+    <div class="dl-card reveal" style="background:var(--blue)">
+      <h3>Web</h3>
+      <p>Rien à installer : la zone membre tourne dans ton navigateur, sur n'importe quelle machine.</p>
+      <a class="btn" href="/app/">Ouvrir l'app</a>
+    </div>
+    <div class="dl-card reveal" style="background:var(--mint)">
+      <h3>Code source</h3>
+      <p>Tout le projet — web, serveur, migrations, ce site — sous licence libre, prêt à auto-héberger.</p>
+      <a class="btn" href="https://github.com/Ulrichfr/Vignette" data-gh>Voir sur GitHub</a>
+    </div>
+    <div class="dl-card reveal" style="background:var(--lilac)">
+      <h3>macOS</h3>
+      <p>Les post-its dockés au bord de l'écran, par-dessus le bureau, avec l'icône dans la barre de menus.</p>
+      <span class="soon">BIENTÔT · Tauri</span>
+    </div>
+    <div class="dl-card reveal" style="background:var(--yellow)">
+      <h3>Windows & Linux</h3>
+      <p>La même app native, construite depuis la même base Tauri.</p>
+      <span class="soon">BIENTÔT</span>
+    </div>
+    <div class="dl-card reveal" style="background:var(--rose)">
+      <h3>iPhone & iPad</h3>
+      <p>Tes listes dans la poche, synchronisées avec le bureau à la seconde près.</p>
+      <span class="soon">BIENTÔT</span>
+    </div>
+    <div class="dl-card reveal" style="background:var(--sand)">
+      <h3>Android</h3>
+      <p>Même moteur Tauri, mêmes post-its, sur tous tes appareils Android.</p>
+      <span class="soon">BIENTÔT</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">— pour les curieux</p>
+  <h2>Auto-héberger en trois commandes.</h2>
+  <p class="section-intro">Il te faut Docker et Node. Le guide complet est dans le dépôt.</p>
+  <pre class="clone reveal"><span class="c"># récupérer le projet</span>
+git clone https://github.com/Ulrichfr/Vignette.git &amp;&amp; cd Vignette
+
+<span class="c"># générer les secrets puis lancer la stack (Postgres, auth, realtime, Caddy)</span>
+node supabase/scripts/gen-env.mjs
+docker compose -f supabase/docker-compose.yml up -d
+
+<span class="c"># appliquer le schéma et construire la web app</span>
+./supabase/scripts/apply-migrations.sh
+pnpm install &amp;&amp; pnpm build</pre>
+</section>
+
+<section class="final">
+  <a class="note-cta" href="/app/">
+    <span class="hand">en attendant les apps natives…</span>
+    <h2>La web app t'attend.</h2>
+  </a>
+</section>
+
+<footer>
+  <a class="brand" href="/">
+    <img src="assets/icons/vignette-yellow.svg" alt="">
+    Vignette
+  </a>
+  <span>Fait à la main, hébergé à la maison.</span>
+  <span class="links">
+    <a href="/telechargements">Téléchargements</a>
+    <a href="https://github.com/Ulrichfr/Vignette" data-gh>GitHub</a>
+    <a href="https://ulrichrozier.com">ulrichrozier.com</a>
+  </span>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+</script>
+
+</body>
+</html>

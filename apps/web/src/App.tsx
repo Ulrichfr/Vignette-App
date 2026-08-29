@@ -17,7 +17,7 @@ function Workspace() {
   const selected = selectedId ?? state.notes.find((n) => !n.deletedAt)?.id ?? null;
 
   return (
-    <div className="app">
+    <div className={`app ${selectedId ? 'detail-open' : ''}`}>
       <InvitationsBanner />
       <main className="window">
         <NotesList
@@ -29,7 +29,11 @@ function Workspace() {
           onSelect={setSelectedId}
         />
         {selected ? (
-          <NoteDetail noteId={selected} onDeleted={() => setSelectedId(null)} />
+          <NoteDetail
+            noteId={selected}
+            onDeleted={() => setSelectedId(null)}
+            onBack={() => setSelectedId(null)}
+          />
         ) : (
           <section className="detail-pane empty">
             <p className="empty-hint">{t.emptyDetail}</p>

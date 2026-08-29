@@ -37,13 +37,13 @@ export function relativeAge(iso: string, now: Date = new Date(), units: AgeUnits
   return `${d}${units.d}`;
 }
 
-/** Filtre de la vue All Notes. */
-export type NotesFilter = 'all' | 'active' | 'archived';
+/** Filtre de la vue All Notes. `trash` = notes soft-supprimées, restaurables. */
+export type NotesFilter = 'all' | 'active' | 'archived' | 'trash';
 
 export function filterNotes(notes: Note[], filter: NotesFilter, query = ''): Note[] {
   const q = query.trim().toLowerCase();
   return notes
-    .filter((n) => !n.deletedAt)
+    .filter((n) => (filter === 'trash' ? n.deletedAt !== null : !n.deletedAt))
     .filter((n) => {
       if (filter === 'active') return n.status === 'active' || n.status === 'completed';
       if (filter === 'archived') return n.status === 'archived';

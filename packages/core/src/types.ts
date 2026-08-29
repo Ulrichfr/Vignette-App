@@ -12,12 +12,16 @@ export type NoteColor =
   | 'sand'
   | (string & {});
 
+/** Rendu des items : tirets manuscrits ou cases à cocher. */
+export type ListStyle = 'dashes' | 'checks';
+
 export interface Note {
   id: string;
   ownerId: string;
   title: string;
   color: NoteColor;
   status: NoteStatus;
+  listStyle: ListStyle;
   /** Ordre dans le deck ; null = pas dockée. Fractionnaire pour insertion sans renumérotation. */
   dockPosition: number | null;
   createdAt: string;

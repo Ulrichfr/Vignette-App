@@ -15,13 +15,67 @@ function download(filename: string, content: string) {
   URL.revokeObjectURL(url);
 }
 
-export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: () => void }) {
+interface NoteDetailProps {
+  noteId: string;
+  onDeleted: () => void;
+  /** Retour à la liste (mobile uniquement, masqué en desktop via CSS). */
+  onBack?: () => void;
+}
+
+export function NoteDetail({ noteId, onDeleted, onBack }: NoteDetailProps) {
   const { t } = useI18n();
   const state = useAppState();
   const [exportOpen, setExportOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
-  const note = state.notes.find((n) => n.id === noteId && !n.deletedAt);
+  const note = state.notes.find((n) => n.id === noteId);
   if (!note) return <section className="detail-pane empty" />;
+
+  // Vue corbeille : restaurer ou purger, contenu en lecture seule.
+  if (note.deletedAt) {
+    const spec0 = colorSpec(note.color);
+    return (
+      <section className="detail-pane">
+        <header className="detail-header">
+          {onBack && (
+            <button className="back-btn" onClick={onBack}>
+              ‹
+            </button>
+          )}
+          <span className="detail-status">
+            <span className="status-dot" style={{ background: spec0.base }} />
+            {t.badgeTrash}
+          </span>
+          <span className="detail-actions">
+            <button className="soft-btn" onClick={() => store.restore(note.id)}>
+              {t.restore}
+            </button>
+            <button
+              className="soft-btn danger"
+              onClick={() => {
+                store.purge(note.id);
+                onDeleted();
+              }}
+            >
+              {t.deleteForever}
+            </button>
+          </span>
+        </header>
+        <article className="detail-card trashed" style={{ background: spec0.base, color: spec0.ink }}>
+          <div className="detail-card-top">
+            <span className="detail-title">{note.title || t.untitled}</span>
+          </div>
+          <div className="checklist hand" style={{ color: spec0.ink }}>
+            {itemsOf(state, note.id).map((i) => (
+              <div key={i.id} className="checklist-line">
+                <span className="checklist-dash">{i.checked ? '✓' : '–'}</span>
+                <span className={i.checked ? 'checked' : ''}>{i.text}</span>
+              </div>
+            ))}
+          </div>
+        </article>
+      </section>
+    );
+  }
 
   const spec = colorSpec(note.color);
   const items = itemsOf(state, note.id);
@@ -41,6 +95,11 @@ export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: (
   return (
     <section className="detail-pane">
       <header className="detail-header">
+        {onBack && (
+          <button className="back-btn" onClick={onBack}>
+            ‹
+          </button>
+        )}
         <span className="detail-status">
           <span className="status-dot" style={{ background: spec.base }} />
           {statusLabel}
@@ -119,7 +178,7 @@ export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: (
           </span>
         </div>
 
-        <ChecklistEditor noteId={note.id} items={items} ink={spec.ink} />
+        <ChecklistEditor noteId={note.id} items={items} ink={spec.ink} listStyle={note.listStyle} />
 
         <footer className="detail-footer">
           <span>
@@ -129,6 +188,22 @@ export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: (
       </article>
 
       <div className="detail-toolbar">
+        <span className="style-toggle">
+          <button
+            className={note.listStyle === 'dashes' ? 'selected' : ''}
+            title={t.listDashes}
+            onClick={() => store.setListStyle(note.id, 'dashes')}
+          >
+            –
+          </button>
+          <button
+            className={note.listStyle === 'checks' ? 'selected' : ''}
+            title={t.listChecks}
+            onClick={() => store.setListStyle(note.id, 'checks')}
+          >
+            ☑
+          </button>
+        </span>
         <span className="color-picker">
           {COLOR_NAMES.map((name) => (
             <button
@@ -149,6 +224,12 @@ export function NoteDetail({ noteId, onDeleted }: { noteId: string; onDeleted: (
               {t.share}
             </button>
           )}
+          <button
+            className="ghost-btn"
+            onClick={() => store.duplicate(note.id, t.copySuffix)}
+          >
+            {t.duplicate}
+          </button>
           {inDeck ? (
             <button className="ghost-btn" onClick={() => store.undock(note.id)}>
               {t.removeFromDeck}

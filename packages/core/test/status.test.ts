@@ -8,6 +8,7 @@ function note(partial: Partial<Note> & { id: string }): Note {
     title: partial.id,
     color: 'blue',
     status: 'active',
+    listStyle: 'dashes',
     dockPosition: null,
     createdAt: '2026-08-29T10:00:00Z',
     updatedAt: '2026-08-29T10:00:00Z',
@@ -70,5 +71,8 @@ describe('filterNotes', () => {
   });
   it('recherche insensible à la casse sur le titre', () => {
     expect(filterNotes(notes, 'all', 'groc').map((n) => n.id)).toEqual(['Groceries']);
+  });
+  it('trash montre uniquement les supprimées', () => {
+    expect(filterNotes(notes, 'trash').map((n) => n.id)).toEqual(['Gone']);
   });
 });

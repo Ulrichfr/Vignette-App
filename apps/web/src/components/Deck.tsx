@@ -98,6 +98,7 @@ export function Deck() {
                   noteId={open.id}
                   items={itemsOf(state, open.id)}
                   ink={colorSpec(open.color).ink}
+                  listStyle={open.listStyle}
                   autoFocusLast
                 />
               </div>

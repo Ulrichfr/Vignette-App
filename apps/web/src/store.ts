@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import {
   positionAtEnd,
+  type ListStyle,
   type Note,
   type NoteColor,
   type NoteItem,
@@ -42,6 +43,7 @@ type NoteRow = {
   title: string;
   color: string;
   status: NoteStatus;
+  list_style: ListStyle;
   dock_position: number | null;
   created_at: string;
   updated_at: string;
@@ -62,6 +64,7 @@ const rowToNote = (r: NoteRow): Note => ({
   title: r.title,
   color: r.color,
   status: r.status,
+  listStyle: r.list_style ?? 'dashes',
   dockPosition: r.dock_position,
   createdAt: r.created_at,
   updatedAt: r.updated_at,
@@ -135,15 +138,18 @@ class Store {
       .subscribe();
   }
 
-  async refetch() {
+  async refetch(retry = true) {
     if (!supabase) return;
     const [notesRes, itemsRes, invRes] = await Promise.all([
-      supabase.from('notes').select('*').is('deleted_at', null),
+      supabase.from('notes').select('*'),
       supabase.from('note_items').select('*'),
       supabase.rpc('my_invitations'),
     ]);
     if (notesRes.error || itemsRes.error) {
       console.error('vignette: fetch failed', notesRes.error ?? itemsRes.error);
+      // ex. PGRST303 « JWT issued at future » : iat arrondi à la seconde
+      // suivante juste après le login — une seule relance suffit.
+      if (retry) setTimeout(() => void this.refetch(false), 1500);
       return;
     }
     type InvRow = { note_id: string; title: string; owner_name: string; role: string };
@@ -277,6 +283,7 @@ class Store {
       title: '',
       color,
       status: 'active',
+      listStyle: 'dashes',
       dockPosition: positionAtEnd(this.state.notes),
       createdAt: t,
       updatedAt: t,
@@ -324,6 +331,10 @@ class Store {
     this.patchNote(id, { status }, { status });
   }
 
+  setListStyle(id: string, listStyle: ListStyle) {
+    this.patchNote(id, { listStyle }, { list_style: listStyle });
+  }
+
   markComplete(id: string) {
     this.commit({
       ...this.state,
@@ -337,10 +348,67 @@ class Store {
   }
 
   softDelete(id: string) {
-    this.commit({ ...this.state, notes: this.state.notes.filter((n) => n.id !== id) });
-    this.push(() =>
-      supabase!.from('notes').update({ deleted_at: now(), dock_position: null }).eq('id', id),
-    );
+    this.patchNote(id, { deletedAt: now(), dockPosition: null }, { deleted_at: now(), dock_position: null });
+  }
+
+  restore(id: string) {
+    this.patchNote(id, { deletedAt: null }, { deleted_at: null });
+  }
+
+  purge(id: string) {
+    this.commit({
+      ...this.state,
+      notes: this.state.notes.filter((n) => n.id !== id),
+      items: this.state.items.filter((i) => i.noteId !== id),
+    });
+    this.push(() => supabase!.from('notes').delete().eq('id', id));
+  }
+
+  /** Duplique une note (titre + items), non dockée, décochée. */
+  duplicate(id: string, copySuffix: string): string | null {
+    const userId = this.userId;
+    const src = this.state.notes.find((n) => n.id === id);
+    if (!src || !userId) return null;
+    const newId = crypto.randomUUID();
+    const t = now();
+    const copy: Note = {
+      ...src,
+      id: newId,
+      ownerId: userId,
+      title: `${src.title}${copySuffix}`,
+      status: 'active',
+      dockPosition: null,
+      createdAt: t,
+      updatedAt: t,
+      deletedAt: null,
+    };
+    const items = itemsOf(this.state, id).map((i, idx) => ({
+      id: crypto.randomUUID(),
+      noteId: newId,
+      position: (idx + 1) * 1024,
+      text: i.text,
+      checked: false,
+    }));
+    this.commit({
+      ...this.state,
+      notes: [...this.state.notes, copy],
+      items: [...this.state.items, ...items],
+    });
+    this.push(async () => {
+      const res = await supabase!.from('notes').insert({
+        id: newId,
+        owner_id: userId,
+        title: copy.title,
+        color: copy.color,
+        status: 'active',
+        list_style: copy.listStyle,
+      });
+      if (res.error || items.length === 0) return res;
+      return supabase!.from('note_items').insert(
+        items.map((i) => ({ id: i.id, note_id: newId, position: i.position, text: i.text })),
+      );
+    });
+    return newId;
   }
 
   dock(id: string) {

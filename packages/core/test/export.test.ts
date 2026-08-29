@@ -8,6 +8,7 @@ const note: Note = {
   title: 'Groceries',
   color: 'mint',
   status: 'active',
+  listStyle: 'dashes',
   dockPosition: 1024,
   createdAt: '2026-08-29T10:00:00Z',
   updatedAt: '2026-08-29T10:00:00Z',
