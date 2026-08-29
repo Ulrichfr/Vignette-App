@@ -7,9 +7,12 @@
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
-        .plugin(tauri_plugin_notification::init())
-        .plugin(tauri_plugin_positioner::init())
+    let builder = tauri::Builder::default().plugin(tauri_plugin_notification::init());
+
+    #[cfg(desktop)]
+    let builder = builder.plugin(tauri_plugin_positioner::init());
+
+    builder
         .run(tauri::generate_context!())
         .expect("erreur au lancement de Vignette");
 }

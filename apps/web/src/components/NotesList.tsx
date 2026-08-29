@@ -12,6 +12,7 @@ import { setLang, useI18n, type Strings } from '../i18n';
 import { cycleTheme, useTheme } from '../theme';
 import { itemsOf, store, useAppState } from '../store';
 import { signOut } from './AuthGate';
+import { IcImport, IcMoon, IcSearch, IcSignOut, IcSun, IcSystem } from './icons';
 
 interface Props {
   filter: NotesFilter;
@@ -29,7 +30,7 @@ function statusBadge(note: Note, t: Strings): { label: string; className: string
   return { label: t.badgeActive, className: 'badge active' };
 }
 
-const THEME_ICON = { system: '◐', light: '☀', dark: '☾' } as const;
+const THEME_ICON = { system: <IcSystem />, light: <IcSun />, dark: <IcMoon /> } as const;
 
 export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSelect }: Props) {
   const { t, lang } = useI18n();
@@ -64,7 +65,7 @@ export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSele
         <h1>{t.allNotes}</h1>
         <span className="header-tools">
           <button className="ghost-btn icon-btn" title={t.import} onClick={() => fileRef.current?.click()}>
-            ⤒
+            <IcImport />
           </button>
           <input
             ref={fileRef}
@@ -85,13 +86,13 @@ export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSele
             {THEME_ICON[theme]}
           </button>
           <button className="ghost-btn icon-btn" title={t.signOut} onClick={signOut}>
-            ⎋
+            <IcSignOut />
           </button>
         </span>
       </header>
 
       <div className="search-row">
-        <span className="search-icon">⌕</span>
+        <span className="search-icon"><IcSearch /></span>
         <input
           placeholder={t.searchPlaceholder}
           value={query}

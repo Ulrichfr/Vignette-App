@@ -240,6 +240,17 @@ createServer(async (req, res) => {
     if (url.pathname === '/vapid-public') {
       return json(res, 200, { key: PUSH_ENABLED ? VAPID_PUBLIC : null });
     }
+    // découverte d'instance : permet aux apps natives de se connecter à
+    // n'importe quel serveur Vignette avec sa seule URL (la clé anon est
+    // publique par conception — elle est dans le bundle web de toute façon)
+    if (url.pathname === '/instance') {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      return json(res, 200, {
+        name: 'Vignette',
+        version: '0.1.0',
+        anonKey: process.env.ANON_KEY ?? null,
+      });
+    }
 
     const token = (req.headers.authorization ?? '').replace(/^Bearer /, '');
     const payload = verifyJwt(token);

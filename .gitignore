@@ -9,3 +9,4 @@ backups/
 *.log
 .DS_Store
 .gstack/
+apps/desktop/keystore/

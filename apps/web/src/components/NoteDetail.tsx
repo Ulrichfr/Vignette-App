@@ -4,9 +4,11 @@ import { toLocalInput } from '../lib/dates';
 import { useState } from 'react';
 import { COLOR_NAMES, PALETTE, colorSpec } from '../colors';
 import { useI18n } from '../i18n';
+import { isLocalMode } from '../lib/supabase';
 import { itemsOf, store, useAppState } from '../store';
 import { ChecklistEditor } from './ChecklistEditor';
 import { SharePanel } from './SharePanel';
+import { IcBack, IcClock } from './icons';
 
 function download(filename: string, content: string) {
   const url = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=utf-8' }));
@@ -40,7 +42,7 @@ export function NoteDetail({ noteId, onDeleted, onBack }: NoteDetailProps) {
         <header className="detail-header">
           {onBack && (
             <button className="back-btn" onClick={onBack}>
-              ‹
+              <IcBack />
             </button>
           )}
           <span className="detail-status">
@@ -99,7 +101,7 @@ export function NoteDetail({ noteId, onDeleted, onBack }: NoteDetailProps) {
       <header className="detail-header">
         {onBack && (
           <button className="back-btn" onClick={onBack}>
-            ‹
+            <IcBack />
           </button>
         )}
         <span className="detail-status">
@@ -234,7 +236,7 @@ export function NoteDetail({ noteId, onDeleted, onBack }: NoteDetailProps) {
           ))}
         </span>
         <span className="detail-toolbar-actions">
-          {isOwner && (
+          {isOwner && !isLocalMode() && (
             <button
               className={`ghost-btn ${shareOpen ? 'active' : ''}`}
               onClick={() => setShareOpen((v) => !v)}
@@ -265,7 +267,7 @@ export function NoteDetail({ noteId, onDeleted, onBack }: NoteDetailProps) {
                 el?.focus();
               }}
             >
-              🕐 {t.reminder}
+              <IcClock /> {t.reminder}
             </button>
             <input
               id="remind-input"

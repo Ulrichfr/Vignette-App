@@ -1,11 +1,16 @@
 import type { Session } from '@supabase/supabase-js';
 import { useEffect, useState, type ReactNode } from 'react';
 import { useI18n } from '../i18n';
-import { supabase } from '../lib/supabase';
+import { bootMode, supabase } from '../lib/supabase';
+import { Onboarding } from './Onboarding';
 import { store } from '../store';
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const { t } = useI18n();
+  // mode local : pas de compte, pas d'auth — on entre directement
+  if (bootMode === 'local') return <>{children}</>;
+  // premier lancement natif : choisir son instance
+  if (bootMode === 'onboarding') return <Onboarding />;
   const [session, setSession] = useState<Session | null>(null);
   const [checking, setChecking] = useState(true);
   // zone membre privée : les comptes se créent depuis le back office
@@ -39,13 +44,6 @@ export function AuthGate({ children }: { children: ReactNode }) {
     void store.setUser(session?.user.id ?? null);
   }, [session]);
 
-  if (!supabase) {
-    return (
-      <div className="auth-screen">
-        <p className="empty-hint">VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY manquants.</p>
-      </div>
-    );
-  }
 
   if (checking) return <div className="auth-screen" />;
 
@@ -66,7 +64,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
     return (
       <div className="auth-screen">
         <form className="auth-card" onSubmit={save}>
-          <h1 className="auth-logo">Vignette</h1>
+          <h1 className="auth-logo"><img src={`${import.meta.env.BASE_URL}icon.svg`} alt="" />Vignette</h1>
           <p className="auth-tagline hand">{t.tagline}</p>
           <label>
             {t.newPassword}
@@ -105,7 +103,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
     return (
       <div className="auth-screen">
         <form className="auth-card" onSubmit={submit}>
-          <h1 className="auth-logo">Vignette</h1>
+          <h1 className="auth-logo"><img src={`${import.meta.env.BASE_URL}icon.svg`} alt="" />Vignette</h1>
           <p className="auth-tagline hand">{t.tagline}</p>
           <label>
             {t.email}

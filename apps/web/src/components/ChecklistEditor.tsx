@@ -4,6 +4,7 @@ import { toLocalInput } from '../lib/dates';
 import { useRef, useState } from 'react';
 import { useI18n } from '../i18n';
 import { store } from '../store';
+import { IcClock } from './icons';
 
 interface Props {
   noteId: string;
@@ -136,7 +137,7 @@ export function ChecklistEditor({ noteId, items, ink, listStyle = 'dashes', auto
                     store.setItemReminder(item.id, null);
                   }}
                 >
-                  🕐 {fmtRemind(item.remindAt)}
+                  <IcClock size={14} /> {fmtRemind(item.remindAt)}
                 </span>
               )}
             </span>
@@ -160,7 +161,7 @@ export function ChecklistEditor({ noteId, items, ink, listStyle = 'dashes', auto
                   el?.showPicker?.();
                 }}
               >
-                🕐
+                <IcClock size={14} />
               </button>
               <input
                 id={`item-remind-${item.id}`}

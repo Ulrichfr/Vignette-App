@@ -60,6 +60,17 @@ export interface Strings {
   decline: string;
   leave: string;
   shareError: string;
+  onboardTitle: string;
+  onboardIntro: string;
+  onboardOfficial: string;
+  onboardOfficialDesc: string;
+  onboardCustom: string;
+  onboardCustomDesc: string;
+  onboardCustomPlaceholder: string;
+  onboardConnect: string;
+  onboardLocal: string;
+  onboardLocalDesc: string;
+  onboardError: string;
   signIn: string;
   signUp: string;
   email: string;
@@ -136,6 +147,17 @@ const STRINGS: Record<Lang, Strings> = {
     decline: 'Refuser',
     leave: 'Quitter la note',
     shareError: 'Invitation impossible — vérifie l’email.',
+    onboardTitle: 'Où vivent tes notes ?',
+    onboardIntro: 'Tu pourras changer d’avis plus tard.',
+    onboardOfficial: 'Vignette officiel',
+    onboardOfficialDesc: 'L’instance de vignette.ulrichrozier.com — un compte fourni par Ulrich.',
+    onboardCustom: 'Ma propre instance',
+    onboardCustomDesc: 'Ton serveur auto-hébergé : donne son adresse, l’app fait le reste.',
+    onboardCustomPlaceholder: 'https://vignette.mondomaine.fr',
+    onboardConnect: 'Connecter',
+    onboardLocal: 'Local, sans serveur',
+    onboardLocalDesc: 'Tout reste sur cet appareil. Pas de compte, pas de partage — juste tes listes.',
+    onboardError: 'Impossible de joindre cette instance — vérifie l’adresse.',
     signIn: 'Se connecter',
     signUp: 'Créer un compte',
     email: 'Email',
@@ -210,6 +232,17 @@ const STRINGS: Record<Lang, Strings> = {
     decline: 'Decline',
     leave: 'Leave note',
     shareError: 'Could not invite — check the email.',
+    onboardTitle: 'Where do your notes live?',
+    onboardIntro: 'You can change your mind later.',
+    onboardOfficial: 'Official Vignette',
+    onboardOfficialDesc: 'The vignette.ulrichrozier.com instance — accounts provided by Ulrich.',
+    onboardCustom: 'My own instance',
+    onboardCustomDesc: 'Your self-hosted server: give its address, the app does the rest.',
+    onboardCustomPlaceholder: 'https://vignette.mydomain.com',
+    onboardConnect: 'Connect',
+    onboardLocal: 'Local, serverless',
+    onboardLocalDesc: 'Everything stays on this device. No account, no sharing — just your lists.',
+    onboardError: 'Could not reach this instance — check the address.',
     signIn: 'Sign in',
     signUp: 'Create account',
     email: 'Email',

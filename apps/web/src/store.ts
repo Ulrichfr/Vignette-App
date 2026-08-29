@@ -7,7 +7,8 @@ import {
   type NoteItem,
   type NoteStatus,
 } from '@vignette/core';
-import { supabase } from './lib/supabase';
+import { isLocalMode, supabase } from './lib/supabase';
+import { LocalStore } from './store-local';
 
 export interface Invitation {
   noteId: string;
@@ -573,7 +574,7 @@ class Store {
   }
 }
 
-export const store = new Store();
+export const store = isLocalMode() ? new LocalStore() : new Store();
 
 export function useAppState(): AppState {
   return useSyncExternalStore(store.subscribe, store.getState);
