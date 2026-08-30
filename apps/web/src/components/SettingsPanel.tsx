@@ -4,8 +4,11 @@ import { getAppIcon, setAppIcon, ICON_COLORS, type IconColor } from '../lib/appi
 import {
   APP_VERSION,
   checkForUpdate,
+  checkForUpdateInPlace,
+  isDesktopNative,
   isNative,
   openExternal,
+  type InPlaceUpdate,
   type UpdateInfo,
 } from '../lib/update';
 import { buildBackup } from '../lib/backup';
@@ -25,15 +28,43 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
     'idle',
   );
   const [update, setUpdate] = useState<UpdateInfo | null>(null);
+  const [inPlace, setInPlace] = useState<InPlaceUpdate | null>(null);
+  const [installPct, setInstallPct] = useState<number | null>(null);
+  const [installing, setInstalling] = useState(false);
+  const [installed, setInstalled] = useState(false);
 
-  const runUpdateCheck = () => {
-    setUpdateState('checking');
+  const manifestCheck = () =>
     checkForUpdate()
       .then((u) => {
         setUpdate(u);
         setUpdateState(u ? 'idle' : 'uptodate');
       })
       .catch(() => setUpdateState('error'));
+
+  const runUpdateCheck = () => {
+    setUpdateState('checking');
+    if (isDesktopNative) {
+      // updater signé d'abord ; repli manifeste si indisponible (deb…)
+      checkForUpdateInPlace()
+        .then((u) => {
+          setInPlace(u);
+          setUpdateState(u ? 'idle' : 'uptodate');
+        })
+        .catch(() => void manifestCheck());
+    } else {
+      void manifestCheck();
+    }
+  };
+
+  const runInstall = () => {
+    if (!inPlace) return;
+    setInstalling(true);
+    setInstallPct(0);
+    inPlace
+      .install((pct) => setInstallPct(pct))
+      .then(() => setInstalled(true))
+      .catch(() => setUpdateState('error'))
+      .finally(() => setInstalling(false));
   };
 
   const pickIcon = (c: IconColor) => {
@@ -173,7 +204,23 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
         <section>
           <h3>{t.settingsUpdate}</h3>
           <p className="settings-hint">{t.updateCurrent(APP_VERSION)}</p>
-          {update ? (
+          {inPlace ? (
+            <div className="settings-update">
+              <p className="update-available">{t.updateAvailable(inPlace.version)}</p>
+              {inPlace.body && <p className="settings-hint">{inPlace.body}</p>}
+              {installed ? (
+                <button className="soft-btn" onClick={() => void inPlace.restart()}>
+                  {t.updateRestart}
+                </button>
+              ) : (
+                <button className="soft-btn" disabled={installing} onClick={runInstall}>
+                  {installing
+                    ? t.updateInstalling(installPct === null ? '…' : `${installPct}%`)
+                    : t.updateInstall}
+                </button>
+              )}
+            </div>
+          ) : update ? (
             <div className="settings-update">
               <p className="update-available">{t.updateAvailable(update.version)}</p>
               {update.notes?.fr && <p className="settings-hint">{update.notes.fr}</p>}

@@ -3,6 +3,8 @@ import '@fontsource-variable/inter';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import { FloatingNote } from './components/FloatingNote';
+import { floatNoteId } from './lib/float';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { applyAppIcon } from './lib/appicon';
 import './styles.css';
@@ -10,11 +12,11 @@ import './app.css';
 
 applyAppIcon();
 
+const floatId = floatNoteId();
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ErrorBoundary>
-      <App />
-    </ErrorBoundary>
+    <ErrorBoundary>{floatId ? <FloatingNote noteId={floatId} /> : <App />}</ErrorBoundary>
   </StrictMode>,
 );
 

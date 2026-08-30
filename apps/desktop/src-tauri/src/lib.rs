@@ -11,7 +11,10 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init());
 
     #[cfg(desktop)]
-    let builder = builder.plugin(tauri_plugin_positioner::init());
+    let builder = builder
+        .plugin(tauri_plugin_positioner::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init());
 
     builder
         .run(tauri::generate_context!())

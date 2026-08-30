@@ -37,6 +37,16 @@ export class LocalStore {
   private state: AppState = { ...load(), invitations: [], ready: true };
   private listeners = new Set<() => void>();
 
+  constructor() {
+    // une autre fenêtre (post-it sur le bureau) a écrit : on recharge
+    window.addEventListener('storage', (e) => {
+      if (e.key === STORAGE_KEY) {
+        this.state = { ...this.state, ...load() };
+        this.listeners.forEach((fn) => fn());
+      }
+    });
+  }
+
   getState = (): AppState => this.state;
 
   get currentUserId(): string | null {

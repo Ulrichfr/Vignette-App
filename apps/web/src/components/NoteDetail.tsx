@@ -1,5 +1,7 @@
 import { isDue, noteToMarkdown, noteToText, relativeAge } from '@vignette/core';
 import { ensurePushSubscription } from '../lib/push';
+import { openFloatingNote } from '../lib/float';
+import { isDesktopNative } from '../lib/update';
 import { toLocalInput } from '../lib/dates';
 import { useState } from 'react';
 import { COLOR_NAMES, PALETTE, colorSpec } from '../colors';
@@ -250,6 +252,11 @@ export function NoteDetail({ noteId, onDeleted, onBack }: NoteDetailProps) {
           >
             {t.duplicate}
           </button>
+          {isDesktopNative && (
+            <button className="ghost-btn" onClick={() => void openFloatingNote(note.id)}>
+              {t.floatPin}
+            </button>
+          )}
           <span className="remind-wrap">
             <button
               className={`ghost-btn ${note.remindAt ? 'active' : ''}`}

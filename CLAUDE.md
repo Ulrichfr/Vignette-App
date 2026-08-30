@@ -95,5 +95,11 @@ Quatre fichiers portent la version et doivent bouger ENSEMBLE :
 `apps/site/dl/latest.json` (manifeste lu par le vérificateur de mise à jour
 des apps — bump le champ version, les URLs des binaires et les notes).
 Ensuite : rebuild natifs signés → copier dans apps/site/dl/ → SHA256SUMS.txt
-→ deploy.sh. Le manifeste est servi avec CORS * et no-cache (Caddyfile) parce
+→ deploy.sh. Pour la mise à jour EN PLACE : builder desktop avec
+`TAURI_SIGNING_PRIVATE_KEY_PATH=apps/desktop/keystore/updater.key` et
+`TAURI_SIGNING_PRIVATE_KEY_PASSWORD` (ligne updaterpass de keystore.txt) —
+ça produit les artefacts + `.sig` ; recopier chaque signature dans
+`apps/site/dl/updater.json` (format updater Tauri : version, pub_date,
+platforms.{linux-x86_64,darwin-aarch64}.{url,signature}). La clé updater.key
+est PRÉCIEUSE (NAS) : perdue = plus aucune mise à jour en place possible. Le manifeste est servi avec CORS * et no-cache (Caddyfile) parce
 que les webviews tauri:// le lisent cross-origin — ne pas retirer ces en-têtes.

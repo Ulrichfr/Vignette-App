@@ -67,7 +67,7 @@
 		header @volatile Cache-Control "no-cache, must-revalidate"
 		# manifeste de version : lu par les apps natives (webview tauri://) → CORS,
 		# et jamais mis en cache pour que la détection de màj soit immédiate
-		@latest path /dl/latest.json
+		@latest path /dl/latest.json /dl/updater.json
 		header @latest Access-Control-Allow-Origin "*"
 		header @latest Cache-Control "no-cache, must-revalidate"
 		try_files {path} {path}.html /index.html

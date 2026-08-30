@@ -1,0 +1,22 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "desktop",
+  "description": "Capacités desktop : mise à jour en place et relance",
+  "platforms": [
+    "linux",
+    "macOS",
+    "windows"
+  ],
+  "windows": [
+    "main",
+    "float-*"
+  ],
+  "permissions": [
+    "updater:default",
+    "process:allow-restart",
+    "core:webview:allow-create-webview-window",
+    "core:window:allow-close",
+    "core:window:allow-start-dragging",
+    "core:window:allow-set-focus"
+  ]
+}

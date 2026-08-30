@@ -36,6 +36,10 @@ export interface Strings {
   updateDownload: string;
   updateReload: string;
   updateError: string;
+  floatPin: string;
+  updateInstall: string;
+  updateInstalling: (p: string) => string;
+  updateRestart: string;
   migrationOffer: (n: number) => string;
   migrationImport: string;
   migrationLater: string;
@@ -165,6 +169,10 @@ const STRINGS: Record<Lang, Strings> = {
     updateDownload: 'Télécharger',
     updateReload: 'Recharger',
     updateError: 'Vérification impossible (hors ligne ?)',
+    floatPin: 'Épingler sur le bureau',
+    updateInstall: 'Installer la mise à jour',
+    updateInstalling: (p) => `Installation… ${p}`,
+    updateRestart: 'Redémarrer Vignette',
     migrationOffer: (n) =>
       n === 1
         ? 'Une note du mode local vit encore sur cet appareil — l’importer dans ce compte ?'
@@ -295,6 +303,10 @@ const STRINGS: Record<Lang, Strings> = {
     updateDownload: 'Download',
     updateReload: 'Reload',
     updateError: 'Could not check (offline?)',
+    floatPin: 'Pin to desktop',
+    updateInstall: 'Install update',
+    updateInstalling: (p) => `Installing… ${p}`,
+    updateRestart: 'Restart Vignette',
     migrationOffer: (n) =>
       n === 1
         ? 'One local-mode note still lives on this device — import it into this account?'
