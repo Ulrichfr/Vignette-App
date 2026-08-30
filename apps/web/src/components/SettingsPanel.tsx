@@ -10,7 +10,8 @@ import {
 } from '../lib/update';
 import { buildBackup } from '../lib/backup';
 import { clearInstance } from '../lib/instance';
-import { instanceConfig } from '../lib/supabase';
+import { archiveLocalData, localNotesPending } from '../lib/migration';
+import { bootMode, instanceConfig } from '../lib/supabase';
 import { setTheme, useTheme, type Theme } from '../theme';
 import { store, useAppState } from '../store';
 
@@ -123,6 +124,21 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
             <button className="soft-btn" onClick={exportAll}>
               {t.backupExport}
             </button>
+            {bootMode !== 'local' && localNotesPending() && (
+              <button
+                className="soft-btn"
+                onClick={() => {
+                  const pending = localNotesPending();
+                  if (pending) {
+                    store.importBackup(pending.notes, pending.items);
+                    archiveLocalData();
+                  }
+                  onClose();
+                }}
+              >
+                {t.settingsMigrate(localNotesPending()?.notes.length ?? 0)}
+              </button>
+            )}
           </div>
           <p className="settings-hint">{t.settingsImportHint}</p>
         </section>

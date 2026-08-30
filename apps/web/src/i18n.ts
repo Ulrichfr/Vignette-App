@@ -36,6 +36,10 @@ export interface Strings {
   updateDownload: string;
   updateReload: string;
   updateError: string;
+  migrationOffer: (n: number) => string;
+  migrationImport: string;
+  migrationLater: string;
+  settingsMigrate: (n: number) => string;
   listChecks: string;
   copySuffix: string;
   badgeTrash: string;
@@ -161,6 +165,13 @@ const STRINGS: Record<Lang, Strings> = {
     updateDownload: 'Télécharger',
     updateReload: 'Recharger',
     updateError: 'Vérification impossible (hors ligne ?)',
+    migrationOffer: (n) =>
+      n === 1
+        ? 'Une note du mode local vit encore sur cet appareil — l’importer dans ce compte ?'
+        : `${n} notes du mode local vivent encore sur cet appareil — les importer dans ce compte ?`,
+    migrationImport: 'Importer',
+    migrationLater: 'Plus tard',
+    settingsMigrate: (n) => (n === 1 ? 'Importer la note locale de cet appareil' : `Importer les ${n} notes locales de cet appareil`),
     listChecks: 'Cases à cocher',
     copySuffix: ' (copie)',
     badgeTrash: 'CORBEILLE',
@@ -284,6 +295,13 @@ const STRINGS: Record<Lang, Strings> = {
     updateDownload: 'Download',
     updateReload: 'Reload',
     updateError: 'Could not check (offline?)',
+    migrationOffer: (n) =>
+      n === 1
+        ? 'One local-mode note still lives on this device — import it into this account?'
+        : `${n} local-mode notes still live on this device — import them into this account?`,
+    migrationImport: 'Import',
+    migrationLater: 'Later',
+    settingsMigrate: (n) => (n === 1 ? 'Import this device’s local note' : `Import this device’s ${n} local notes`),
     listChecks: 'Checkboxes',
     copySuffix: ' (copy)',
     badgeTrash: 'TRASH',

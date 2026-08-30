@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AuthGate } from './components/AuthGate';
 import { Deck } from './components/Deck';
 import { InvitationsBanner } from './components/InvitationsBanner';
+import { MigrationBanner } from './components/MigrationBanner';
 import { NoteDetail } from './components/NoteDetail';
 import { NotesList } from './components/NotesList';
 import { useI18n } from './i18n';
@@ -103,6 +104,7 @@ function Workspace() {
   return (
     <div className={`app ${selectedId ? 'detail-open' : ''}`}>
       <InvitationsBanner />
+      <MigrationBanner />
       <main className="window">
         <NotesList
           filter={filter}

@@ -24,9 +24,10 @@ stockage de l'appareil. Tout marche pareil — deck, rappels (notifications
 locales), couleurs, corbeille, imports/exports — sauf le partage et la
 synchro entre appareils, qui demandent un serveur.
 
-Tu peux commencer en local et te connecter à une instance plus tard : tes
-notes locales restent sur l'appareil (l'import Markdown permet de les
-transvaser en attendant une migration en un clic, prévue).
+Tu peux commencer en local et te connecter à une instance plus tard : au
+premier lancement connecté, Vignette remarque les notes locales de l'appareil
+et propose de **les importer dans le compte en un clic** (les données locales
+sont archivées sur l'appareil, jamais effacées).
 
 La web app, elle, est toujours servie par une instance : elle est en mode
 « officiel/auto-hébergé » par nature.
@@ -36,8 +37,6 @@ La web app, elle, est toujours servie par une instance : elle est en mode
 - **Synchro pair-à-pair sans serveur** : synchroniser le mode local entre ses
   propres appareils sans instance (CRDT + WebRTC/mDNS). Le grand chantier
   local-first.
-- **Migration locale → instance en un clic** : envoyer ses notes locales vers
-  un compte fraîchement connecté.
 - **Icônes alternatives natives** : le choix d'icône des Réglages s'applique au
   favicon et à la PWA ; sur macOS/iOS/Android il faudra les mécanismes de
   chaque plateforme (NSApp.applicationIconImage, activity-alias Android,
