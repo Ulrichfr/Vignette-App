@@ -32,6 +32,15 @@ sont archivées sur l'appareil, jamais effacées).
 La web app, elle, est toujours servie par une instance : elle est en mode
 « officiel/auto-hébergé » par nature.
 
+## Déjà là (desktop)
+
+- **Post-its sur le bureau** : « Épingler sur le bureau » sur n'importe quelle
+  note ouvre une fenêtre sans bordure, toujours au premier plan, au bord de
+  l'écran — déplaçable par sa poignée, synchronisée en direct avec l'app.
+- **Mise à jour en place** : Réglages → Vérifier télécharge et installe la
+  nouvelle version signée (AppImage, .app macOS), puis relance. Repli sur le
+  téléchargement classique là où l'updater n'existe pas (deb, Android).
+
 ## Feuille de route
 
 - **Synchro pair-à-pair sans serveur** : synchroniser le mode local entre ses
@@ -44,11 +53,6 @@ La web app, elle, est toujours servie par une instance : elle est en mode
 - **Widgets OS** : épingler UNE de ses listes en widget (écran d'accueil
   iOS/Android, bureau/menu bar macOS) — la liste choisie parmi toutes,
   cochable depuis le widget.
-- **Fenêtres post-its sur le bureau** (desktop) : chaque note dockée devient
-  une vraie fenêtre frameless always-on-top au bord de l'écran.
-- **Mise à jour en place** : l'app détecte déjà les nouvelles versions
-  (manifeste `dl/latest.json`) et mène au téléchargement ; l'étape suivante est
-  l'updater Tauri signé qui remplace le binaire tout seul.
 - **Chiffrement local** : chiffrer le corps des notes au repos en mode local
   (clé dans le trousseau de l'OS).
 - **Import Stickies** : importer les fichiers `.stickies` de macOS en gardant

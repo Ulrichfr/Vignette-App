@@ -1,0 +1,11 @@
+{
+  "version": "0.1.0",
+  "pub_date": "2026-08-30T04:00:00Z",
+  "notes": "Premi\u00e8re version publique.",
+  "platforms": {
+    "linux-x86_64": {
+      "url": "https://vignette.ulrichrozier.com/dl/Vignette_0.1.0_amd64.AppImage",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUekRISE9HZ0ZNZFgyRVRsODlIUzVRTndWUHhvcnUvYUNKN0xyTHB6WFFwV0Y4RmpIWVd4U2RSTmRlaWFyaXJqdkIzMUxaTDhGN1B0TTJZRklFd24xMXRJdFBxOXJIb1FVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg4MDYwOTczCWZpbGU6VmlnbmV0dGVfMC4xLjBfYW1kNjQuQXBwSW1hZ2UKUmZoanJRYWhvWFlrQUtFL2JGc3hmbTNvcWxvTU9tK0R1UVBZRTFYdUh4Z0MvZ0k5THgvN2VUMFN5Q05CQ1daUXVrb2djUG5MWFVzTDVVZ3MybHltQ0E9PQo="
+    }
+  }
+}
