@@ -5,7 +5,7 @@
   "platforms": {
     "linux-x86_64": {
       "url": "https://vignette.ulrichrozier.com/dl/Vignette_0.1.0_amd64.AppImage",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUekRISE9HZ0ZNZGZJVmRTNG9pbWxQMW44SVJ5ZlVqOERDQWtWVlVJemZRaXRudnZuZDZDZzhCeTBJNm84MzJBUGUvR2ZUbGt6emlqbVNqN0Y2THlKTnR1UE1SQWRTREEwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg4MDc3OTkxCWZpbGU6VmlnbmV0dGVfMC4xLjBfYW1kNjQuQXBwSW1hZ2UKSFJSQ05velNnbVFxOERxOGJwY1E4M0JGcysvUmcraUdYb0t4c2FVYVFzcmJuSkJuZi9FOWxyOFdWblpubDhPcHNTbWxNV09tMyt5Q2hjeFNHczB1Q2c9PQo="
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUekRISE9HZ0ZNZGVqRzJCczRGMGNIeDN1M0ttMEZlK09hWUNWVmZIRWk0enJRbWpuek1jL1JWWUNpVk1FRVhzZ0U5di83MmlZNDhYc1luZEdWckFrVmJZcHgyUHlpaEFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg4MDc5MjQwCWZpbGU6VmlnbmV0dGVfMC4xLjBfYW1kNjQuQXBwSW1hZ2UKcm9VY3lBOVplRjFacjl0MnFsdk43UlQyREZ6b09Wdm1SbHcwalJsaDZIZm9HNzVRNjYzSVQzVlRxVjBaSWEyRTBEeUpnRkg0a1k2aGtoMWVZbkN5RHc9PQo="
     },
     "darwin-aarch64": {
       "url": "https://vignette.ulrichrozier.com/dl/Vignette.app.tar.gz",
