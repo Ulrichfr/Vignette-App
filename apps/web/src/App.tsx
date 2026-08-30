@@ -8,7 +8,7 @@ import { NoteDetail } from './components/NoteDetail';
 import { NotesList } from './components/NotesList';
 import { useI18n } from './i18n';
 import { ensurePushSubscription } from './lib/push';
-import { checkForUpdate, isNative, openExternal, type UpdateInfo } from './lib/update';
+import { checkForUpdate, isDesktopNative, isNative, openExternal, type UpdateInfo } from './lib/update';
 import { store, useAppState } from './store';
 
 function Workspace() {
@@ -29,6 +29,18 @@ function Workspace() {
     clearTimeout(undoTimer.current);
     undoTimer.current = setTimeout(() => setUndoNoteId(null), 8000);
   };
+
+  // tray / raccourci global natif : « nouvelle note » depuis n'importe où
+  useEffect(() => {
+    if (!isDesktopNative) return;
+    let unlisten: (() => void) | undefined;
+    void import('@tauri-apps/api/event').then(({ listen }) =>
+      listen('vignette://nouvelle-note', () => setSelectedId(store.createNote())).then((u) => {
+        unlisten = u;
+      }),
+    );
+    return () => unlisten?.();
+  }, []);
 
   // nouvelle version publiée ? (démarrage différé + toutes les 6 h, silencieux si injoignable)
   useEffect(() => {
