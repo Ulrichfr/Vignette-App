@@ -59,3 +59,26 @@ export async function closeFloatingWindow(): Promise<void> {
   const { getCurrentWindow } = await import('@tauri-apps/api/window');
   await getCurrentWindow().close();
 }
+
+const TAB_W = 48;
+const TAB_H = 190;
+
+/** Replie la fenêtre courante en onglet collé au bord droit, ou la redéploie. */
+export async function setFloatCollapsed(collapsed: boolean): Promise<void> {
+  const { getCurrentWindow, LogicalPosition, LogicalSize } = await import(
+    '@tauri-apps/api/window'
+  );
+  const w = getCurrentWindow();
+  const scale = await w.scaleFactor();
+  const pos = await w.outerPosition();
+  const y = Math.max(0, Math.round(pos.y / scale));
+  if (collapsed) {
+    await w.setSize(new LogicalSize(TAB_W, TAB_H));
+    await w.setPosition(new LogicalPosition(window.screen.availWidth - TAB_W, y));
+  } else {
+    await w.setSize(new LogicalSize(FLOAT_W, FLOAT_H));
+    await w.setPosition(
+      new LogicalPosition(Math.max(0, window.screen.availWidth - FLOAT_W - 16), y),
+    );
+  }
+}

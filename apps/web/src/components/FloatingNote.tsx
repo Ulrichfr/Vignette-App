@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useI18n } from '../i18n';
 import { colorSpec } from '../colors';
-import { closeFloatingWindow } from '../lib/float';
+import { closeFloatingWindow, setFloatCollapsed } from '../lib/float';
 import { isDesktopNative } from '../lib/update';
 import { supabase } from '../lib/supabase';
 import { itemsOf, store, useAppState } from '../store';
@@ -11,10 +11,20 @@ import { ChecklistEditor } from './ChecklistEditor';
  * Une note seule, rendue dans sa propre fenêtre frameless posée sur le bureau
  * (`?float=<id>`). La bande du haut sert de poignée de déplacement.
  */
+function tabLabel(title: string): string {
+  return (title || 'NOTE').toUpperCase().slice(0, 9);
+}
+
 export function FloatingNote({ noteId }: { noteId: string }) {
   const { t } = useI18n();
   const state = useAppState();
   const [slow, setSlow] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+
+  const fold = (next: boolean) => {
+    setCollapsed(next);
+    void setFloatCollapsed(next);
+  };
   const note = state.notes.find((n) => n.id === noteId && !n.deletedAt);
 
   // cette fenêtre ne passe pas par AuthGate : elle amorce la session elle-même
@@ -61,6 +71,21 @@ export function FloatingNote({ noteId }: { noteId: string }) {
   }
 
   const spec = colorSpec(note.color);
+
+  if (collapsed) {
+    return (
+      <div
+        className="float-collapsed"
+        style={{ background: spec.base, color: spec.ink }}
+        data-tauri-drag-region
+      >
+        <button title={t.floatExpand} onClick={() => fold(false)}>
+          <span className="tab-label">{tabLabel(note.title)}</span>
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="float-note" style={{ background: spec.base, color: spec.ink }}>
       <header className="float-head" data-tauri-drag-region>
@@ -72,13 +97,18 @@ export function FloatingNote({ noteId }: { noteId: string }) {
           onChange={(e) => store.rename(note.id, e.target.value)}
         />
         {isDesktopNative && (
-          <button
-            className="float-close"
-            aria-label="✕"
-            onClick={() => void closeFloatingWindow()}
-          >
-            ✕
-          </button>
+          <>
+            <button className="float-fold" title={t.floatCollapse} onClick={() => fold(true)}>
+              ⇥
+            </button>
+            <button
+              className="float-close"
+              aria-label="✕"
+              onClick={() => void closeFloatingWindow()}
+            >
+              ✕
+            </button>
+          </>
         )}
       </header>
       <div className="float-body">

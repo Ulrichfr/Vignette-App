@@ -42,6 +42,8 @@ export interface Strings {
   onboardChecking: string;
   floatPin: string;
   floatConnecting: string;
+  floatCollapse: string;
+  floatExpand: string;
   floatNoSession: string;
   updateInstall: string;
   updateInstalling: (p: string) => string;
@@ -181,6 +183,8 @@ const STRINGS: Record<Lang, Strings> = {
     onboardChecking: 'Vérification…',
     floatPin: 'Épingler sur le bureau',
     floatConnecting: 'connexion…',
+    floatCollapse: 'Ranger sur le côté',
+    floatExpand: 'Déplier',
     floatNoSession: 'Impossible de charger la note — ouvre Vignette et vérifie ta connexion.',
     updateInstall: 'Installer la mise à jour',
     updateInstalling: (p) => `Installation… ${p}`,
@@ -321,6 +325,8 @@ const STRINGS: Record<Lang, Strings> = {
     onboardChecking: 'Checking…',
     floatPin: 'Pin to desktop',
     floatConnecting: 'connecting…',
+    floatCollapse: 'Tuck to the side',
+    floatExpand: 'Unfold',
     floatNoSession: 'Could not load this note — open Vignette and check your connection.',
     updateInstall: 'Install update',
     updateInstalling: (p) => `Installing… ${p}`,
