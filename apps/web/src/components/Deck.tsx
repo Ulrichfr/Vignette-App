@@ -95,6 +95,7 @@ export function Deck() {
               className="deck-open-note"
               style={{ background: colorSpec(open.color).base, color: colorSpec(open.color).ink }}
               layoutId={`deck-${open.id}`}
+              exit={{ x: '112%', transition: { duration: 0.34, ease: [0.4, 0, 0.9, 0.45] } }}
               transition={SPRING}
             >
               <span className="deck-open-edge perforation">

@@ -8,7 +8,7 @@
   <link rel="icon" href="assets/icons/favicon.ico" sizes="48x48">
   <link rel="icon" href="assets/icons/vignette-yellow.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="style.css?v=20260830k">
+  <link rel="stylesheet" href="style.css?v=20260830l">
 </head>
 <body>
 
@@ -27,12 +27,21 @@
   <a class="btn btn-primary" href="/app/">Ouvrir l'app <span class="arr">↗</span></a>
 </nav>
 
-<div class="mini-deck" aria-hidden="true">
-  <span style="background:var(--blue)">OFFICE</span>
-  <span style="background:var(--mint)">COURSES</span>
-  <span style="background:var(--lilac)">WEEK-END</span>
-  <span style="background:var(--yellow)">IDÉES</span>
+<div class="mini-deck" role="group" aria-label="Essaie le deck : clique un onglet">
+  <span tabindex="0" style="background:var(--blue)" data-ink="#23384f" data-title="Office" data-items="– relire le contrat|– point équipe à 15 h|✓ répondre à Léa">OFFICE</span>
+  <span tabindex="0" style="background:var(--mint)" data-ink="#1f3d2b" data-title="Courses" data-items="✓ pommes|– 4x bananes  🕐 dim. 18:30|– fruits secs">COURSES</span>
+  <span tabindex="0" style="background:var(--lilac)" data-ink="#3d2b5e" data-title="Week-end" data-items="– réserver le resto|– cadeau pour Lola">WEEK-END</span>
+  <span tabindex="0" style="background:var(--yellow)" data-ink="#4a3b10" data-title="Idées" data-items="– un widget pour le bureau|– mode focus du matin">IDÉES</span>
 </div>
+
+<aside class="mini-note" id="mini-note" hidden>
+  <span class="mini-note-edge"><span id="mini-note-tab"></span></span>
+  <div class="mini-note-body">
+    <strong id="mini-note-title"></strong>
+    <div class="hand" id="mini-note-items"></div>
+    <button class="mini-note-close" id="mini-note-close" aria-label="Fermer">✕</button>
+  </div>
+</aside>
 
 <header class="hero">
   <span class="float-note" style="background:var(--mint); color:#1f3d2b; top:120px; left:-150px; --r:-7deg; width:150px">– appeler le plombier<br>– arroser les plantes</span>
@@ -275,6 +284,39 @@ pnpm install &amp;&amp; pnpm build</pre>
 </footer>
 
 <script>
+// mini-deck interactif : le geste signature, en vrai, sur la vitrine
+(() => {
+  const note = document.getElementById('mini-note');
+  const tabEl = document.getElementById('mini-note-tab');
+  const titleEl = document.getElementById('mini-note-title');
+  const itemsEl = document.getElementById('mini-note-items');
+  let current = null;
+  const close = () => {
+    note.classList.remove('open');
+    current = null;
+    setTimeout(() => { if (!current) note.hidden = true; }, 380);
+  };
+  document.querySelectorAll('.mini-deck span').forEach((tab) => {
+    const openNote = () => {
+      if (current === tab) return close();
+      current = tab;
+      note.hidden = false;
+      note.style.background = getComputedStyle(tab).backgroundColor;
+      note.style.color = tab.dataset.ink;
+      tabEl.textContent = tab.textContent;
+      titleEl.textContent = tab.dataset.title;
+      itemsEl.innerHTML = tab.dataset.items.split('|').map((i) => `<div>${i}</div>`).join('');
+      requestAnimationFrame(() => requestAnimationFrame(() => note.classList.add('open')));
+    };
+    tab.addEventListener('click', openNote);
+    tab.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openNote(); } });
+  });
+  document.getElementById('mini-note-close').addEventListener('click', close);
+  document.addEventListener('click', (e) => {
+    if (current && !note.contains(e.target) && !e.target.closest('.mini-deck')) close();
+  });
+})();
+
   // apparitions au scroll
   const io = new IntersectionObserver((entries) => {
     for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
