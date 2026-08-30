@@ -58,8 +58,8 @@ export function Deck() {
                   : ''
               }`}
               style={{ background: spec.base, color: spec.ink }}
-              whileHover={{ x: -8 }}
-              whileDrag={{ x: -14, scale: 1.05 }}
+              whileHover={{ width: 56 }}
+              whileDrag={{ width: 60, scale: 1.04 }}
               transition={SPRING}
               layoutId={`deck-${note.id}`}
               onClick={() => setOpenId(note.id === openId ? null : note.id)}

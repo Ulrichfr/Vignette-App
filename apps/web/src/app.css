@@ -969,7 +969,6 @@
 }
 
 .deck-tab:hover {
-  transform: translateX(-7px);
   box-shadow: -10px 6px 22px rgba(0, 0, 0, 0.2);
 }
 
