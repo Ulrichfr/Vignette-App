@@ -101,5 +101,9 @@ Ensuite : rebuild natifs signés → copier dans apps/site/dl/ → SHA256SUMS.tx
 ça produit les artefacts + `.sig` ; recopier chaque signature dans
 `apps/site/dl/updater.json` (format updater Tauri : version, pub_date,
 platforms.{linux-x86_64,darwin-aarch64}.{url,signature}). La clé updater.key
-est PRÉCIEUSE (NAS) : perdue = plus aucune mise à jour en place possible. Le manifeste est servi avec CORS * et no-cache (Caddyfile) parce
+est PRÉCIEUSE (NAS) : perdue = plus aucune mise à jour en place possible.
+Elle ne quitte JAMAIS le mini-PC : les artefacts construits ailleurs
+(dmg/.app.tar.gz du Mac) sont rapatriés puis signés ici en détaché avec
+`pnpm tauri signer sign` — ne jamais transporter la clé vers une autre
+machine, même pour un build. Le manifeste est servi avec CORS * et no-cache (Caddyfile) parce
 que les webviews tauri:// le lisent cross-origin — ne pas retirer ces en-têtes.
