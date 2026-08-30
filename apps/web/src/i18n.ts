@@ -41,6 +41,8 @@ export interface Strings {
   onboardStartLocal: string;
   onboardChecking: string;
   floatPin: string;
+  floatConnecting: string;
+  floatNoSession: string;
   updateInstall: string;
   updateInstalling: (p: string) => string;
   updateRestart: string;
@@ -178,6 +180,8 @@ const STRINGS: Record<Lang, Strings> = {
     onboardStartLocal: 'Commencer en local',
     onboardChecking: 'Vérification…',
     floatPin: 'Épingler sur le bureau',
+    floatConnecting: 'connexion…',
+    floatNoSession: 'Impossible de charger la note — ouvre Vignette et vérifie ta connexion.',
     updateInstall: 'Installer la mise à jour',
     updateInstalling: (p) => `Installation… ${p}`,
     updateRestart: 'Redémarrer Vignette',
@@ -316,6 +320,8 @@ const STRINGS: Record<Lang, Strings> = {
     onboardStartLocal: 'Start locally',
     onboardChecking: 'Checking…',
     floatPin: 'Pin to desktop',
+    floatConnecting: 'connecting…',
+    floatNoSession: 'Could not load this note — open Vignette and check your connection.',
     updateInstall: 'Install update',
     updateInstalling: (p) => `Installing… ${p}`,
     updateRestart: 'Restart Vignette',

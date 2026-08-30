@@ -1,19 +1,11 @@
-import {
-  filterNotes,
-  parseImport,
-  relativeAge,
-  stripInline,
-  type Note,
-  type NotesFilter,
-} from '@vignette/core';
-import { useRef, useState } from 'react';
+import { filterNotes, relativeAge, stripInline, type Note, type NotesFilter } from '@vignette/core';
+import { useState } from 'react';
 import { colorSpec } from '../colors';
 import { useI18n, type Strings } from '../i18n';
 import { itemsOf, store, useAppState } from '../store';
 import { signOut } from './AuthGate';
-import { IcExport, IcGear, IcImport, IcSearch, IcSignOut } from './icons';
+import { IcGear, IcSearch, IcSignOut } from './icons';
 import { SettingsPanel } from './SettingsPanel';
-import { buildBackup, parseBackup } from '../lib/backup';
 
 interface Props {
   filter: NotesFilter;
@@ -34,41 +26,8 @@ function statusBadge(note: Note, t: Strings): { label: string; className: string
 export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSelect }: Props) {
   const { t } = useI18n();
   const state = useAppState();
-  const fileRef = useRef<HTMLInputElement>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const importFiles = async (files: FileList | null) => {
-    if (!files) return;
-    let lastId: string | null = null;
-    for (const file of Array.from(files)) {
-      const text = await file.text();
-      if (file.name.toLowerCase().endsWith('.json')) {
-        try {
-          const backup = parseBackup(text);
-          store.importBackup(backup.notes, backup.items);
-        } catch {
-          console.warn('vignette: sauvegarde illisible', file.name);
-        }
-        continue;
-      }
-      const parsed = parseImport(text, file.name.replace(/\.(md|txt)$/i, ''));
-      lastId = store.createNoteWithItems(parsed.title, parsed.items);
-    }
-    if (lastId) onSelect(lastId);
-    if (fileRef.current) fileRef.current.value = '';
-  };
-
-  const exportAll = () => {
-    const stamp = new Date().toISOString().slice(0, 10);
-    const url = URL.createObjectURL(
-      new Blob([buildBackup(state.notes, state.items)], { type: 'application/json' }),
-    );
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `vignette-sauvegarde-${stamp}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
   const notes = filterNotes(state.notes, filter, query, state.items);
   const total = state.notes.filter((n) => !n.deletedAt).length;
 
@@ -85,20 +44,6 @@ export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSele
       <header className="list-header">
         <h1>{t.allNotes}</h1>
         <span className="header-tools">
-          <button className="ghost-btn icon-btn" title={t.import} aria-label={t.import} onClick={() => fileRef.current?.click()}>
-            <IcImport />
-          </button>
-          <input
-            ref={fileRef}
-            type="file"
-            accept=".md,.txt,.json,text/markdown,text/plain,application/json"
-            multiple
-            style={{ display: 'none' }}
-            onChange={(e) => void importFiles(e.target.files)}
-          />
-          <button className="ghost-btn icon-btn" title={t.backupExport} aria-label={t.backupExport} onClick={exportAll}>
-            <IcExport />
-          </button>
           <button
             className="ghost-btn icon-btn"
             title={t.settings}
@@ -166,7 +111,12 @@ export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSele
         })}
         {notes.length === 0 && <p className="empty-hint">{t.emptyList}</p>}
       </div>
-      {settingsOpen && <SettingsPanel onClose={() => setSettingsOpen(false)} />}
+      {settingsOpen && (
+        <SettingsPanel
+          onClose={() => setSettingsOpen(false)}
+          onImported={(lastId) => lastId && onSelect(lastId)}
+        />
+      )}
     </section>
   );
 }

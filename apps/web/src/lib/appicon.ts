@@ -17,7 +17,7 @@ export function getAppIcon(): IconColor {
   } catch {
     // stockage indisponible
   }
-  return 'blue';
+  return 'yellow';
 }
 
 function setLink(rel: string, href: string, type?: string) {

@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react';
 import { useI18n } from '../i18n';
 import { colorSpec } from '../colors';
 import { closeFloatingWindow } from '../lib/float';
 import { isDesktopNative } from '../lib/update';
+import { supabase } from '../lib/supabase';
 import { itemsOf, store, useAppState } from '../store';
 import { ChecklistEditor } from './ChecklistEditor';
 
@@ -12,9 +14,39 @@ import { ChecklistEditor } from './ChecklistEditor';
 export function FloatingNote({ noteId }: { noteId: string }) {
   const { t } = useI18n();
   const state = useAppState();
+  const [slow, setSlow] = useState(false);
   const note = state.notes.find((n) => n.id === noteId && !n.deletedAt);
 
-  if (!state.ready) return null;
+  // cette fenêtre ne passe pas par AuthGate : elle amorce la session elle-même
+  // (le mode local est prêt d'office ; en mode serveur, sans ça le store ne
+  // démarre jamais et la fenêtre resterait vide — bogue payé cash sur macOS)
+  useEffect(() => {
+    if (!supabase) return;
+    void supabase.auth
+      .getSession()
+      .then(({ data }) => store.setUser(data.session?.user.id ?? null));
+    const { data: sub } = supabase.auth.onAuthStateChange(
+      (_e, sess) => void store.setUser(sess?.user.id ?? null),
+    );
+    const timer = setTimeout(() => setSlow(true), 8000);
+    return () => {
+      sub.subscription.unsubscribe();
+      clearTimeout(timer);
+    };
+  }, []);
+
+  if (!state.ready) {
+    return (
+      <div className="float-note float-missing">
+        <p className="empty-hint hand">{slow ? t.floatNoSession : t.floatConnecting}</p>
+        {isDesktopNative && (
+          <button className="ghost-btn" onClick={() => void closeFloatingWindow()}>
+            ✕
+          </button>
+        )}
+      </div>
+    );
+  }
   if (!note) {
     return (
       <div className="float-note float-missing">

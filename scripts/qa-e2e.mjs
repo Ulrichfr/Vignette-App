@@ -28,6 +28,19 @@ async function scenario(name, fn) {
   } catch (err) {
     results.push({ name, ok: false, err: String(err).split('\n')[0] });
     console.log(`  ✗ ${name} — ${String(err).split('\n')[0]}`);
+    try {
+      const safe = name.replace(/[^a-z0-9]+/gi, '-').slice(0, 40);
+      await page.screenshot({ path: `/tmp/qa-echec-${safe}.png` });
+    } catch {
+      // page fermée : tant pis
+    }
+  }
+}
+
+async function openSettings(pg) {
+  if (!(await pg.locator('.settings-panel').count())) {
+    await pg.locator('button[aria-label]:has(svg)').nth(0).click();
+    await pg.waitForTimeout(400);
   }
 }
 
@@ -90,7 +103,7 @@ await scenario('mauvais mot de passe → erreur affichée', async () => {
   await page.waitForTimeout(1200);
   if (!(await page.locator('input[type=email]').count())) {
     // déjà connecté d'une session précédente : on se déconnecte
-    await page.locator('button[title]:has(svg)').nth(3).click();
+    await page.locator('button[title]:has(svg)').nth(1).click();
     await page.waitForTimeout(1200);
   }
   await page.fill('input[type=email]', USER.email);
@@ -304,9 +317,10 @@ await scenario('partage : inviter, accepter, co-éditer en temps réel', async (
 });
 
 /* ------------------------------------------------------------ import / export */
-await scenario('import Markdown', async () => {
+await scenario('import Markdown (via réglages)', async () => {
   const md = '# QA-import\n\n- [ ] alpha\n- [x] beta\n';
-  await page.locator('input[type=file]').setInputFiles({
+  await openSettings(page);
+  await page.locator('.settings-panel input[type=file]').setInputFiles({
     name: 'QA-import.md',
     mimeType: 'text/markdown',
     buffer: Buffer.from(md),
@@ -315,12 +329,14 @@ await scenario('import Markdown', async () => {
   expect(await page.locator('.note-row', { hasText: 'QA-import' }).count(), 'note importée absente');
 });
 
-await scenario('export JSON puis ré-import', async () => {
+await scenario('export JSON puis ré-import (via réglages)', async () => {
+  await openSettings(page);
   const dl = page.waitForEvent('download');
-  await page.locator('button[title^="Tout exporter"]').first().click();
+  await page.locator('.settings-panel button', { hasText: 'Tout exporter' }).click();
   const file = await (await dl).path();
   const before = await page.locator('.note-row').count();
-  await page.locator('input[type=file]').setInputFiles(file);
+  await openSettings(page);
+  await page.locator('.settings-panel input[type=file]').setInputFiles(file);
   await page.waitForTimeout(1500);
   const after = await page.locator('.note-row').count();
   expect(after > before, 'ré-import sans effet');
@@ -328,8 +344,7 @@ await scenario('export JSON puis ré-import', async () => {
 
 /* ------------------------------------------------------------ réglages */
 await scenario('langue EN puis retour FR', async () => {
-  await page.locator('button[aria-label]:has(svg)').nth(2).click();
-  await page.waitForTimeout(400);
+  await openSettings(page);
   await page.locator('.settings-panel button', { hasText: 'English' }).click();
   await page.waitForTimeout(400);
   expect(await page.locator('h1', { hasText: 'All notes' }).count(), 'entête pas en anglais');

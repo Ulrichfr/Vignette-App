@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { setLang, useI18n, type Lang } from '../i18n';
 import { getAppIcon, setAppIcon, ICON_COLORS, type IconColor } from '../lib/appicon';
 import {
@@ -11,15 +11,23 @@ import {
   type InPlaceUpdate,
   type UpdateInfo,
 } from '../lib/update';
-import { buildBackup } from '../lib/backup';
+import { buildBackup, parseBackup } from '../lib/backup';
 import { clearInstance } from '../lib/instance';
 import { archiveLocalData, localNotesPending } from '../lib/migration';
 import { bootMode, instanceConfig } from '../lib/supabase';
+import { parseImport } from '@vignette/core';
 import { setTheme, useTheme, type Theme } from '../theme';
 import { store, useAppState } from '../store';
 
 /** Réglages : langue, thème, icône de l'app, données, instance, à propos. */
-export function SettingsPanel({ onClose }: { onClose: () => void }) {
+export function SettingsPanel({
+  onClose,
+  onImported,
+}: {
+  onClose: () => void;
+  onImported?: (lastId: string | null) => void;
+}) {
+  const fileRef = useRef<HTMLInputElement>(null);
   const { t, lang } = useI18n();
   const theme = useTheme();
   const state = useAppState();
@@ -70,6 +78,28 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
   const pickIcon = (c: IconColor) => {
     setIcon(c);
     setAppIcon(c);
+  };
+
+  const importFiles = async (files: FileList | null) => {
+    if (!files) return;
+    let lastId: string | null = null;
+    for (const file of Array.from(files)) {
+      const text = await file.text();
+      if (file.name.toLowerCase().endsWith('.json')) {
+        try {
+          const backup = parseBackup(text);
+          store.importBackup(backup.notes, backup.items);
+        } catch {
+          console.warn('vignette: sauvegarde illisible', file.name);
+        }
+        continue;
+      }
+      const parsed = parseImport(text, file.name.replace(/\.(md|txt)$/i, ''));
+      lastId = store.createNoteWithItems(parsed.title, parsed.items);
+    }
+    if (fileRef.current) fileRef.current.value = '';
+    onImported?.(lastId);
+    onClose();
   };
 
   const exportAll = () => {
@@ -152,6 +182,17 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
         <section>
           <h3>{t.settingsData}</h3>
           <div className="settings-chips">
+            <button className="soft-btn" onClick={() => fileRef.current?.click()}>
+              {t.import}
+            </button>
+            <input
+              ref={fileRef}
+              type="file"
+              accept=".md,.txt,.json,text/markdown,text/plain,application/json"
+              multiple
+              style={{ display: 'none' }}
+              onChange={(e) => void importFiles(e.target.files)}
+            />
             <button className="soft-btn" onClick={exportAll}>
               {t.backupExport}
             </button>
