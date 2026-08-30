@@ -797,7 +797,10 @@ footer a:hover {
 }
 
 .mini-deck span:hover {
-  transform: translateX(-6px);
+  /* on grandit vers la page, jamais de vide entre l'onglet et le bord */
+  transform: translateX(0);
+  width: 46px;
+  box-shadow: -8px 4px 18px rgb(0 0 0 / 0.18);
 }
 
 @media (max-width: 900px) {
