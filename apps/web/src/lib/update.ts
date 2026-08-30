@@ -3,7 +3,7 @@
 // Le site officiel publie un manifeste statique `/dl/latest.json` (version,
 // URLs par plateforme, notes). Les apps natives le consultent au démarrage et
 // depuis les Réglages ; la web app s'en sert pour proposer un rechargement.
-// La mise à jour EN PLACE (updater Tauri signé) est en feuille de route —
+// La mise à jour EN PLACE (updater Tauri signé) est en feuille de route ;
 // ici on détecte, on informe et on mène au bon binaire.
 
 export const APP_VERSION: string = __APP_VERSION__;
@@ -39,7 +39,7 @@ export interface InPlaceUpdate {
 
 /**
  * Mise à jour EN PLACE via l'updater Tauri signé (AppImage, .app macOS).
- * Jette si indisponible (deb, plateforme absente du manifeste…) — l'appelant
+ * Jette si indisponible (deb, plateforme absente du manifeste…), l'appelant
  * se replie alors sur le flux latest.json + téléchargement.
  */
 export async function checkForUpdateInPlace(): Promise<InPlaceUpdate | null> {
@@ -85,7 +85,7 @@ function platformKey(): string {
   return 'linux-appimage';
 }
 
-/** null si à jour (ou manifeste injoignable — on ne dérange jamais pour ça). */
+/** null si à jour (ou manifeste injoignable, on ne dérange jamais pour ça). */
 export async function checkForUpdate(): Promise<UpdateInfo | null> {
   const r = await fetch(`${LATEST_URL}?t=${Date.now()}`, { cache: 'no-store' });
   if (!r.ok) throw new Error(String(r.status));

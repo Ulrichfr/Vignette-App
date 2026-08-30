@@ -4,6 +4,7 @@ import {
   type ListStyle,
   type Note,
   type NoteColor,
+  type Space,
   type NoteItem,
   type NoteStatus,
 } from '@vignette/core';
@@ -27,6 +28,7 @@ export interface NoteMember {
 export interface AppState {
   notes: Note[];
   items: NoteItem[];
+  spaces: Space[];
   invitations: Invitation[];
   /** false tant que le premier fetch n'est pas terminé. */
   ready: boolean;
@@ -41,6 +43,7 @@ function now(): string {
 type NoteRow = {
   id: string;
   owner_id: string;
+  space_id?: string | null;
   title: string;
   color: string;
   status: NoteStatus;
@@ -65,6 +68,7 @@ type ItemRow = {
 const rowToNote = (r: NoteRow): Note => ({
   id: r.id,
   ownerId: r.owner_id,
+  spaceId: r.space_id ?? null,
   title: r.title,
   color: r.color,
   status: r.status,
@@ -92,7 +96,10 @@ type Listener = () => void;
  * arrière-plan, et application des événements Realtime (partage multi-comptes).
  */
 class Store {
-  private state: AppState = { notes: [], items: [], invitations: [], ready: false };
+  private state: AppState = { notes: [], items: [], spaces: [], invitations: [], ready: false };
+
+  /** Espace actif côté UI : les créations de notes y atterrissent. */
+  activeSpaceId: string | null = null;
   private listeners = new Set<Listener>();
   private userId: string | null = null;
   private channel: ReturnType<NonNullable<typeof supabase>['channel']> | null = null;
@@ -139,7 +146,7 @@ class Store {
       this.channel = null;
     }
     if (!userId || !supabase) {
-      this.commit({ notes: [], items: [], invitations: [], ready: false });
+      this.commit({ notes: [], items: [], spaces: [], invitations: [], ready: false });
       return;
     }
     await this.refetch();
@@ -160,15 +167,16 @@ class Store {
 
   async refetch(retry = true) {
     if (!supabase) return;
-    const [notesRes, itemsRes, invRes] = await Promise.all([
+    const [notesRes, itemsRes, spacesRes, invRes] = await Promise.all([
       supabase.from('notes').select('*'),
       supabase.from('note_items').select('*'),
+      supabase.from('spaces').select('*'),
       supabase.rpc('my_invitations'),
     ]);
     if (notesRes.error || itemsRes.error) {
       console.error('vignette: fetch failed', notesRes.error ?? itemsRes.error);
       // ex. PGRST303 « JWT issued at future » : iat arrondi à la seconde
-      // suivante juste après le login — une seule relance suffit.
+      // suivante juste après le login, une seule relance suffit.
       if (retry) setTimeout(() => void this.refetch(false), 1500);
       return;
     }
@@ -176,6 +184,9 @@ class Store {
     this.commit({
       notes: (notesRes.data as NoteRow[]).map(rowToNote),
       items: (itemsRes.data as ItemRow[]).map(rowToItem),
+      spaces: ((spacesRes.data ?? []) as { id: string; name: string; position: number }[])
+        .map((r) => ({ id: r.id, name: r.name, position: r.position }))
+        .sort((a, b) => a.position - b.position || a.name.localeCompare(b.name)),
       invitations: ((invRes.data ?? []) as InvRow[]).map((r) => ({
         noteId: r.note_id,
         title: r.title,
@@ -301,6 +312,7 @@ class Store {
     const note: Note = {
       id,
       ownerId: userId,
+      spaceId: this.activeSpaceId,
       title: '',
       color,
       status: 'active',
@@ -330,6 +342,7 @@ class Store {
       const res = await supabase!.from('notes').insert({
         id,
         owner_id: userId,
+        space_id: note.spaceId,
         title: '',
         color,
         status: 'active',
@@ -345,6 +358,46 @@ class Store {
 
   rename(id: string, title: string) {
     this.patchNote(id, { title }, { title });
+  }
+
+  /* ------------------------------------------------------------- espaces */
+
+  setNoteSpace(id: string, spaceId: string | null) {
+    this.patchNote(id, { spaceId }, { space_id: spaceId });
+  }
+
+  createSpace(name: string): string {
+    const userId = this.userId;
+    if (!userId) return '';
+    const id = crypto.randomUUID();
+    const position = (this.state.spaces.at(-1)?.position ?? 0) + 1024;
+    this.commit({
+      ...this.state,
+      spaces: [...this.state.spaces, { id, name, position }],
+    });
+    this.push(() =>
+      supabase!.from('spaces').insert({ id, owner_id: userId, name, position }),
+    );
+    return id;
+  }
+
+  renameSpace(id: string, name: string) {
+    this.commit({
+      ...this.state,
+      spaces: this.state.spaces.map((sp) => (sp.id === id ? { ...sp, name } : sp)),
+    });
+    this.push(() => supabase!.from('spaces').update({ name }).eq('id', id));
+  }
+
+  /** Supprime l'espace ; ses notes redeviennent « Personnel » (jamais de perte). */
+  deleteSpace(id: string) {
+    if (this.activeSpaceId === id) this.activeSpaceId = null;
+    this.commit({
+      ...this.state,
+      spaces: this.state.spaces.filter((sp) => sp.id !== id),
+      notes: this.state.notes.map((n) => (n.spaceId === id ? { ...n, spaceId: null } : n)),
+    });
+    this.push(() => supabase!.from('spaces').delete().eq('id', id));
   }
 
   setColor(id: string, color: NoteColor) {
@@ -396,6 +449,7 @@ class Store {
     const note: Note = {
       id,
       ownerId: userId,
+      spaceId: this.activeSpaceId,
       title,
       color,
       status: 'active',
@@ -423,6 +477,7 @@ class Store {
       const res = await supabase!.from('notes').insert({
         id,
         owner_id: userId,
+        space_id: note.spaceId,
         title,
         color,
         status: 'active',
@@ -451,7 +506,7 @@ class Store {
     const newNotes: Note[] = notes.map((n) => {
       const id = crypto.randomUUID();
       idMap.set(n.id, id);
-      return { ...n, id, ownerId: userId, dockPosition: null, createdAt: t, updatedAt: t };
+      return { ...n, id, ownerId: userId, spaceId: null, dockPosition: null, createdAt: t, updatedAt: t };
     });
     const newItems: NoteItem[] = items
       .filter((i) => idMap.has(i.noteId))

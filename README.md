@@ -7,7 +7,7 @@
 <p align="center">
   <b>Tes listes, collées au bord de l'écran.</b><br>
   Des post-its numériques dockés en onglets pastel, synchronisés en temps réel,
-  partageables par email — open source et auto-hébergés.
+  partageables par email, open source et auto-hébergés.
 </p>
 
 <p align="center">
@@ -23,21 +23,21 @@
 
 ## Ce que fait Vignette
 
-- **Le deck** — tes notes vivent en onglets pastel dockés au bord de l'écran et se
+- **Le deck**, tes notes vivent en onglets pastel dockés au bord de l'écran et se
   déplient d'une pichenette, avec des animations à ressort.
-- **Temps réel** — coche un item sur ton téléphone, il se barre instantanément sur
+- **Temps réel**, coche un item sur ton téléphone, il se barre instantanément sur
   ton Mac (Supabase Realtime, mises à jour optimistes).
-- **Partage** — invite par email en lecture ou en édition ; l'invitation arrive
+- **Partage**, invite par email en lecture ou en édition ; l'invitation arrive
   comme un petit post-it jaune, à accepter ou refuser. La RLS Postgres garantit
   l'isolation entre comptes.
-- **Rappels « coin corné »** — corne une note avec une échéance, écrite à la main
+- **Rappels « coin corné »**, corne une note avec une échéance, écrite à la main
   sur le pli ; l'onglet frémit et une notification part quand c'est l'heure.
-- **Listes vivantes** — tirets manuscrits ou cases à cocher, **gras**, *italique*,
+- **Listes vivantes**, tirets manuscrits ou cases à cocher, **gras**, *italique*,
   `code` et liens cliquables, duplication, archives, corbeille restaurable,
   exports Markdown/texte.
-- **FR/EN, clair/sombre** — français par défaut, mode sombre où les post-its
+- **FR/EN, clair/sombre**, français par défaut, mode sombre où les post-its
   restent des post-its.
-- **Trois modes** — l'instance officielle, la tienne (une URL suffit, l'app
+- **Trois modes**, l'instance officielle, la tienne (une URL suffit, l'app
   découvre le reste), ou le mode local pur, sans serveur ni compte
   ([docs/MODES.md](docs/MODES.md)).
 
@@ -59,7 +59,7 @@ Monorepo pnpm :
 | `supabase/` | Stack self-hosted (Postgres + GoTrue + PostgREST + Realtime + Caddy), migrations SQL + RLS |
 
 Le backend est une stack Supabase self-hosted **taillée** : pas de Kong (Caddy
-fait le routage et le CORS préflight), pas de Studio ni d'analytics — cinq
+fait le routage et le CORS préflight), pas de Studio ni d'analytics, cinq
 conteneurs, ~450 Mo de RAM.
 
 ## Démarrer
@@ -84,4 +84,4 @@ pnpm dev         # web app en dev (Vite, port 5183)
 
 ## Licence
 
-[MIT](LICENSE) — fait à la main, hébergé à la maison.
+[MIT](LICENSE), fait à la main, hébergé à la maison.

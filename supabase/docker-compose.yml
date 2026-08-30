@@ -1,6 +1,6 @@
 # Stack Supabase self-hosted minimale pour Vignette.
 # Dérivée du compose officiel (supabase/supabase docker), taillée pour le mini-PC :
-# pas de Studio, ni analytics, ni Storage, ni pooler, ni Kong/Envoy — Caddy route
+# pas de Studio, ni analytics, ni Storage, ni pooler, ni Kong/Envoy : Caddy route
 # /auth, /rest et /realtime avec les mêmes réécritures que le gateway officiel.
 # Secrets dans .env (générés par scripts/gen-env.mjs), jamais commités.
 
@@ -9,7 +9,7 @@ name: vignette
 services:
   db:
     # Même version que celle épinglée par le compose officiel pour gotrue v2.189 /
-    # realtime v2.102 — une image plus ancienne casse les migrations (ownership).
+    # realtime v2.102 : une image plus ancienne casse les migrations (ownership).
     image: supabase/postgres:17.6.1.136
     container_name: vignette-db
     restart: unless-stopped
@@ -183,7 +183,7 @@ services:
       - realtime
     ports:
       # TLS terminé par Cloudflare. Passerelle docker0 : joignable par le
-      # conteneur cloudflared (host.docker.internal) sans exposer au LAN —
+      # conteneur cloudflared (host.docker.internal) sans exposer au LAN
       # le loopback pur serait invisible du tunnel (502), dixit Orchestration.
       - "172.17.0.1:8360:80"
       # et loopback pour le dev local

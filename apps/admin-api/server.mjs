@@ -1,4 +1,4 @@
-// API back office Vignette — zéro dépendance.
+// API back office Vignette : zéro dépendance.
 // Vérifie le JWT de l'appelant (HS256), exige profiles.is_admin, puis pilote
 // GoTrue admin + PostgREST avec la clé service_role (jamais exposée au client).
 
@@ -86,7 +86,7 @@ async function scanReminders() {
       )
     ).json();
     for (const n of dueNotes) {
-      const count = await pushTo(await recipientsOf(n), `Vignette — ${n.title || 'Une note'}`, 'C’est l’heure !');
+      const count = await pushTo(await recipientsOf(n), `Vignette · ${n.title || 'Une note'}`, 'C’est l’heure !');
       await fetch(`${REST_URL}/notes?id=eq.${n.id}`, {
         method: 'PATCH',
         headers: svc,
@@ -111,7 +111,7 @@ async function scanReminders() {
       if (notes[0]) {
         const count = await pushTo(
           await recipientsOf(notes[0]),
-          `Vignette — ${i.text || 'Une tâche'}`,
+          `Vignette · ${i.text || 'Une tâche'}`,
           `C’est l’heure ! (${notes[0].title || 'note'})`,
         );
         if (count) console.log(`rappel item "${i.text}" → ${count} abonnement(s)`);
@@ -243,7 +243,7 @@ createServer(async (req, res) => {
     }
     // découverte d'instance : permet aux apps natives de se connecter à
     // n'importe quel serveur Vignette avec sa seule URL (la clé anon est
-    // publique par conception — elle est dans le bundle web de toute façon)
+    // publique par conception : elle est dans le bundle web de toute façon)
     if (url.pathname === '/instance') {
       res.setHeader('Access-Control-Allow-Origin', '*');
       return json(res, 200, {

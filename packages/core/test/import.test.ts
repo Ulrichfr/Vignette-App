@@ -23,7 +23,7 @@ describe('parseImport', () => {
     expect(parsed.items).toContainEqual({ text: 'dry fruits', checked: false });
   });
 
-  it('lignes nues et puces * — tout devient item', () => {
+  it('lignes nues et puces * : tout devient item', () => {
     expect(parseImport('# T\n* a\nb', 'x').items).toEqual([
       { text: 'a', checked: false },
       { text: 'b', checked: false },

@@ -25,7 +25,7 @@ function ExtLink({ href, children, className }: { href: string; children: React.
 
 /**
  * Premier lancement (apps natives) : choisir où vivent les notes.
- * Trois post-its — l'instance officielle, la sienne, ou le local pur.
+ * Trois post-its, l'instance officielle, la sienne, ou le local pur.
  */
 export function Onboarding() {
   const { t, lang } = useI18n();

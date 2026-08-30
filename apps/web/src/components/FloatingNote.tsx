@@ -29,7 +29,7 @@ export function FloatingNote({ noteId }: { noteId: string }) {
 
   // cette fenêtre ne passe pas par AuthGate : elle amorce la session elle-même
   // (le mode local est prêt d'office ; en mode serveur, sans ça le store ne
-  // démarre jamais et la fenêtre resterait vide — bogue payé cash sur macOS)
+  // démarre jamais et la fenêtre resterait vide, bogue payé cash sur macOS)
   useEffect(() => {
     if (!supabase) return;
     void supabase.auth

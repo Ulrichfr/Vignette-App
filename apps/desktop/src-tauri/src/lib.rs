@@ -1,4 +1,4 @@
-// Vignette desktop/mobile — coque Tauri v2 autour de la web app (apps/web).
+// Vignette desktop/mobile : coque Tauri v2 autour de la web app (apps/web).
 //
 // La fenêtre principale montre la vue « Toutes les notes ». Les post-its sur
 // le bureau sont des WebviewWindow frameless créées côté JS (lib/float.ts).

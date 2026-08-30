@@ -10,7 +10,7 @@ OUT=/home/ul-ia/vignette/backups/test-alarme.log
 
 {
   echo "=== test d'alarme $(date) ==="
-  echo "$(date) ECHEC test-api (TEST D'ALARME VOLONTAIRE — ignorer, retiré dans 2 min)" >> "$LOG"
+  echo "$(date) ECHEC test-api (TEST D'ALARME VOLONTAIRE : ignorer, retiré dans 2 min)" >> "$LOG"
   echo "-- revue avec faux échec :"
   bash /home/ul-ia/ulia-ops/revue-invariants.sh 2>&1
   sleep 120

@@ -1,4 +1,4 @@
-# Vignette — app native (Tauri v2)
+# Vignette : app native (Tauri v2)
 
 Coque native autour de la web app (`apps/web`), une seule base de code pour
 macOS, Windows, Linux, iOS et Android.
@@ -28,7 +28,7 @@ pnpm tauri icon ../site/assets/icons/icon-1024.png
 ## Feuille de route native
 
 - [ ] Fenêtres post-it dockées au bord de l'écran (frameless, always-on-top,
-      `tauri-plugin-positioner`) — le geste signature, par-dessus le bureau
+      `tauri-plugin-positioner`) : le geste signature, par-dessus le bureau
 - [ ] Icône barre de menus / tray avec bascule du deck
 - [ ] Raccourci global « nouvelle note »
 - [ ] Notifications natives pour les rappels (plugin déjà branché)

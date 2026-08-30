@@ -3,7 +3,7 @@
 // Quand l'app est branchée sur un serveur mais que l'appareil porte encore des
 // notes du mode local (localStorage), on propose de les importer dans le
 // compte. Les données locales ne sont JAMAIS effacées : après import, la clé
-// est renommée en archive datée — récupérable tant qu'on ne vide pas le
+// est renommée en archive datée, récupérable tant qu'on ne vide pas le
 // stockage du navigateur.
 
 import type { Note, NoteItem } from '@vignette/core';

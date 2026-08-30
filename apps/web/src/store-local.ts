@@ -6,11 +6,12 @@ import {
   type NoteItem,
   type NoteStatus,
 } from '@vignette/core';
+import type { Space } from '@vignette/core';
 import type { AppState, NoteMember } from './store';
 
 /**
  * Mode local : mêmes gestes, zéro serveur. Tout vit dans localStorage.
- * Le partage n'existe pas ici (pas de comptes) — les méthodes de partage
+ * Le partage n'existe pas ici (pas de comptes) : les méthodes de partage
  * répondent poliment qu'elles ne sont pas disponibles.
  */
 
@@ -21,20 +22,25 @@ function now(): string {
   return new Date().toISOString();
 }
 
-type Persisted = Pick<AppState, 'notes' | 'items'>;
+type Persisted = Pick<AppState, 'notes' | 'items' | 'spaces'>;
 
 function load(): Persisted {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw) as Persisted;
+    if (raw) {
+      const data = JSON.parse(raw) as Persisted;
+      return { notes: data.notes ?? [], items: data.items ?? [], spaces: data.spaces ?? [] };
+    }
   } catch {
     // stockage indisponible ou corrompu
   }
-  return { notes: [], items: [] };
+  return { notes: [], items: [], spaces: [] };
 }
 
 export class LocalStore {
   private state: AppState = { ...load(), invitations: [], ready: true };
+
+  activeSpaceId: string | null = null;
   private listeners = new Set<() => void>();
 
   constructor() {
@@ -61,7 +67,7 @@ export class LocalStore {
   private commit(next: AppState) {
     this.state = next;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ notes: next.notes, items: next.items }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ notes: next.notes, items: next.items, spaces: next.spaces }));
     } catch {
       // best effort
     }
@@ -69,6 +75,38 @@ export class LocalStore {
   }
 
   /* --- cycle de vie (no-ops en local) --- */
+
+  setNoteSpace(id: string, spaceId: string | null) {
+    this.commit({
+      ...this.state,
+      notes: this.state.notes.map((n) =>
+        n.id === id ? { ...n, spaceId, updatedAt: now() } : n,
+      ),
+    });
+  }
+
+  createSpace(name: string): string {
+    const id = crypto.randomUUID();
+    const position = (this.state.spaces.at(-1)?.position ?? 0) + 1024;
+    this.commit({ ...this.state, spaces: [...this.state.spaces, { id, name, position }] });
+    return id;
+  }
+
+  renameSpace(id: string, name: string) {
+    this.commit({
+      ...this.state,
+      spaces: this.state.spaces.map((sp) => (sp.id === id ? { ...sp, name } : sp)),
+    });
+  }
+
+  deleteSpace(id: string) {
+    if (this.activeSpaceId === id) this.activeSpaceId = null;
+    this.commit({
+      ...this.state,
+      spaces: this.state.spaces.filter((sp) => sp.id !== id),
+      notes: this.state.notes.map((n) => (n.spaceId === id ? { ...n, spaceId: null } : n)),
+    });
+  }
 
   async setUser(_userId: string | null) {
     // rien : l'utilisateur local est toujours là
@@ -107,6 +145,7 @@ export class LocalStore {
     const note: Note = {
       id,
       ownerId: LOCAL_USER,
+      spaceId: this.activeSpaceId,
       title: '',
       color,
       status: 'active',
@@ -143,6 +182,7 @@ export class LocalStore {
     const note: Note = {
       id,
       ownerId: LOCAL_USER,
+      spaceId: this.activeSpaceId,
       title,
       color,
       status: 'active',
@@ -281,7 +321,7 @@ export class LocalStore {
     const newNotes: Note[] = notes.map((n) => {
       const id = crypto.randomUUID();
       idMap.set(n.id, id);
-      return { ...n, id, ownerId: LOCAL_USER, dockPosition: null, createdAt: t, updatedAt: t };
+      return { ...n, id, ownerId: LOCAL_USER, spaceId: null, dockPosition: null, createdAt: t, updatedAt: t };
     });
     const newItems: NoteItem[] = items
       .filter((i) => idMap.has(i.noteId))

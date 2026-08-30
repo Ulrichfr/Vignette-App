@@ -6,6 +6,11 @@ import { InvitationsBanner } from './components/InvitationsBanner';
 import { MigrationBanner } from './components/MigrationBanner';
 import { NoteDetail } from './components/NoteDetail';
 import { NotesList } from './components/NotesList';
+import {
+  loadActiveSpace,
+  saveActiveSpace,
+  type ActiveSpace,
+} from './components/SpaceSwitcher';
 import { useI18n } from './i18n';
 import { ensurePushSubscription } from './lib/push';
 import { checkForUpdate, isDesktopNative, isNative, openExternal, type UpdateInfo } from './lib/update';
@@ -15,6 +20,7 @@ function Workspace() {
   const { t } = useI18n();
   const state = useAppState();
   const [filter, setFilter] = useState<NotesFilter>('all');
+  const [activeSpace, setActiveSpace] = useState<ActiveSpace>(() => loadActiveSpace());
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [undoNoteId, setUndoNoteId] = useState<string | null>(null);
@@ -23,6 +29,19 @@ function Workspace() {
   const [appError, setAppError] = useState<string | null>(null);
   const undoTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const selected = selectedId ?? state.notes.find((n) => !n.deletedAt)?.id ?? null;
+
+  const changeSpace = (v: ActiveSpace) => {
+    setActiveSpace(v);
+    saveActiveSpace(v);
+    store.activeSpaceId = v === 'all' ? null : v;
+    setSelectedId(null);
+  };
+
+  // au montage : le store crée les notes dans l'espace actif restauré
+  useEffect(() => {
+    store.activeSpaceId = activeSpace === 'all' ? null : activeSpace;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const noteDeleted = (id: string) => {
     setSelectedId(null);
@@ -106,7 +125,7 @@ function Workspace() {
         if (isDue(n) && !notified.current.has(n.id)) {
           notified.current.add(n.id);
           if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification(`Vignette — ${n.title || '…'}`, { body: t.reminderDue });
+            new Notification(`Vignette · ${n.title || '…'}`, { body: t.reminderDue });
           }
         }
       }
@@ -114,7 +133,7 @@ function Workspace() {
         if (alive.has(i.noteId) && isItemDue(i) && !notified.current.has(i.id)) {
           notified.current.add(i.id);
           if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification(`Vignette — ${i.text || '…'}`, { body: t.reminderDue });
+            new Notification(`Vignette · ${i.text || '…'}`, { body: t.reminderDue });
           }
         }
       }
@@ -133,6 +152,8 @@ function Workspace() {
           filter={filter}
           query={query}
           selectedId={selected}
+          activeSpace={activeSpace}
+          onSpaceChange={changeSpace}
           onFilter={setFilter}
           onQuery={setQuery}
           onSelect={setSelectedId}
@@ -149,7 +170,7 @@ function Workspace() {
           </section>
         )}
       </main>
-      <Deck />
+      <Deck activeSpace={activeSpace} />
       {appError && (
         <div className="undo-toast error-toast" role="alert">
           <span>{appError}</span>

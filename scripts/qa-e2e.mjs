@@ -27,7 +27,7 @@ async function scenario(name, fn) {
     console.log(`  ✓ ${name}`);
   } catch (err) {
     results.push({ name, ok: false, err: String(err).split('\n')[0] });
-    console.log(`  ✗ ${name} — ${String(err).split('\n')[0]}`);
+    console.log(`  ✗ ${name} : ${String(err).split('\n')[0]}`);
     try {
       const safe = name.replace(/[^a-z0-9]+/gi, '-').slice(0, 40);
       await page.screenshot({ path: `/tmp/qa-echec-${safe}.png` });
@@ -95,7 +95,7 @@ const browser = await chromium.launch(EXEC ? { executablePath: EXEC } : {});
 const ctx = await browser.newContext({ viewport: { width: 1360, height: 850 }, acceptDownloads: true });
 page = await ctx.newPage();
 
-console.log(`QA Vignette — ${APP}`);
+console.log(`QA Vignette : ${APP}`);
 
 /* ------------------------------------------------------------ auth */
 await scenario('mauvais mot de passe → erreur affichée', async () => {

@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 const envPath = join(dirname(fileURLToPath(import.meta.url)), '..', '.env');
 const env = readFileSync(envPath, 'utf8');
 if (env.includes('VAPID_PUBLIC_KEY=')) {
-  console.log('VAPID déjà présent — rien à faire.');
+  console.log('VAPID déjà présent : rien à faire.');
   process.exit(0);
 }
 
@@ -27,6 +27,6 @@ const raw = Buffer.concat([
 
 appendFileSync(
   envPath,
-  `\n# Web push (rappels app fermée) — générés par gen-vapid.mjs\nVAPID_PUBLIC_KEY=${b64u(raw.toString('base64'))}\nVAPID_PRIVATE_KEY=${jwk.d}\nVAPID_SUBJECT=mailto:u@ulrichrozier.com\n`,
+  `\n# Web push (rappels app fermée) : générés par gen-vapid.mjs\nVAPID_PUBLIC_KEY=${b64u(raw.toString('base64'))}\nVAPID_PRIVATE_KEY=${jwk.d}\nVAPID_SUBJECT=mailto:u@ulrichrozier.com\n`,
 );
 console.log('Clés VAPID ajoutées à supabase/.env');

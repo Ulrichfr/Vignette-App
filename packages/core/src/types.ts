@@ -15,9 +15,18 @@ export type NoteColor =
 /** Rendu des items : tirets manuscrits ou cases à cocher. */
 export type ListStyle = 'dashes' | 'checks';
 
+/** Espace de travail : Personnel, Pro, un projet… (organisation du propriétaire). */
+export interface Space {
+  id: string;
+  name: string;
+  position: number;
+}
+
 export interface Note {
   id: string;
   ownerId: string;
+  /** Espace du propriétaire ; null = Personnel (l'espace implicite). */
+  spaceId: string | null;
   title: string;
   color: NoteColor;
   status: NoteStatus;

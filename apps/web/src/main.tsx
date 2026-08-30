@@ -20,7 +20,7 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 );
 
-// PWA : coquille hors-ligne + installabilité (web uniquement — pas en natif,
+// PWA : coquille hors-ligne + installabilité (web uniquement, pas en natif,
 // où BASE_URL vaut './' et où le service worker n'a pas de sens)
 if ('serviceWorker' in navigator && import.meta.env.PROD && import.meta.env.BASE_URL === '/app/') {
   window.addEventListener('load', () => {

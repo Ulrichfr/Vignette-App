@@ -1,7 +1,7 @@
 /**
  * Configuration d'instance : où vivent les notes.
  * - 'builtin' : la web app servie par sa propre instance (clé baked au build)
- * - 'server'  : instance choisie au premier lancement (apps natives) — l'app
+ * - 'server'  : instance choisie au premier lancement (apps natives), l'app
  *               découvre la clé anon via GET <url>/admin-api/instance
  * - 'local'   : sans serveur, tout vit dans le stockage de l'appareil
  */

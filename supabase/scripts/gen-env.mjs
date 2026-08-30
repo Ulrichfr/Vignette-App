@@ -11,7 +11,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const envPath = join(here, '..', '.env');
 
 if (existsSync(envPath) && !process.argv.includes('--force')) {
-  console.error(`${envPath} existe déjà — utilise --force pour régénérer (invalide toutes les sessions).`);
+  console.error(`${envPath} existe déjà : utilise --force pour régénérer (invalide toutes les sessions).`);
   process.exit(1);
 }
 
@@ -34,7 +34,7 @@ const serviceKey = signJwt({ role: 'service_role', iss: 'supabase', iat, exp }, 
 const site = process.env.VIGNETTE_SITE_URL ?? 'http://localhost:5183';
 const api = process.env.VIGNETTE_API_URL ?? 'http://127.0.0.1:8360';
 
-const env = `# Généré par scripts/gen-env.mjs — NE PAS COMMITTER
+const env = `# Généré par scripts/gen-env.mjs : NE PAS COMMITTER
 POSTGRES_PASSWORD=${randomBytes(24).toString('hex')}
 JWT_SECRET=${jwtSecret}
 JWT_EXPIRY=3600

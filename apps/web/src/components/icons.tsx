@@ -1,4 +1,4 @@
-/** Icônes SVG maison — trait 2, rondes, héritent de currentColor. */
+/** Icônes SVG maison, trait 2, rondes, héritent de currentColor. */
 
 const base = {
   viewBox: '0 0 24 24',

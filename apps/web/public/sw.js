@@ -1,4 +1,4 @@
-// Service worker Vignette — coquille hors-ligne minimale.
+// Service worker Vignette : coquille hors-ligne minimale.
 // Assets fingerprintés : cache-first. Navigation : réseau d'abord, cache en secours.
 const CACHE = 'vignette-v1';
 

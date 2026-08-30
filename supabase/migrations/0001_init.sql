@@ -1,4 +1,4 @@
--- Vignette — schéma initial
+-- Vignette : schéma initial
 -- Conventions : snake_case en base, RLS activée partout, soft delete via deleted_at.
 
 create extension if not exists pgcrypto;
@@ -96,7 +96,7 @@ create trigger note_items_touch after insert or update or delete on public.note_
 -- security definer pour éviter la récursion RLS entre notes et note_shares.
 
 -- Test de partage seul (sans lookup de notes) : utilisable dans les policies de
--- notes elles-mêmes — un lookup de la table dans sa propre policy ne voit pas la
+-- notes elles-mêmes : un lookup de la table dans sa propre policy ne voit pas la
 -- ligne en cours d'insertion (snapshot), ce qui casse INSERT … RETURNING.
 create function public.has_note_share(nid uuid, need_edit boolean)
 returns boolean language sql security definer set search_path = public stable as $$

@@ -1652,3 +1652,149 @@
   opacity: 1;
   background: rgba(0, 0, 0, 0.08);
 }
+
+/* sélecteur d'espace de travail */
+.space-switcher {
+  position: relative;
+  margin: -6px 0 2px;
+}
+
+.space-current {
+  border: 0;
+  background: none;
+  font-family: 'Caveat Variable', cursive;
+  font-size: 20px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  padding: 2px 6px 2px 0;
+}
+
+.space-current:hover {
+  color: var(--ink);
+}
+
+.space-caret {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.space-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 220px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lift);
+  padding: 6px;
+  z-index: 60;
+  display: grid;
+  gap: 2px;
+}
+
+.space-menu > button,
+.space-row .space-name {
+  border: 0;
+  background: none;
+  text-align: left;
+  font: inherit;
+  font-size: 14px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.space-menu > button:hover,
+.space-row:hover {
+  background: var(--paper-2);
+}
+
+.space-menu > button.selected,
+.space-row.selected {
+  background: var(--paper-2);
+  font-weight: 600;
+}
+
+.space-row {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+}
+
+.space-row .space-name {
+  flex: 1;
+}
+
+.space-tool {
+  border: 0;
+  background: none;
+  color: var(--ink-soft);
+  opacity: 0;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.space-row:hover .space-tool {
+  opacity: 0.7;
+}
+
+.space-tool:hover {
+  opacity: 1 !important;
+  background: var(--line);
+}
+
+.space-new {
+  color: var(--ink-soft) !important;
+}
+
+.space-form {
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+}
+
+.space-form input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font: inherit;
+  font-size: 13.5px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.space-form button {
+  border: 0;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+/* déplacement d'une note entre espaces (barre d'outils du détail) */
+.space-move {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.space-move select {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  padding: 5px 6px;
+}

@@ -1,12 +1,12 @@
 # Démarrer en cinq minutes
 
-Ce guide suppose que Vignette tourne déjà — soit l'instance de démonstration,
+Ce guide suppose que Vignette tourne déjà, soit l'instance de démonstration,
 soit la tienne (voir [AUTO-HEBERGEMENT.md](AUTO-HEBERGEMENT.md)).
 
 ## 0. Choisir un mode (apps natives)
 
 Au premier lancement, l'app demande où vivent tes notes : l'instance
-officielle, la tienne, ou **local sans serveur** (aucun compte — saute
+officielle, la tienne, ou **local sans serveur** (aucun compte, saute
 directement à l'étape 2). Détail : [MODES.md](MODES.md).
 
 ## 1. Se connecter
@@ -18,13 +18,13 @@ email + mot de passe. Connecte-toi sur `/app`.
 ## 2. Écrire une première note
 
 Clique le **+** en bas du deck (le bord droit de l'écran). La note se déplie,
-tu écris son titre puis tes items — **Entrée** ajoute une ligne, **Retour
+tu écris son titre puis tes items, **Entrée** ajoute une ligne, **Retour
 arrière** sur une ligne vide la supprime. Le tiret en tête de ligne sert de
 case à cocher ; la bascule `– / ☑` du panneau de détail passe la note en vraies
 cases à cocher.
 
 Dans un item, tu peux écrire `**gras**`, `*italique*`, `` `code` `` et coller
-des liens — ils deviennent cliquables au repos.
+des liens, ils deviennent cliquables au repos.
 
 ## 3. La docker au bord de l'écran
 

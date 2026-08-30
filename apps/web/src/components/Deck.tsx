@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { colorSpec } from '../colors';
 import { useI18n } from '../i18n';
 import { itemsOf, store, useAppState } from '../store';
+import { inActiveSpace, type ActiveSpace } from './SpaceSwitcher';
 import { ChecklistEditor } from './ChecklistEditor';
 
 /** Ressort signature (DESIGN.md § Motion). */
@@ -19,11 +20,13 @@ function tabLabel(title: string): string {
 }
 
 /** Le deck : onglets pastel dockés au bord droit, dépliage au clic. */
-export function Deck() {
+export function Deck({ activeSpace }: { activeSpace: ActiveSpace }) {
   const { t } = useI18n();
   const state = useAppState();
   const [openId, setOpenId] = useState<string | null>(null);
-  const notes = deckNotes(state.notes);
+  const notes = deckNotes(
+    state.notes.filter((n) => inActiveSpace(n, activeSpace, store.currentUserId)),
+  );
   const open = openId ? notes.find((n) => n.id === openId) : undefined;
   const orderedIds = useMemo(() => notes.map((n) => n.id), [notes]);
 

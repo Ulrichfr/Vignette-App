@@ -1,11 +1,11 @@
-# Vignette — Design System
+# Vignette, Design System
 
 Source de vérité du design. Toute décision visuelle nouvelle se prend ici d'abord.
 
 ## Intention
 
 Des post-its numériques qui donnent envie de les toucher : papier pastel, écriture
-manuscrite, et un geste signature — les notes vivent **dockées au bord de l'écran
+manuscrite, et un geste signature, les notes vivent **dockées au bord de l'écran
 comme des onglets** et se déplient d'une pichenette. Rendu premium et « natif » :
 peu de chrome, beaucoup de matière, des animations physiques (springs), jamais de
 transition linéaire.
@@ -51,7 +51,7 @@ post-it) ; seul leur `-ink` s'ajuste.
 
 - **UI** : `Inter` (embarquée), fallback system-ui. Titres de notes en 600,
   libellés d'onglets en 600 + `letter-spacing: 0.08em` + petites capitales.
-- **Contenu manuscrit** : `Caveat` (embarquée), 1.35rem minimum — c'est la voix
+- **Contenu manuscrit** : `Caveat` (embarquée), 1.35rem minimum, c'est la voix
   du produit, tout le contenu saisi par l'utilisateur est rendu en manuscrit.
 - Méta (badges ACTIVE/ARCHIVED, timestamps) : UI 11px, 500, `ink-soft`.
 
@@ -61,7 +61,7 @@ post-it) ; seul leur `-ink` s'ajuste.
 - Ombres : deux couches douces (`0 1px 2px rgb(0 0 0 / .06), 0 8px 24px rgb(0 0 0 / .10)`),
   jamais d'ombre dure. Une note « soulevée » (drag) passe à 32px de flou.
 - L'onglet docké porte une **ligne de perforation** (pointillés verticaux) entre
-  le bord-libellé et le corps de la note — signature visuelle des maquettes.
+  le bord-libellé et le corps de la note, signature visuelle des maquettes.
 
 ## Motion
 
@@ -72,7 +72,7 @@ Physique par défaut : spring `stiffness 420, damping 34, mass 0.9` (via Framer 
 - **Peel** (création/suppression) : rotation 2-3° + scale 0.96 → 1, origine dans
   le coin supérieur du bord docké.
 - **Réordonnancement du deck** : les onglets s'écartent en spring pendant le drag.
-- **Survol** : un onglet docké sort de 8px (teaser) en 120ms ease-out — seule
+- **Survol** : un onglet docké sort de 8px (teaser) en 120ms ease-out, seule
   exception non-spring.
 - Respecter `prefers-reduced-motion` : tout passe en fondu 150ms.
 

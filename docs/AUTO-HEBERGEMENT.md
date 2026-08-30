@@ -16,7 +16,7 @@ node supabase/scripts/gen-env.mjs
 # 2. la stack (premier lancement : télécharge ~1,5 Go d'images)
 docker compose -f supabase/docker-compose.yml up -d
 
-# 3. le schéma applicatif (tables, RLS, realtime) — attends ~1 min que
+# 3. le schéma applicatif (tables, RLS, realtime), attends ~1 min que
 #    le service auth soit healthy (docker compose ps)
 ./supabase/scripts/apply-migrations.sh
 
@@ -54,14 +54,14 @@ suppression, stats, état des sauvegardes.
 
 ## Exposer sur Internet
 
-Caddy écoute en HTTP simple (port 8360) : mets ce que tu veux devant —
+Caddy écoute en HTTP simple (port 8360) : mets ce que tu veux devant
 un tunnel Cloudflare, un reverse proxy TLS, Tailscale. Pense à mettre à jour
 `SITE_URL` et `API_EXTERNAL_URL` dans `supabase/.env` avec ton URL publique
 puis `docker compose up -d auth`.
 
 ## Et les emails ? (SMTP totalement optionnel)
 
-**Pas de serveur mail ? Aucun problème — c'est le mode par défaut.** Laisse les
+**Pas de serveur mail ? Aucun problème, c'est le mode par défaut.** Laisse les
 variables `SMTP_*` vides dans `.env` :
 
 - les comptes créés depuis le back office **fonctionnent immédiatement**
@@ -79,7 +79,7 @@ emails de réinitialisation en autonomie. Tout le reste marche pareil.
 
 Les apps macOS/Linux/Android demandent au premier lancement où vivent tes
 notes : choisis « Ma propre instance » et donne l'URL publique de ton serveur.
-L'app découvre la configuration via `GET /admin-api/instance` — rien d'autre à
+L'app découvre la configuration via `GET /admin-api/instance`, rien d'autre à
 saisir. (Pour repartir de zéro sur un appareil : vider les données du site/app,
 l'écran de choix revient.)
 

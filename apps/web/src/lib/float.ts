@@ -1,7 +1,7 @@
 // Fenêtres post-its sur le bureau (desktop natif uniquement).
 //
 // Chaque note épinglée devient une vraie fenêtre sans bordure, toujours au
-// premier plan, collée au bord droit de l'écran — le post-it quitte l'app et
+// premier plan, collée au bord droit de l'écran, le post-it quitte l'app et
 // vit par-dessus le bureau. La fenêtre recharge le même bundle avec
 // `?float=<id>` : main.tsx rend alors FloatingNote au lieu de l'app entière.
 
@@ -14,11 +14,11 @@ export function floatNoteId(): string | null {
   return new URLSearchParams(window.location.search).get('float');
 }
 
-/** Signale une erreur à l'interface (toast) — les échecs silencieux sont interdits. */
+/** Signale une erreur à l'interface (toast), les échecs silencieux sont interdits. */
 function signalError(context: string, err: unknown) {
   console.error('vignette float:', context, err);
   window.dispatchEvent(
-    new CustomEvent('vignette:erreur', { detail: `${context} — ${String(err)}` }),
+    new CustomEvent('vignette:erreur', { detail: `${context}, ${String(err)}` }),
   );
 }
 

@@ -7,7 +7,7 @@ Une note se partage **par email**, entre comptes de la même instance.
 Sur une note dont tu es propriétaire : **Partager** → saisis l'email, choisis
 le rôle, **Inviter**.
 
-- **Édition** : la personne peut cocher, écrire, renommer — mais ni supprimer
+- **Édition** : la personne peut cocher, écrire, renommer, mais ni supprimer
   la note, ni la repartager.
 - **Lecture** : elle voit la note vivre en temps réel, sans pouvoir la toucher.
 
@@ -17,7 +17,7 @@ pas acceptée) et permet de **Retirer** quelqu'un.
 ## Accepter
 
 Chez la personne invitée, l'invitation apparaît en haut de l'écran comme un
-petit post-it jaune : « Untel partage “Courses” » — **Accepter** ou
+petit post-it jaune : « Untel partage “Courses” », **Accepter** ou
 **Refuser**. Une fois acceptée, la note apparaît dans sa liste et son deck,
 synchronisée à la seconde : un item coché d'un côté se barre de l'autre.
 

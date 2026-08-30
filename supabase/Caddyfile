@@ -1,4 +1,4 @@
-# Routage Vignette — mêmes réécritures que le gateway officiel Supabase
+# Routage Vignette : mêmes réécritures que le gateway officiel Supabase
 # (/auth/v1 → /, /rest/v1 → /, /realtime/v1 → /socket, /realtime/v1/api → /api).
 
 :80 {
@@ -42,7 +42,7 @@
 		}
 	}
 
-	# Web app (zone membre) sous /app — build de apps/web (base /app/).
+	# Web app (zone membre) sous /app : build de apps/web (base /app/).
 	handle /app* {
 		root * /srv
 		try_files {path} /app/index.html
@@ -55,7 +55,7 @@
 		reverse_proxy admin-api:3005
 	}
 
-	# Back office sous /admin — build de apps/admin (base /admin/).
+	# Back office sous /admin : build de apps/admin (base /admin/).
 	handle /admin* {
 		root * /srv
 		try_files {path} /admin/index.html

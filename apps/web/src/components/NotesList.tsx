@@ -6,11 +6,14 @@ import { itemsOf, store, useAppState } from '../store';
 import { signOut } from './AuthGate';
 import { IcGear, IcSearch, IcSignOut } from './icons';
 import { SettingsPanel } from './SettingsPanel';
+import { inActiveSpace, SpaceSwitcher, type ActiveSpace } from './SpaceSwitcher';
 
 interface Props {
   filter: NotesFilter;
   query: string;
   selectedId: string | null;
+  activeSpace: ActiveSpace;
+  onSpaceChange: (v: ActiveSpace) => void;
   onFilter: (f: NotesFilter) => void;
   onQuery: (q: string) => void;
   onSelect: (id: string) => void;
@@ -23,15 +26,18 @@ function statusBadge(note: Note, t: Strings): { label: string; className: string
   return { label: t.badgeActive, className: 'badge active' };
 }
 
-export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSelect }: Props) {
+export function NotesList({ filter, query, selectedId, activeSpace, onSpaceChange, onFilter, onQuery, onSelect }: Props) {
   const { t } = useI18n();
   const state = useAppState();
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const notes = filterNotes(state.notes, filter, query, state.items);
-  const total = state.notes.filter((n) => !n.deletedAt).length;
+  const spaceNotes = state.notes.filter((n) =>
+    inActiveSpace(n, activeSpace, store.currentUserId),
+  );
+  const notes = filterNotes(spaceNotes, filter, query, state.items);
+  const total = spaceNotes.filter((n) => !n.deletedAt).length;
 
-  const trashCount = state.notes.filter((n) => n.deletedAt).length;
+  const trashCount = spaceNotes.filter((n) => n.deletedAt).length;
   const FILTERS: { key: NotesFilter; label: string }[] = [
     { key: 'all', label: t.filterAll },
     { key: 'active', label: t.filterActive },
@@ -57,6 +63,8 @@ export function NotesList({ filter, query, selectedId, onFilter, onQuery, onSele
           </button>
         </span>
       </header>
+
+      <SpaceSwitcher active={activeSpace} onChange={onSpaceChange} />
 
       <div className="search-row">
         <span className="search-icon"><IcSearch /></span>

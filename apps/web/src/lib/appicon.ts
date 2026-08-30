@@ -1,7 +1,7 @@
 /**
  * Icône d'app au choix (réglages) : bascule le favicon, l'icône d'écran
  * d'accueil iOS (apple-touch-icon) et le manifest PWA. Le navigateur lit ces
- * balises au moment de l'installation — l'icône choisie devient celle de
+ * balises au moment de l'installation, l'icône choisie devient celle de
  * l'app installée. (Icônes alternatives des apps NATIVES : feuille de route.)
  */
 

@@ -9,7 +9,7 @@ export interface ColorSpec {
   ink: string;
 }
 
-/** Palette pastel intégrée — valeurs de DESIGN.md avec dérivés précalculés. */
+/** Palette pastel intégrée : valeurs de DESIGN.md avec dérivés précalculés. */
 export const PALETTE: Record<string, ColorSpec> = {
   blue: { base: '#BCD9F8', edge: '#9FC4EE', ink: '#23384F' },
   mint: { base: '#BFE8CF', edge: '#A2D9B8', ink: '#1F3D2B' },

@@ -31,7 +31,7 @@ interface Backup {
 }
 
 const fmtDate = (iso: string | null) =>
-  iso ? new Date(iso).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }) : '—';
+  iso ? new Date(iso).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }) : ', ';
 
 const fmtSize = (bytes: number) =>
   bytes > 1_048_576 ? `${(bytes / 1_048_576).toFixed(1)} Mo` : `${Math.round(bytes / 1024)} Ko`;

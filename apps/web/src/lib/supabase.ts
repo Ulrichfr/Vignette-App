@@ -1,7 +1,7 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { loadInstance, type InstanceConfig } from './instance';
 
-/** Client Supabase de l'instance active — null en mode local ou avant onboarding. */
+/** Client Supabase de l'instance active, null en mode local ou avant onboarding. */
 export let supabase: SupabaseClient | null = null;
 
 export let instanceConfig: InstanceConfig | null = null;
@@ -24,5 +24,5 @@ export function isLocalMode(): boolean {
   return instanceConfig?.mode === 'local';
 }
 
-/** Évalué au chargement du module — avant le store et le rendu. */
+/** Évalué au chargement du module, avant le store et le rendu. */
 export const bootMode: BootMode = initSupabase();

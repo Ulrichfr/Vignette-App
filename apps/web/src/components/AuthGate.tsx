@@ -7,7 +7,7 @@ import { store } from '../store';
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const { t } = useI18n();
-  // mode local : pas de compte, pas d'auth — on entre directement
+  // mode local : pas de compte, pas d'auth, on entre directement
   if (bootMode === 'local') return <>{children}</>;
   // premier lancement natif : choisir son instance
   if (bootMode === 'onboarding') return <Onboarding />;

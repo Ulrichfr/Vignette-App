@@ -257,6 +257,22 @@ export function NoteDetail({ noteId, onDeleted, onBack }: NoteDetailProps) {
               {t.floatPin}
             </button>
           )}
+          {isOwner && (
+            <label className="space-move">
+              {t.spaceLabel}
+              <select
+                value={note.spaceId ?? ''}
+                onChange={(e) => store.setNoteSpace(note.id, e.target.value || null)}
+              >
+                <option value="">{t.spaceDefault}</option>
+                {state.spaces.map((sp) => (
+                  <option key={sp.id} value={sp.id}>
+                    {sp.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <span className="remind-wrap">
             <button
               className={`ghost-btn ${note.remindAt ? 'active' : ''}`}
