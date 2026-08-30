@@ -6,6 +6,10 @@
     "linux-x86_64": {
       "url": "https://vignette.ulrichrozier.com/dl/Vignette_0.1.0_amd64.AppImage",
       "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUekRISE9HZ0ZNZGQ5U1k3bk1WM0NkQk1aVE5qZUkxNk1ucDJ5U1R0RDdMbGlWdWU5RllTaHBNQnhNbUFpQkllMUF4UlhjVzV6bS9DQUdZdkd4ZUJ3MmFJOTFPNVN5dHd3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg4MDYzMzQ0CWZpbGU6VmlnbmV0dGVfMC4xLjBfYW1kNjQuQXBwSW1hZ2UKUS9GS0lmdnV1OVJIbUNOZnJ0b0QwNkRHMjVNVmFEY1ZzdklIU0Qwa3phSk1LVDFuVTNkdS9lYjdzNnNBcjJab2ppeWN5eTVXdWp4SzZBNXJYZUZOQnc9PQo="
+    },
+    "darwin-aarch64": {
+      "url": "https://vignette.ulrichrozier.com/dl/Vignette.app.tar.gz",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUekRISE9HZ0ZNZGZSMnY5YmhqVFJmWEhNS0krWTBzR29pVGJXb1ZJeWdPeW5CQSt5UWhPS0QwUS9DSzhvQ0ZYYkxDL1JTb1F2NXFmMjlqQmpJUU14ZFFJYnBScXdLTndNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg4MDYzNjUzCWZpbGU6VmlnbmV0dGUuYXBwLnRhci5negp3Z3dmRCtadXlCL05BTzJsOHJHQ3R0TzBneVpKbHNnaEZ2YkFlNFJUQ2RwbTA1ZDZjSmM0dE41ZWk2M2ZWRndGTWtYb1VCQ3M2N1V5QytYcUVmdTFDUT09Cg=="
     }
   }
 }
