@@ -36,6 +36,8 @@ export interface Strings {
   updateDownload: string;
   updateReload: string;
   updateError: string;
+  onboardConnecting: string;
+  onboardChecking: string;
   floatPin: string;
   updateInstall: string;
   updateInstalling: (p: string) => string;
@@ -169,6 +171,8 @@ const STRINGS: Record<Lang, Strings> = {
     updateDownload: 'Télécharger',
     updateReload: 'Recharger',
     updateError: 'Vérification impossible (hors ligne ?)',
+    onboardConnecting: 'connexion…',
+    onboardChecking: 'Vérification…',
     floatPin: 'Épingler sur le bureau',
     updateInstall: 'Installer la mise à jour',
     updateInstalling: (p) => `Installation… ${p}`,
@@ -303,6 +307,8 @@ const STRINGS: Record<Lang, Strings> = {
     updateDownload: 'Download',
     updateReload: 'Reload',
     updateError: 'Could not check (offline?)',
+    onboardConnecting: 'connecting…',
+    onboardChecking: 'Checking…',
     floatPin: 'Pin to desktop',
     updateInstall: 'Install update',
     updateInstalling: (p) => `Installing… ${p}`,

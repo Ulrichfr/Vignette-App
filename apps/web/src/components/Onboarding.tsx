@@ -1,14 +1,34 @@
 import { useState } from 'react';
-import { isNative, openExternal } from '../lib/update';
-import { useI18n } from '../i18n';
+import { setLang, useI18n, type Lang } from '../i18n';
 import { OFFICIAL_URL, probeInstance, saveInstance } from '../lib/instance';
+import { APP_VERSION, isNative, openExternal } from '../lib/update';
+
+/** Lien externe : navigateur système en natif, nouvel onglet sur le web. */
+function ExtLink({ href, children, className }: { href: string; children: React.ReactNode; className?: string }) {
+  return (
+    <a
+      className={className}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => {
+        if (isNative) {
+          e.preventDefault();
+          void openExternal(href);
+        }
+      }}
+    >
+      {children}
+    </a>
+  );
+}
 
 /**
  * Premier lancement (apps natives) : choisir où vivent les notes.
  * Trois post-its — l'instance officielle, la sienne, ou le local pur.
  */
 export function Onboarding() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [customUrl, setCustomUrl] = useState('');
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -33,6 +53,17 @@ export function Onboarding() {
   return (
     <div className="auth-screen">
       <div className="onboard">
+        <div className="onboard-lang">
+          {(['fr', 'en'] as Lang[]).map((l) => (
+            <button
+              key={l}
+              className={`filter-chip ${lang === l ? 'selected' : ''}`}
+              onClick={() => setLang(l)}
+            >
+              {l === 'fr' ? 'FR' : 'EN'}
+            </button>
+          ))}
+        </div>
         <h1 className="auth-logo">
           <img src={`${import.meta.env.BASE_URL}icon.svg`} alt="" />
           Vignette
@@ -48,12 +79,16 @@ export function Onboarding() {
             disabled={busy !== null}
             onClick={() => void connect(OFFICIAL_URL, 'official')}
           >
+            <span className="onboard-ear" aria-hidden />
             <h3>{t.onboardOfficial}</h3>
             <p>{t.onboardOfficialDesc}</p>
-            <span className="onboard-hint hand">{t.onboardOfficialHint}</span>
+            <span className="onboard-hint hand">
+              {busy === 'official' ? t.onboardConnecting : t.onboardOfficialHint}
+            </span>
           </button>
 
           <div className="onboard-card" style={{ background: '#bfe8cf', color: '#1f3d2b' }}>
+            <span className="onboard-ear" aria-hidden />
             <h3>{t.onboardCustom}</h3>
             <p>{t.onboardCustomDesc}</p>
             <span className="onboard-hint hand">{t.onboardCustomHint}</span>
@@ -69,20 +104,22 @@ export function Onboarding() {
                 required
                 placeholder={t.onboardCustomPlaceholder}
                 value={customUrl}
-                onChange={(e) => setCustomUrl(e.target.value)}
+                onChange={(e) => {
+                  setCustomUrl(e.target.value);
+                  setError(null);
+                }}
               />
               <button type="submit" disabled={busy !== null}>
-                {t.onboardConnect}
+                {busy === 'custom' ? t.onboardChecking : t.onboardConnect}
               </button>
             </form>
-            <a
+            {error && <p className="onboard-error hand">{error}</p>}
+            <ExtLink
               className="onboard-card-link"
               href="https://github.com/Ulrichfr/Vignette-App/blob/main/docs/AUTO-HEBERGEMENT.md"
-              target="_blank" onClick={(e) => { if (isNative) { e.preventDefault(); void openExternal(e.currentTarget.href); } }}
-              rel="noopener noreferrer"
             >
               {t.onboardCustomInstall} ↗
-            </a>
+            </ExtLink>
           </div>
 
           <button
@@ -91,33 +128,24 @@ export function Onboarding() {
             disabled={busy !== null}
             onClick={goLocal}
           >
+            <span className="onboard-ear" aria-hidden />
             <h3>{t.onboardLocal}</h3>
             <p>{t.onboardLocalDesc}</p>
             <span className="onboard-hint hand">{t.onboardLocalHint}</span>
           </button>
         </div>
 
-        {error && <p className="auth-error">{error}</p>}
-
         <div className="onboard-links">
-          <a href="https://github.com/Ulrichfr/Vignette-App/blob/main/docs/AUTO-HEBERGEMENT.md" target="_blank" onClick={(e) => { if (isNative) { e.preventDefault(); void openExternal(e.currentTarget.href); } }} rel="noopener noreferrer">
+          <ExtLink href="https://github.com/Ulrichfr/Vignette-App/blob/main/docs/AUTO-HEBERGEMENT.md">
             {t.onboardLinkGuide} ↗
-          </a>
-          <a href="https://vignette.ulrichrozier.com" target="_blank" onClick={(e) => { if (isNative) { e.preventDefault(); void openExternal(e.currentTarget.href); } }} rel="noopener noreferrer">
-            {t.onboardLinkSite} ↗
-          </a>
-          <a
-            href="https://vignette.ulrichrozier.com/#tutoriels"
-            target="_blank" onClick={(e) => { if (isNative) { e.preventDefault(); void openExternal(e.currentTarget.href); } }}
-            rel="noopener noreferrer"
-          >
+          </ExtLink>
+          <ExtLink href="https://vignette.ulrichrozier.com">{t.onboardLinkSite} ↗</ExtLink>
+          <ExtLink href="https://vignette.ulrichrozier.com/#tutoriels">
             {t.onboardLinkTutorials} ↗
-          </a>
-          <a href="https://github.com/Ulrichfr/Vignette-App" target="_blank" onClick={(e) => { if (isNative) { e.preventDefault(); void openExternal(e.currentTarget.href); } }} rel="noopener noreferrer">
-            {t.onboardLinkSource} ↗
-          </a>
+          </ExtLink>
+          <ExtLink href="https://github.com/Ulrichfr/Vignette-App">{t.onboardLinkSource} ↗</ExtLink>
         </div>
-        <p className="onboard-version">Vignette 0.1.0</p>
+        <p className="onboard-version">Vignette {APP_VERSION}</p>
       </div>
     </div>
   );

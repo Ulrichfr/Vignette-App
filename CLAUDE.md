@@ -21,7 +21,7 @@ sur `origin` ET `public` à chaque commit. Identité git du repo : Ulrichfr.
 
 ```bash
 pnpm test                    # tests unitaires du core (rapides, toujours avant commit)
-./scripts/test-api.sh        # 10 invariants API/RLS contre la stack locale (comptes jetables)
+./scripts/test-api.sh, scripts/qa-e2e.mjs (24 scénarios navigateur bout en bout — lancer avec VIGNETTE_QA_CHROME=<chromium> depuis la racine)        # 10 invariants API/RLS contre la stack locale (comptes jetables)
 ./scripts/deploy.sh          # tests + build web/admin + reload caddy + purge cache Cloudflare
 ./scripts/backup-db.sh       # dump SQL (aussi en cron à 3h40)
 ```
