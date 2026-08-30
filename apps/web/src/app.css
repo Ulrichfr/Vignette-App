@@ -1230,25 +1230,50 @@
 
 .onboard-custom {
   display: flex;
+  flex-direction: column;
   gap: 8px;
   margin-top: 12px;
 }
 
 .onboard-custom input {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
   background: rgb(255 255 255 / 0.55);
-  border-radius: 9px;
-  padding: 8px 10px;
-  font-size: 13px;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13.5px;
 }
 
 .onboard-custom button {
   background: #1f3d2b;
   color: #e6f6ec;
-  border-radius: 9px;
-  padding: 8px 14px;
+  border-radius: 10px;
+  padding: 10px 14px;
   font-weight: 600;
+  width: 100%;
+}
+
+/* le vrai bouton d'action de chaque post-it */
+.onboard-cta {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.onboard-cta:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.12);
+}
+
+.onboard-cta:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 
 .onboard-hint {

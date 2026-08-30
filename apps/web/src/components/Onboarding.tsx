@@ -73,19 +73,20 @@ export function Onboarding() {
         <p className="onboard-intro hand">{t.onboardIntro}</p>
 
         <div className="onboard-cards">
-          <button
-            className="onboard-card"
-            style={{ background: '#bcd9f8', color: '#23384f' }}
-            disabled={busy !== null}
-            onClick={() => void connect(OFFICIAL_URL, 'official')}
-          >
+          <div className="onboard-card" style={{ background: '#bcd9f8', color: '#23384f' }}>
             <span className="onboard-ear" aria-hidden />
             <h3>{t.onboardOfficial}</h3>
             <p>{t.onboardOfficialDesc}</p>
-            <span className="onboard-hint hand">
-              {busy === 'official' ? t.onboardConnecting : t.onboardOfficialHint}
-            </span>
-          </button>
+            <span className="onboard-hint hand">{t.onboardOfficialHint}</span>
+            <button
+              className="onboard-cta"
+              style={{ background: '#23384f', color: '#dcebfb' }}
+              disabled={busy !== null}
+              onClick={() => void connect(OFFICIAL_URL, 'official')}
+            >
+              {busy === 'official' ? t.onboardConnecting : t.onboardSignIn}
+            </button>
+          </div>
 
           <div className="onboard-card" style={{ background: '#bfe8cf', color: '#1f3d2b' }}>
             <span className="onboard-ear" aria-hidden />
@@ -122,17 +123,20 @@ export function Onboarding() {
             </ExtLink>
           </div>
 
-          <button
-            className="onboard-card"
-            style={{ background: '#f8df7c', color: '#4a3b10' }}
-            disabled={busy !== null}
-            onClick={goLocal}
-          >
+          <div className="onboard-card" style={{ background: '#f8df7c', color: '#4a3b10' }}>
             <span className="onboard-ear" aria-hidden />
             <h3>{t.onboardLocal}</h3>
             <p>{t.onboardLocalDesc}</p>
             <span className="onboard-hint hand">{t.onboardLocalHint}</span>
-          </button>
+            <button
+              className="onboard-cta"
+              style={{ background: '#4a3b10', color: '#fdf3cf' }}
+              disabled={busy !== null}
+              onClick={goLocal}
+            >
+              {t.onboardStartLocal}
+            </button>
+          </div>
         </div>
 
         <div className="onboard-links">
