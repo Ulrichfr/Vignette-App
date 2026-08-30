@@ -121,6 +121,14 @@ sur un mini PC auto-hébergé, du premier trait de maquette au binaire signé.
 C'est à la fois un vrai outil du quotidien et une démonstration : voir ce qu'on
 peut livrer en quelques heures quand on outille bien les agents.
 
+Une nuit, oui. Un prompt, non. Il a fallu un environnement de travail préparé
+(machine, accès, sauvegardes, monitoring, plusieurs sessions d'agents qui
+coopèrent), un brief clair avec des maquettes et des exigences précises, des
+décisions humaines à chaque bifurcation (le nom, la stack, ce qui entre dans la
+v1), et un vrai dialogue : tester, renvoyer des retours, réfléchir ensemble à
+la suite. L'histoire complète :
+[ulrichrozier.com/vignette](https://ulrichrozier.com/vignette).
+
 ## Licence
 
 [MIT](LICENSE), fait à la main (enfin, presque), hébergé à la maison.
