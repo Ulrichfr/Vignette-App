@@ -1,5 +1,13 @@
 # Vignette : consignes pour les agents
 
+> Ce fichier suit la convention AGENTS.md (pas de fichier CLAUDE : un lien
+> symbolique local, hors git, pointe ici pour l'outillage qui le cherche).
+
+## Style d'écriture (consigne d'Ulrich)
+
+Aucun tiret cadratin dans quoi que ce soit de produit : textes, sites, docs,
+interface, commentaires. Utiliser « : », une virgule, ou deux phrases.
+
 App de post-its dockés au bord de l'écran : listes, synchro temps réel,
 partage, rappels. **En production sur https://vignette.ulrichrozier.com**
 (vitrine `/`, app `/app`, admin `/admin`, API Supabase `/auth|/rest|/realtime`,

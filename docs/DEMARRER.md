@@ -46,4 +46,27 @@ l'onglet pour la déplier, **Échap** pour la ranger.
 **Supprimer** l'envoie à la corbeille (filtre Corbeille → Restaurer ou
 Supprimer définitivement). **Exporter…** produit du Markdown ou du texte brut.
 
+## 6. Cloisonner avec les espaces
+
+Au-dessus de la recherche, un petit sélecteur manuscrit dit où tu es :
+**Personnel**, un espace à toi (Pro, un projet…), ou **Tous les espaces**.
+La liste ET le deck ne montrent que l'espace actif, et les nouvelles notes y
+naissent. « + Nouvel espace… » pour en créer un ; supprimer un espace ne
+supprime rien, ses notes retournent dans Personnel. Les notes partagées avec
+toi restent visibles partout.
+
+## 7. Sur le bureau (desktop)
+
+- **Épingler sur le bureau** transforme la note en vraie fenêtre posée au bord
+  de l'écran, toujours visible ; le bouton ⇥ la range en onglet, un clic la
+  redéploie.
+- **Ctrl/Cmd+Maj+N** crée une note depuis n'importe quelle app, et l'icône de
+  la zone de notifications garde Vignette à portée.
+
+## Raccourcis et réglages
+
+Dans l'app : **n** nouvelle note, **/** recherche, **Échap** ferme. Le rouage
+ouvre les réglages : langue, thème, icône d'app (sept couleurs), import et
+export des notes, sauvegarde JSON complète, vérification de mise à jour.
+
 Pour partager une note : [PARTAGE.md](PARTAGE.md).
