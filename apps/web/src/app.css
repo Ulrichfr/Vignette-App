@@ -1593,3 +1593,8 @@
   overflow-y: auto;
   padding: 4px 18px 16px;
 }
+
+.error-toast {
+  background: #7c2d1e;
+  max-width: min(560px, 90vw);
+}

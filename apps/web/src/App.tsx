@@ -20,6 +20,7 @@ function Workspace() {
   const [undoNoteId, setUndoNoteId] = useState<string | null>(null);
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
   const [updateDismissed, setUpdateDismissed] = useState(false);
+  const [appError, setAppError] = useState<string | null>(null);
   const undoTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const selected = selectedId ?? state.notes.find((n) => !n.deletedAt)?.id ?? null;
 
@@ -29,6 +30,16 @@ function Workspace() {
     clearTimeout(undoTimer.current);
     undoTimer.current = setTimeout(() => setUndoNoteId(null), 8000);
   };
+
+  // erreurs signalées par les modules (fenêtres flottantes…) → toast visible
+  useEffect(() => {
+    const onErr = (e: Event) => {
+      setAppError(String((e as CustomEvent).detail));
+      setTimeout(() => setAppError(null), 12_000);
+    };
+    window.addEventListener('vignette:erreur', onErr);
+    return () => window.removeEventListener('vignette:erreur', onErr);
+  }, []);
 
   // tray / raccourci global natif : « nouvelle note » depuis n'importe où
   useEffect(() => {
@@ -139,6 +150,14 @@ function Workspace() {
         )}
       </main>
       <Deck />
+      {appError && (
+        <div className="undo-toast error-toast" role="alert">
+          <span>{appError}</span>
+          <button aria-label="✕" onClick={() => setAppError(null)}>
+            ✕
+          </button>
+        </div>
+      )}
       {updateInfo && !updateDismissed && !undoNoteId && (
         <div className="undo-toast update-toast" role="status">
           <span>{t.updateAvailable(updateInfo.version)}</span>

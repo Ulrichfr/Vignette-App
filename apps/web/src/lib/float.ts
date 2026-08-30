@@ -14,30 +14,45 @@ export function floatNoteId(): string | null {
   return new URLSearchParams(window.location.search).get('float');
 }
 
+/** Signale une erreur à l'interface (toast) — les échecs silencieux sont interdits. */
+function signalError(context: string, err: unknown) {
+  console.error('vignette float:', context, err);
+  window.dispatchEvent(
+    new CustomEvent('vignette:erreur', { detail: `${context} — ${String(err)}` }),
+  );
+}
+
 export async function openFloatingNote(noteId: string, index = 0): Promise<void> {
   if (!isDesktopNative) return;
-  const { WebviewWindow } = await import('@tauri-apps/api/webviewWindow');
-  const label = `float-${noteId}`;
-  const existing = await WebviewWindow.getByLabel(label);
-  if (existing) {
-    await existing.setFocus();
-    return;
+  try {
+    const { WebviewWindow } = await import('@tauri-apps/api/webviewWindow');
+    const label = `float-${noteId}`;
+    const existing = await WebviewWindow.getByLabel(label);
+    if (existing) {
+      await existing.setFocus();
+      return;
+    }
+    // bord droit de l'écran, empilées avec un léger décalage
+    const x = Math.max(0, window.screen.availWidth - FLOAT_W - 16);
+    const y = Math.max(0, 80 + index * 48);
+    const w = new WebviewWindow(label, {
+      url: `index.html?float=${encodeURIComponent(noteId)}`,
+      width: FLOAT_W,
+      height: FLOAT_H,
+      x,
+      y,
+      decorations: false,
+      alwaysOnTop: true,
+      resizable: true,
+      skipTaskbar: true,
+      // un post-it de bureau suit tous les bureaux/Spaces (macOS, Linux)
+      visibleOnAllWorkspaces: true,
+      title: 'Vignette',
+    });
+    void w.once('tauri://error', (e) => signalError('création de la fenêtre', e.payload));
+  } catch (err) {
+    signalError('épinglage', err);
   }
-  // bord droit de l'écran, empilées avec un léger décalage
-  const x = Math.max(0, window.screen.availWidth - FLOAT_W - 16);
-  const y = Math.max(0, 80 + index * 48);
-  new WebviewWindow(label, {
-    url: `index.html?float=${encodeURIComponent(noteId)}`,
-    width: FLOAT_W,
-    height: FLOAT_H,
-    x,
-    y,
-    decorations: false,
-    alwaysOnTop: true,
-    resizable: true,
-    skipTaskbar: true,
-    title: 'Vignette',
-  });
 }
 
 export async function closeFloatingWindow(): Promise<void> {
