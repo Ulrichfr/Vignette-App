@@ -1,7 +1,7 @@
 import type { Session } from '@supabase/supabase-js';
 import { useEffect, useState, type ReactNode } from 'react';
 import { useI18n } from '../i18n';
-import { bootMode, supabase } from '../lib/supabase';
+import { bootMode, instanceConfig, supabase } from '../lib/supabase';
 import { Onboarding } from './Onboarding';
 import { store } from '../store';
 
@@ -131,24 +131,26 @@ export function AuthGate({ children }: { children: ReactNode }) {
           <button className="auth-submit" disabled={busy} type="submit">
             {t.signIn}
           </button>
-          <button
-            type="button"
-            className="auth-switch"
-            onClick={async () => {
-              if (!email) {
-                setError(t.authError);
-                return;
-              }
-              setError(null);
-              const { error: err } = await supabase!.auth.resetPasswordForEmail(email, {
-                redirectTo: `${window.location.origin}/app/`,
-              });
-              if (err) setError(err.message);
-              else setInfo(t.resetSent);
-            }}
-          >
-            {t.forgotPassword}
-          </button>
+          {instanceConfig?.mail !== false && (
+            <button
+              type="button"
+              className="auth-switch"
+              onClick={async () => {
+                if (!email) {
+                  setError(t.authError);
+                  return;
+                }
+                setError(null);
+                const { error: err } = await supabase!.auth.resetPasswordForEmail(email, {
+                  redirectTo: `${window.location.origin}/app/`,
+                });
+                if (err) setError(err.message);
+                else setInfo(t.resetSent);
+              }}
+            >
+              {t.forgotPassword}
+            </button>
+          )}
         </form>
       </div>
     );

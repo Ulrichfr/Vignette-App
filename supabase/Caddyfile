@@ -5,6 +5,10 @@
 	# CORS préflight (rôle tenu par Kong dans la stack officielle) ; les
 	# réponses réelles portent déjà les en-têtes CORS de GoTrue/PostgREST.
 	@preflight method OPTIONS
+	header X-Content-Type-Options "nosniff"
+	header X-Frame-Options "SAMEORIGIN"
+	header Referrer-Policy "strict-origin-when-cross-origin"
+
 	handle @preflight {
 		header Access-Control-Allow-Origin "*"
 		header Access-Control-Allow-Headers "authorization, apikey, content-type, x-client-info, prefer, range, accept-profile, content-profile, x-supabase-api-version, x-upsert"

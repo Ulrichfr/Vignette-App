@@ -139,6 +139,17 @@ export default function App() {
     }
   };
 
+  const resetPassword = async (u: AdminUser) => {
+    const password = prompt(`Nouveau mot de passe pour ${u.email} (≥ 8 caractères) :`);
+    if (!password) return;
+    try {
+      await api(`/users/${u.id}/password`, { method: 'PUT', body: JSON.stringify({ password }) });
+      alert('Mot de passe remplacé. Transmets-le par un canal sûr.');
+    } catch {
+      alert('Échec (trop court ?).');
+    }
+  };
+
   const deleteUser = async (u: AdminUser) => {
     if (!confirm(`Supprimer définitivement le compte ${u.email} et toutes ses notes ?`)) return;
     try {
@@ -183,7 +194,10 @@ export default function App() {
                 <td>{u.notes}{u.trashed > 0 ? ` (${u.trashed} corbeille)` : ''}</td>
                 <td>{fmtDate(u.createdAt)}</td>
                 <td>{fmtDate(u.lastSignInAt)}</td>
-                <td>{!u.isAdmin && <button className="danger" onClick={() => void deleteUser(u)}>Supprimer</button>}</td>
+                <td>
+                  <button className="ghost" onClick={() => void resetPassword(u)}>Mot de passe</button>
+                  {!u.isAdmin && <button className="danger" onClick={() => void deleteUser(u)}>Supprimer</button>}
+                </td>
               </tr>
             ))}
           </tbody>

@@ -12,6 +12,8 @@ export interface InstanceConfig {
   mode: 'builtin' | 'server' | 'local';
   url?: string;
   anonKey?: string;
+  /** false = l'instance n'a pas de serveur mail (masquer « mot de passe oublié »). */
+  mail?: boolean;
 }
 
 const KEY = 'vignette:instance';
@@ -47,7 +49,7 @@ export async function probeInstance(url: string): Promise<InstanceConfig> {
   const base = url.replace(/\/+$/, '');
   const r = await fetch(`${base}/admin-api/instance`, { signal: AbortSignal.timeout(8000) });
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  const data = (await r.json()) as { anonKey?: string };
+  const data = (await r.json()) as { anonKey?: string; mail?: boolean };
   if (!data.anonKey) throw new Error('instance sans clé');
-  return { mode: 'server', url: base, anonKey: data.anonKey };
+  return { mode: 'server', url: base, anonKey: data.anonKey, mail: data.mail !== false };
 }

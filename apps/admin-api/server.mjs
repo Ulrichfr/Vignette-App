@@ -250,6 +250,9 @@ createServer(async (req, res) => {
         name: 'Vignette',
         version: '0.1.0',
         anonKey: process.env.ANON_KEY ?? null,
+        // pas de serveur mail → les apps masquent « mot de passe oublié »
+        // (le back office sait réinitialiser un mot de passe à la place)
+        mail: Boolean(process.env.SMTP_HOST),
       });
     }
 
@@ -272,6 +275,20 @@ createServer(async (req, res) => {
         body: JSON.stringify({ email, password, email_confirm: true }),
       });
       return json(res, r.status, await r.json());
+    }
+
+    const upd = url.pathname.match(/^\/users\/([0-9a-f-]{36})\/password$/);
+    if (req.method === 'PUT' && upd) {
+      const { password } = await readBody(req);
+      if (!password || password.length < 8) {
+        return json(res, 400, { error: 'mot de passe trop court (≥ 8)' });
+      }
+      const r = await fetch(`${AUTH_URL}/admin/users/${upd[1]}`, {
+        method: 'PUT',
+        headers: svc,
+        body: JSON.stringify({ password }),
+      });
+      return json(res, r.status, r.status < 300 ? { ok: true } : await r.json());
     }
 
     const del = url.pathname.match(/^\/users\/([0-9a-f-]{36})$/);

@@ -59,6 +59,22 @@ un tunnel Cloudflare, un reverse proxy TLS, Tailscale. Pense à mettre à jour
 `SITE_URL` et `API_EXTERNAL_URL` dans `supabase/.env` avec ton URL publique
 puis `docker compose up -d auth`.
 
+## Et les emails ? (SMTP totalement optionnel)
+
+**Pas de serveur mail ? Aucun problème — c'est le mode par défaut.** Laisse les
+variables `SMTP_*` vides dans `.env` :
+
+- les comptes créés depuis le back office **fonctionnent immédiatement**
+  (aucun email de confirmation à attendre) ;
+- le lien « mot de passe oublié » est masqué automatiquement dans les apps ;
+- un mot de passe perdu se remplace en deux clics dans le back office
+  (`/admin` → bouton **Mot de passe** sur le compte).
+
+Si tu as un SMTP (même une adresse iCloud avec mot de passe d'application),
+renseigne `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` et
+`SMTP_ADMIN_EMAIL`, puis mets `MAILER_AUTOCONFIRM=false` : tu gagnes les
+emails de réinitialisation en autonomie. Tout le reste marche pareil.
+
 ## Connecter les apps natives
 
 Les apps macOS/Linux/Android demandent au premier lancement où vivent tes

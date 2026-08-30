@@ -166,6 +166,7 @@ services:
       - ../backups:/backups:ro
     environment:
       JWT_SECRET: ${JWT_SECRET}
+      SMTP_HOST: ${SMTP_HOST:-}
       SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
       ANON_KEY: ${ANON_KEY}
       VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
